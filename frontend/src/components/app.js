@@ -8,7 +8,6 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import Navbar from './navbar'
 import Register from './register'
 import Login from './login'
-import Reset from './reset'
 import Home from './home'
 
 class App extends React.Component {
