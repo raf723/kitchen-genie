@@ -1,5 +1,6 @@
 .page-container * {
   font-family: 'Poppins', sans-serif;
+  color: rgb(50, 50, 50);
 }
 
 .page-container {
@@ -9,8 +10,8 @@
 
 #splash-img {
   height: 100%;
-  margin-right: 0;
-  margin-left: auto;
+  margin-left: 0;
+  margin-right: auto;
   object-fit: cover;
 }
 
@@ -21,7 +22,7 @@
   align-items: center;
   height: 100%;
   width: 42%;
-  left: 0;
+  right: 0;
   background-color: white;
 }
 
@@ -34,24 +35,16 @@
 
 h1 {
   text-align: left;
-  font-size: 40px;
-  color: rgb(50, 50, 50);
+  color: rgb(116,166,127) !important;
+  font-size: 48px;
   margin: 0;
-  margin-bottom: 40px;
+  margin-bottom: 8px;
 }
 
-#login-button {
-  height: 36px;
-  color: white;
-  background-color: rgb(116,166,127);
-  transition: background .5s ease;
-  border: none;
-  border-radius: 4px;
-}
-
-#login-button:hover {
-  background-color: rgb(97, 141, 107);
-  transition: background .5s ease;
+label {
+  font-size: 15px;
+  font-weight: 400;
+  margin-top: 20px;
 }
 
 .checkbox {
@@ -62,8 +55,31 @@ h1 {
   padding: 0;
 }
 
+#login-button {
+  height: 36px;
+  color: white;
+  font-size: 15px;
+  background-color: rgb(116,166,127);
+  transition: background .5s ease;
+  border: none;
+  border-radius: 4px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+#login-button:hover {
+  background-color: rgb(97, 141, 107);
+  transition: background .5s ease;
+}
+
+span {
+  font-size: 15px;
+  font-weight: 400;
+}
+
 #register-button {
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
   color: rgb(97, 141, 107);
   background-color: white;
   border: none;
@@ -72,88 +88,3 @@ h1 {
 #register-button:hover {
   background-color: white;
 }
-
-
-
-
-/*
-#login-container {
-  display: flex;
-  flex-direction: column;
-  transform: translate(0, -10%);
-  width: 30vw;
-}
-
-p {
-  font-weight: 300;
-  color: rgb(0, 0, 0);
-  margin: 0;
-}
-
-#pw-p {
-  align-items: center;
-}
-
-input {
-  height: 40px;
-  font-size: 20px;
-  font-weight: 200;
-  color: rgb(0, 0, 0);
-  padding: 0px;
-  background-color: transparent;
-  border-top: none;
-  border-right: none;
-  border-left: none;
-  border-bottom: solid 1px rgb(255, 255, 255, 0.2);
-}
-
-input::placeholder {
-  color: grey;
-}
-
-input:focus {
-  outline: none;
-  border-bottom: solid 1px rgb(0, 0, 0);
-  transition: border .5s ease;
-}
-
-#pw-title-container {
-  height: min-content;
-  overflow:hidden;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 24px;
-}
-
-#forgot-button {
-  width: fit-content;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 300;
-  color: rgb(51,102,187);
-  background-color: transparent;
-  border: none;
-  padding: 0;
-}
-
-#forgot-button:hover {
-  text-decoration: underline;
-}
-
-#login-button {
-  height: 40px;
-  font-size: 16px;
-  font-weight: 300;
-  color: rgb(0, 0, 0);
-  background-color: transparent;
-  border: solid 1px rgb(0, 0, 0);
-  border-radius: 4px;
-  margin-top: 32px;
-}
-
-#login-button:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-  transition: background .5s ease;
-}
-*/

@@ -8,6 +8,9 @@ import { NavLink } from 'react-router-dom'
 // Component imports
 import Input from './reusable/input'
 
+// Function imports
+import Validate from '../functions/validate';
+
 class Login extends React.Component {
   // Declare initialState object where all values are empty
   initialState = {
@@ -41,12 +44,16 @@ class Login extends React.Component {
     // else window.location.replace('/')
   }
 
-  onChange() {
-
+  // When input value is changed
+  onChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value })
   }
 
-  onBlur() {
-
+  // When input focus is removed
+  onBlur = (field) => {
+    const touchedField = {...this.state.touched}
+    touchedField[field] = true
+    this.setState({ touched: touchedField })
   }
 
   render() {
@@ -60,10 +67,10 @@ class Login extends React.Component {
             <h1>Login</h1>
 
             { /* Email */ }
-            <Input onChange={ this.onChange } onBlur={ this.onBlur }></Input>
+            <Input type="email" onChange={ this.onChange } onBlur={ this.onBlur } error={ true }></Input>
 
             { /* Password */ }
-            <Input onChange={ this.onChange } onBlur={ this.onBlur }></Input>
+            <Input type="password" onChange={ this.onChange } onBlur={ this.onBlur } error={ true }></Input>
 
             { /* Remember me checkbox */ }
             <label>
@@ -71,39 +78,12 @@ class Login extends React.Component {
             </label>
 
             { /* Login button */ }
-            <button id="login-button">Log in</button>
+            <button id="login-button" onClick={ () => this.loginHandler() }>Login</button>
 
             { /* Register option */ }
             <span>Don't have an account?<button id="register-button">Register</button></span>
           </div>
         </div>
-
-        { /* <div id="login-container">
-          <h1>Sigma Labs</h1>
-
-          <p id="email-p">Email address</p>
-          <input
-            name="email"
-            type="email"
-            value={ this.state.email }
-            onChange={ (e) => this.setState({ email: e.target.value }) }>
-          </input>
-
-          <div id="pw-title-container">
-            <p id="pw-p">Password</p>
-            <button id="forgot-button">Forgot password?</button>
-          </div>
-
-          <input
-            id="pw-input"
-            name="password"
-            type="password"
-            value={ this.state.password }
-            onChange={ (e) => this.setState({ password: e.target.value }) }>
-          </input>
-
-          <button id="login-button" onClick={ () => this.loginHandler() }>Sign in</button>
-        </div> */ }
       </div>
     );
   }

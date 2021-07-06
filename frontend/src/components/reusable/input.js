@@ -4,15 +4,20 @@ import '../../css/input.css'
 // Render input using props
 const Input = (props) => {
   return (
-    <section className="email-input">
+    <div>
+      <p id="title">{ props.type }</p>
+
       <input
-        name="email" 
-        type="email" 
+        name={ props.type }
+        type={ props.type }
         className={ props.class }
         value={ props.email }
-        onBlur={ () => props.onBlur('email') }
-        onChange={ (e) => props.onChange(e) } />
-    </section>
+        onChange={ (e) => props.onChange(e) }
+        onBlur={ () => props.onBlur(props.type) } />
+
+      { /* If condition on the left is true, show element on the right */ }
+      { props.error && <p id="error">Error message</p> }
+    </div>
   )
 }
 

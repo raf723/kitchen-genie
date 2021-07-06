@@ -34,17 +34,6 @@ export function validateUsername(proposedName) {
     }
 }
 
-export async function isUsernameTaken(proposedName) {
-    if(proposedName) {
-      const existenceCheckResponse = await fetch(`http://localhost:8080/checkname/${proposedName}`)
-      const { nameExists } = await existenceCheckResponse.json()
-      this.setState({ isUsernameTaken: nameExists })
-      return nameExists
-    } else {
-      return false
-    }
-}
-
-export const Validate = { markTouched, validateEmail, validatePassword, validateUsername, isUsernameTaken }
+export const Validate = { markTouched, validateEmail, validatePassword, validateUsername }
 
 export default Validate
