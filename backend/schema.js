@@ -8,12 +8,10 @@ const DENO_ENV = Deno.env.get('DENO_ENV') ?? 'development'
 //configure path to environment file.
 config({ path: `./.env.${DENO_ENV}`, export: true })
 
-console.log(Deno.env.get("PORT"))
-
 //!Temporary hardocoded url. 
 // const PG_URL = 'postgres://xwwfuwxv:XeEM9GGiu8_guphTKafAevWvgtF5u8IY@rogue.db.elephantsql.com/xwwfuwxv'
 
-const client = new Client(PG_URL)
+const client = new Client(Deno.env.get('PG_URL'))
 
 await client.connect()
 
@@ -29,8 +27,8 @@ await client.queryObject(
     );`
 )
 
-await client.queryObject(
-    `CREATE TABLE users (
+await client.queryObject(`
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
@@ -41,16 +39,62 @@ await client.queryObject(
     );`
 )
 
-await client.queryObject(
-    `CREATE TABLE sessions (
+await client.queryObject(`
+    CREATE TABLE sessions (
         uuid TEXT PRIMARY KEY
         created_at TIMESTAMP NOT NULL,
-        user_id INTEGER
+        expiry_date TIMESTAMP NOT NULL,
+        user_id INTEGER,
         FOREIGN KEY (user_id) REFERENCES users(id)
     );`
 )
 
-awa
+await client.queryObject(`
+    CREATE TABLE rating (
+        id SERIAL PRIMARY KEY,
+        rating INT NOT NULL,
+        CHECK (rating BETWEEN 1 AND 5),
+        created_at TIMESTAMP NOT NULL,
+        updated_at TIMESTAMP NOT NULL,
+        user_id INTEGER,
+        FOREIGN KEY(user_id) REFERENCES users(id)
+    );`
+)
 
 
+await client.queryObject(`
+    CREATE TABLE saved_recipes (
+        id SERIAL PRIMARY KEY,
+        created_at TIMESTAMP NOT NULL,
+        updated_at TIMESTAMP NOT NULL,
+        active BOOLEAN NOT NULL,
+        recipe_id INTEGER,
+        FOREIGN KEY(recipe_id) REFERENCES recipes(id)
+    );`
+)
 
+await client.queryObject(`
+    CREATE TABLE comments (
+        id SERIAL PRIMARY KEY,
+        created_at TIMESTAMP NOT NULL,
+        updated_at TIMESTAMP NOT NULL,
+        comment TEXT NOT NULL,
+        recipe_id INTEGER,
+        FORIEGN KEY(recipe_id) REFERENCES recipes(id)
+    );`
+)
+
+
+await client.queryObject(`
+        CREATE TABLE comment_votes (
+            id SERIAL PRIMARY KEY,
+            direction TEXT NOT NULL DEFAULT 'up',
+            created_at TIMESTAMP NOT NULL,
+            updated_at TIMESTAMP NOT NULL,
+            user_id INTEGER,
+            comment_id INTEGER,
+            FOREIGN KEY(user_id) REFERENCES users(id),
+            FOREIGN KEY(comment_id) REFERENCES comments(id)
+        );
+    `
+)
