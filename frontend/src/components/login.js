@@ -24,7 +24,7 @@ class Login extends React.Component {
   // Set state to initialState
   state = this.initialState
 
-  // When user clicks login
+  // When user logs in
   loginHandler = async() => {
     const { email, password, remember } = this.state
 
