@@ -1,77 +1,94 @@
 import React from 'react'
 import '../css/register.css'
-
-// Routing imports
-import { NavLink } from 'react-router-dom'
+import EmailInput from './form-components/EmailInput'
+import PasswordInput from './form-components/PasswordInput'
+import PasswordConfirmation from './form-components/PasswordConfirmation'
+import FormFuncs from '../function-assets/FormFuncs'
+import splash from '../splash.jpeg';
 
 class Register extends React.Component {
   // Declare initialState object where all values are empty
   initialState = {
     email: '',
     password: '',
-    confirmPassword: '',
+    confirmationPassword: '',
     touched: {
-      email: false, password: false, confirmPassword: false
+      email: false, password: false, confirmationPassword: false
     }
   }
 
   // Set state to initialState
   state = this.initialState
+  markTouched = FormFuncs.markTouched.bind(this)
+  isEmailValid = FormFuncs.isEmailValid
+  validatePassword = FormFuncs.validatePassword
 
-  // When user clicks login
-  signupHandler = async() => {
-    const { email, password } = this.state
+  areAllFieldsValid() {
+   const {email, password, confirmationPassword} = this.state
+   return( this.isEmailValid(email) 
+          && this.validatePassword(password).bool
+          && password === confirmationPassword )
+  }
 
-    // POST request to server
-    const response = await fetch(`http://localhost:8080/register`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, password: password })
-    })
-    
-    // Server response
-    const { errorMessage } = await response.json()
-    
-    // Display alert if signup error, else redirect to homepage
-    if (errorMessage !== '') alert(errorMessage)
-    // else window.location.replace('/')
+  // // When user clicks login
+  async signupHandler(form) {
+    form.preventDefault()
+
+    if(this.areAllFieldsValid()){
+      const { email, password } = this.state
+      // POST request to server
+      const response = await fetch(`http://localhost:8080/register`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, password: password })
+      })
+
+      // Server response
+      const { errorMessage } = await response.json()
+      
+      // Display alert if signup error, else redirect to homepage
+      if (errorMessage !== '') alert(errorMessage)
+      // else window.location.replace('/')
+    }
   }
 
   render() {
+    const {email, password, confirmationPassword, touched} = this.state
+    const passwordValidity = this.validatePassword(password)
     return (
       <div className="page-container">
-        <div id="signup-container">
-          <h1>Register</h1>
+        <div id="registration-container">
+            <h1>Register</h1>
+            <form id="form-container" onSubmit={(e) => this.signupHandler(e)}>
+              <EmailInput email={email}
+                isTouched={touched.email} 
+                isEmailValid={this.isEmailValid(email)}
+                onBlur={() => {this.markTouched('email')}}
+                onChange={(e) => this.setState({email: e.target.value})}/>
 
-          <p id="email-p">Email address</p>
-          <input
-            name="email"
-            type="email"
-            value={ this.state.email }
-            onChange={ (e) => this.setState({ email: e.target.value }) }>
-          </input>
+              <PasswordInput password={password}
+                isTouched={touched.password}
+                isPasswordValid={passwordValidity.bool}
+                errorMsg={passwordValidity.msg}
+                onBlur={() => {this.markTouched('password')}}
+                onChange={(e) => this.setState({password: e.target.value})}/>
 
-          <p id="pw-p" className="input-title">Password</p>
-          <input
-            id="pw-input"
-            name="password"
-            type="password"
-            value={ this.state.password }
-            onChange={ (e) => this.setState({ password: e.target.value }) }>
-          </input>
-
-          <p id="confirm-p" className="input-title">Confirm password</p>
-          <input
-            id="confirm-input"
-            name="confirmPassword"
-            type="password"
-            value={ this.state.confirmPassword }
-            onChange={ (e) => this.setState({ confirmPassword: e.target.value }) }>
-          </input>
-
-          <button id="signup-button" onClick={ () => this.signupHandler() }>Register</button>
+              <PasswordConfirmation confirmationPassword={confirmationPassword}
+                password={password}
+                isTouched={touched.confirmationPassword}
+                isPasswordValid={passwordValidity.bool}
+                onBlur={() => {this.markTouched('confirmationPassword')}}
+                onChange={(e) => {this.setState({confirmationPassword: e.target.value})}}/>
+              <button id="register-button"
+                  type='submit' 
+                  disabled={!this.areAllFieldsValid()} 
+                  className={this.areAllFieldsValid()? "submit-button" : "disabled-submit-button"}>
+              Register
+              </button>
+          </form>
         </div>
+        <img id="splash-img" src={ splash } alt="splash"/>
       </div>
     );
   }

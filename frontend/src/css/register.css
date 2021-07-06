@@ -4,90 +4,77 @@
 
 .page-container {
   height: 100vh;
-  overflow-x: hidden;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow-x: hidden;
 }
 
-#signup-container {
+#splash-img {
+  height: 100%;
+  width: 52%;
+  margin-right: 0;
+  margin-left: auto;
+  object-fit: cover;
+}
+
+#registration-container {
   display: flex;
   flex-direction: column;
-  transform: translate(0, -10%);
-  width: 30vw;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-color: white;
 }
 
-h1 {
-  text-align: center;
-  font-size: 72px;
-  color: white;
+#registration-container h1 {
+  text-align: left;
+  font-size: 40px;
+  color: rgb(116,166,127);
+  margin: 0;
   margin-bottom: 40px;
 }
 
-p {
-  font-weight: 300;
-  color: white;
-  margin: 0;
+#form-container {
+  display: flex;
+  flex-direction: column;
+  height: 60%;
+  width: 80%;
 }
 
-#pw-p {
-  align-items: center;
-}
-
-input {
-  height: 40px;
-  font-size: 20px;
-  font-weight: 200;
-  color: white;
-  padding: 0px;
-  background-color: transparent;
-  border-top: none;
-  border-right: none;
-  border-left: none;
-  border-bottom: solid 1px rgb(255, 255, 255, 0.2);
-}
-
-input::placeholder {
-  color: grey;
+.email-input input, .password-input input, .password-confirmation-input input {
+  display: block;
+  height: 32px;
+  width: 100%;
+  color: rgb(50, 50, 50);
+  font-weight: 400;
+  font-size: 16px;
+  border: solid 2px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  transition: border .5s ease;
+  padding-left: 8px;
+  margin-bottom: 40px;
 }
 
 input:focus {
   outline: none;
-  border-bottom: solid 1px rgb(255, 255, 255, 1.0);
+  border: solid 2px rgb(116,166,127);
   transition: border .5s ease;
 }
 
-.input-title {
-  margin-top: 24px;
-}
-
-#forgot-button {
-  width: fit-content;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 300;
-  color: rgb(51,102,187);
-  background-color: transparent;
-  border: none;
-  padding: 0;
-}
-
-#forgot-button:hover {
-  text-decoration: underline;
-}
-
-#signup-button {
-  height: 40px;
-  font-size: 16px;
-  font-weight: 300;
+#register-button {
+  height: 36px;
   color: white;
-  background-color: transparent;
-  border: solid 1px white;
+  background-color: rgb(116,166,127);
+  transition: background .5s ease;
+  border: none;
   border-radius: 4px;
-  margin-top: 32px;
 }
 
-#signup-button:hover {
-  background-color: rgb(199, 69, 9);
+#register-button:hover {
+  background-color: rgb(97, 141, 107);
   transition: background .5s ease;
+}
+
+.error-message {
+  color: brown;
 }
