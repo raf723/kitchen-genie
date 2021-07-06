@@ -9,13 +9,13 @@ import { NavLink } from 'react-router-dom'
 import Input from './reusable/input'
 
 // Function imports
-import Validate from '../function-assets/validate';
 
 class Login extends React.Component {
   // Declare initialState object where all values are empty
   initialState = {
     email: '',
     password: '',
+    remember: false,
     touched: {
       email: false, password: false
     }
@@ -26,14 +26,14 @@ class Login extends React.Component {
 
   // When user clicks login
   loginHandler = async() => {
-    const { email, password } = this.state
+    const { email, password, remember } = this.state
 
     // POST request to server
     const response = await fetch(`http://localhost:8080/login`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, password: password })
+      body: JSON.stringify({ email: email, password: password, remember: remember })
     })
     
     // Server response
@@ -67,21 +67,21 @@ class Login extends React.Component {
             <h1>Login</h1>
 
             { /* Email */ }
-            <Input type="email" onChange={ this.onChange } onBlur={ this.onBlur } error={ true }></Input>
+            <Input type="email" onChange={ this.onChange } onBlur={ this.onBlur } error={ false }></Input>
 
             { /* Password */ }
-            <Input type="password" onChange={ this.onChange } onBlur={ this.onBlur } error={ true }></Input>
+            <Input type="password" onChange={ this.onChange } onBlur={ this.onBlur } error={ false }></Input>
 
             { /* Remember me checkbox */ }
             <label>
-              <input className="checkbox" name="remember" type="checkbox"/> Remember me?
+              <input className="checkbox" name="remember" type="checkbox" onChange={ (e) => this.setState({ remember: e.target.checked }) }/> Remember me?
             </label>
 
             { /* Login button */ }
             <button id="login-button" onClick={ () => this.loginHandler() }>Login</button>
 
             { /* Register option */ }
-            <span>Don't have an account?<button id="register-button">Register</button></span>
+            <span>Don't have an account? Register <NavLink id="register-button" exact to="/register">here</NavLink></span>
           </div>
         </div>
       </div>

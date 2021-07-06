@@ -4,33 +4,35 @@
 }
 
 .page-container {
-  height: 100vh;
-  overflow-x: hidden;
+  height: 100%;
 }
 
 #splash-img {
-  height: 100%;
+  height: auto;
+  width: 56%;
   margin-left: 0;
-  margin-right: auto;
   object-fit: cover;
+  object-position: left;
 }
 
 #login-container {
-  position: absolute;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
-  width: 42%;
-  right: 0;
+  width: 100%;
+  margin-right: 0;
+  margin-left: auto;
   background-color: white;
 }
 
 #form-container {
   display: flex;
   flex-direction: column;
-  height: 60%;
-  width: 80%;
+  height: auto;
+  width: 74%;
+  transform: translate(0, -5%);
 }
 
 h1 {
@@ -56,7 +58,8 @@ label {
 }
 
 #login-button {
-  height: 36px;
+  height: 40px;
+  width: 100%;
   color: white;
   font-size: 15px;
   background-color: rgb(116,166,127);
@@ -78,6 +81,7 @@ span {
 }
 
 #register-button {
+  text-decoration: none;
   font-size: 15px;
   font-weight: 500;
   color: rgb(97, 141, 107);
@@ -86,5 +90,6 @@ span {
 }
 
 #register-button:hover {
+  text-decoration: underline;
   background-color: white;
 }

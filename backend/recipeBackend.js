@@ -40,7 +40,7 @@ app
   //------------------------- Login handler -------------------------//
   .post('/login', async (server) => {
     // Get email and password from front-end
-    const { email, password } = await server.body
+    const { email, password, remember } = await server.body
 
     // Dynamic block-scope variable to pass to front-end via server response
     let errorMessage = ''
@@ -83,13 +83,15 @@ app
       // Store uuid in sessions
       client.queryObject("INSERT INTO sessions (uuid, user_id, created_at) VALUES ($1, $2, NOW())", sessionId, userID ).rows
       
-      // Set cookie
-      server.setCookie({
-        name: "sessionId",
-        value: sessionId,
-        expires: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
-        path: "/"
-      })
+      // Set cookie if user checked 'Remember me'
+      if (remember) {
+        server.setCookie({
+          name: "sessionId",
+          value: sessionId,
+          expires: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+          path: "/"
+        })
+      }
     } else {
       // Reset global variable, userID
       userID = ''
