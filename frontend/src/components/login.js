@@ -41,9 +41,21 @@ class Login extends React.Component {
   render() {
     return (
       <div className="page-container">
-        <img src={ splash }/>
+        <img id="splash-img" src={ splash } alt="splash"/>
 
-        <div id="container-one"></div>
+        <div id="login-container">
+          <div id="form-container">
+            <h1>Log in</h1>
+
+            <label>
+              <input name="remember" type="checkbox"/> Remember me?
+            </label>
+
+            <button id="login-button">Log in</button>
+
+            <span>Don't have an account?<button id="signup-button">Sign up</button></span>
+          </div>
+        </div>
 
         { /* <div id="login-container">
           <h1>Sigma Labs</h1>
