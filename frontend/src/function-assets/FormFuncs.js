@@ -10,15 +10,21 @@ export function markTouched(field) {
 } 
 
 export function isEmailValid(email) {
-    const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
     return emailPattern.test(email)
 }
 
 export function validatePassword(password) {
     if (password.length < 8){
       return { bool: false, msg: "Password must be at least 8 characters long!" }
+    } else if (!password.match(/[a-z]/)) {
+      return { bool: false, msg: "Password must include at least one lowercase letter!" }
+    } else if (!password.match(/[A-Z]/)) {
+      return { bool: false, msg: "Password must include at least one uppercase letter!" }
     } else if (!includesNumber(password)) {
       return { bool: false, msg: "Password must include at least one numeric character!" }
+    } else if (!password.match(/[.!#$%&'*+/=?^_`{|}~-]/)) {
+      return { bool: false, msg: "Password must include at least one special character!" }
     } else {
       return { bool: true, msg: "" }
     }
