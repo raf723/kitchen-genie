@@ -3,7 +3,7 @@ import '../css/register.css'
 import EmailInput from './form-components/EmailInput'
 import PasswordInput from './form-components/PasswordInput'
 import PasswordConfirmation from './form-components/PasswordConfirmation'
-import FormFuncs from '../function-assets/FormFuncs'
+import formFunctions from '../function-assets/formFunctions'
 import splash from '../splash.jpeg';
 
 class Register extends React.Component {
@@ -19,9 +19,9 @@ class Register extends React.Component {
 
   // Set state to initialState
   state = this.initialState
-  markTouched = FormFuncs.markTouched.bind(this)
-  isEmailValid = FormFuncs.isEmailValid
-  validatePassword = FormFuncs.validatePassword
+  markTouched = formFunctions.markTouched.bind(this)
+  isEmailValid = formFunctions.isEmailValid
+  validatePassword = formFunctions.validatePassword
 
   areAllFieldsValid() {
    const {email, password, confirmationPassword} = this.state
