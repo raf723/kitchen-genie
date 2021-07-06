@@ -1,41 +1,66 @@
-export function stringToDecimal(str) {
-    if (typeof str !== 'string') {
-        throw new TypeError(`A string representing a decimal integer must be passed to stringToDecimal!`)
-    }
-    try {
-        return parseInt(str || 0, 10)
-    } catch {
-        throw new Error(`Error converting variable ${Object.keys({str})[0]} to integer!`)
+/* A Library of boilerplate methods for forms with certain types of components */
+
+import { includesNumber } from "./helpers"
+
+//A boilerplate method for forms with touced field in state
+export function markTouched(field) {
+    let newTouched = {...this.state.touched}
+    newTouched[field] = true
+    this.setState({ touched: newTouched })
+} 
+
+export function isEmailValid(email) {
+    const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
+    return emailPattern.test(email)
+}
+
+export function validatePassword(password) {
+    if (password.length < 8){
+      return { bool: false, msg: "Password must be at least 8 characters long!" }
+    } else if (!password.match(/[a-z]/)) {
+      return { bool: false, msg: "Password must include at least one lowercase letter!" }
+    } else if (!password.match(/[A-Z]/)) {
+      return { bool: false, msg: "Password must include at least one uppercase letter!" }
+    } else if (!includesNumber(password)) {
+      return { bool: false, msg: "Password must include at least one numeric character!" }
+    } else if (!password.match(/[.!#$%&'*+/=?^_`{|}~-]/)) {
+      return { bool: false, msg: "Password must include at least one special character!" }
+    } else {
+      return { bool: true, msg: "" }
     }
 }
 
-export function includesNumber(str) {
-    const charArray = str.split('')
-    const numeralArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
-    return charArray.some((char) => numeralArray.includes(char))
-}
-
-//Snippet from https://www.w3schools.com/js/js_cookies.asp
-export function setCookie(cname, cvalue, exdays) {
-    const d = new Date()
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000))
-    let expires = "expires=" + d.toUTCString()
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/"
-}
-export function getCookie(cname) {
-    let name = cname + "="
-    let ca = document.cookie.split(';')
-    for(let i = 0; i < ca.length; i++) {
-      let c = ca[i]
-      while (c.charAt(0) === ' ') {
-        c = c.substring(1)
-      }
-      if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length)
-      }
+export function validateUsername(proposedName) {
+    if(proposedName.length === 0) {
+      return { bool: false, msg: "Username must be provided!" }
+    } else if (proposedName.length > 50) {
+      return { bool: false, msg: "Username must be less than 50 characters long!" }
+    } else {
+      return { bool: true, msg: "" }
     }
-    return ""
 }
 
-export const helpers = { stringToDecimal, includesNumber, getCookie, setCookie }
-export default helpers
+export async function isUsernameTaken(proposedName) {
+    if(proposedName) {
+      const existenceCheckResponse = await fetch(`http://localhost:8080/checkname/${proposedName}`)
+      const { nameExists } = await existenceCheckResponse.json()
+      this.setState({ isUsernameTaken: nameExists })
+      return nameExists
+    } else {
+      return false
+    }
+}
+
+export function validateTitle(proposedTitle) {
+    if (proposedTitle.length === 0) {
+        return { bool: false, msg: "Title must be given!" }
+    } else if (proposedTitle.length > 200) {
+        return { bool: false, msg: "Title is too long!" }
+    } else {
+        return { bool: true, msg: "" }
+    }
+}
+
+export const FormFuncs = { markTouched, isEmailValid, validatePassword, validateUsername, isUsernameTaken, validateTitle }
+
+export default FormFuncs
