@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom'
 import Input from './reusable/input'
 
 // Function imports
-import Validate from '../functions/validate';
+import Validate from '../function-assets/validate';
 
 class Login extends React.Component {
   // Declare initialState object where all values are empty
