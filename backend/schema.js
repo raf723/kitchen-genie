@@ -11,12 +11,14 @@ const client = new Client(Deno.env.get("PG_URL"))
 //Connect to db.
 await client.connect()
 
+//Todo: if exits drop table. 
+
 //Create recipe table.
 await client.queryObject(
 `CREATE TABLE IF NOT EXISTS recipes (
     id SERIAL PRIMARY KEY,
     name TEXT UNIQUE NOT NULL,
-    instructions TEXT UNIQUE NOT NULL,
+    instructions TEXT NOT NULL,
     ingredients TEXT NOT NULL,
     tags TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
@@ -34,9 +36,12 @@ CREATE TABLE IF NOT EXISTS users (
     salt TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
-    );`
-)
+    );
 
+    CREATE INDEX email_index ON users(email);
+    CREATE INDEX username_index ON users(username);`  
+ )
+  
 //Create sessions table/
 await client.queryObject(`
     CREATE TABLE IF NOT EXISTS sessions (
@@ -68,8 +73,10 @@ await client.queryObject(`
         created_at TIMESTAMP NOT NULL,
         updated_at TIMESTAMP NOT NULL,
         active BOOLEAN NOT NULL,
-        recipe_id INTEGER,
-        FOREIGN KEY(recipe_id) REFERENCES recipes(id)
+        recipe_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        FOREIGN KEY(recipe_id) REFERENCES recipes(id),
+        FOREIGN KEY(user_id) REFERENCES users(id)
     );`
 )
 
@@ -80,8 +87,10 @@ await client.queryObject(`
         created_at TIMESTAMP NOT NULL,
         updated_at TIMESTAMP NOT NULL,
         comment TEXT NOT NULL,
-        recipe_id INTEGER,
-        FOREIGN KEY(recipe_id) REFERENCES recipes(id)
+        recipe_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        FOREIGN KEY(recipe_id) REFERENCES recipes(id),
+        FOREIGN KEY(user_id) REFERENCES users(id)
     );`
 )
 
