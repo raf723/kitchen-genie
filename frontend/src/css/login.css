@@ -37,6 +37,7 @@ h1 {
   font-size: 40px;
   color: rgb(50, 50, 50);
   margin: 0;
+  margin-bottom: 40px;
 }
 
 #login-button {
@@ -53,19 +54,22 @@ h1 {
   transition: background .5s ease;
 }
 
-input {
+.checkbox {
+  display: inline;
   height: 12px;
+  width: fit-content;
   margin: 0;
   padding: 0;
 }
 
-#signup-button {
+#register-button {
   font-weight: 600;
-  background-color: white;
   color: rgb(97, 141, 107);
+  background-color: white;
+  border: none;
 }
 
-#signup-button:hover {
+#register-button:hover {
   background-color: white;
 }
 

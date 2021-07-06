@@ -1,0 +1,19 @@
+input {
+  display: block;
+  height: 32px;
+  width: 100%;
+  color: rgb(50, 50, 50);
+  font-weight: 400;
+  font-size: 16px;
+  border: solid 2px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  transition: border .5s ease;
+  padding-left: 8px;
+  margin-bottom: 40px;
+}
+
+input:focus {
+  outline: none;
+  border: solid 2px rgb(116,166,127);
+  transition: border .5s ease;
+}

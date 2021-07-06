@@ -5,6 +5,9 @@ import splash from '../splash.jpeg';
 // Routing imports
 import { NavLink } from 'react-router-dom'
 
+// Component imports
+import Input from './reusable/input'
+
 class Login extends React.Component {
   // Declare initialState object where all values are empty
   initialState = {
@@ -38,22 +41,40 @@ class Login extends React.Component {
     // else window.location.replace('/')
   }
 
+  onChange() {
+
+  }
+
+  onBlur() {
+
+  }
+
   render() {
     return (
       <div className="page-container">
+        { /* Splash background */ }
         <img id="splash-img" src={ splash } alt="splash"/>
 
         <div id="login-container">
           <div id="form-container">
-            <h1>Log in</h1>
+            <h1>Login</h1>
 
+            { /* Email */ }
+            <Input onChange={ this.onChange } onBlur={ this.onBlur }></Input>
+
+            { /* Password */ }
+            <Input onChange={ this.onChange } onBlur={ this.onBlur }></Input>
+
+            { /* Remember me checkbox */ }
             <label>
-              <input name="remember" type="checkbox"/> Remember me?
+              <input className="checkbox" name="remember" type="checkbox"/> Remember me?
             </label>
 
+            { /* Login button */ }
             <button id="login-button">Log in</button>
 
-            <span>Don't have an account?<button id="signup-button">Sign up</button></span>
+            { /* Register option */ }
+            <span>Don't have an account?<button id="register-button">Register</button></span>
           </div>
         </div>
 
