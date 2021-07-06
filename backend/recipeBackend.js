@@ -37,9 +37,7 @@ let userID = ''
 app
   .use(cors({ allowHeaders: headersWhiteList, allowCredentials: true, allowOrigins: [Deno.env.get("ALLOWED_ORIGINS")] }))
 
-
-
-    //------------------------- Login handler -------------------------//
+  //------------------------- Login handler -------------------------//
   .post('/login', async (server) => {
     // Get email and password from front-end
     const { email, password } = await server.body
