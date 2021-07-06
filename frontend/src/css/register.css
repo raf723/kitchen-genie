@@ -1,0 +1,93 @@
+.page-container * {
+  font-family: 'Poppins', sans-serif;
+}
+
+.page-container {
+  height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#signup-container {
+  display: flex;
+  flex-direction: column;
+  transform: translate(0, -10%);
+  width: 30vw;
+}
+
+h1 {
+  text-align: center;
+  font-size: 72px;
+  color: white;
+  margin-bottom: 40px;
+}
+
+p {
+  font-weight: 300;
+  color: white;
+  margin: 0;
+}
+
+#pw-p {
+  align-items: center;
+}
+
+input {
+  height: 40px;
+  font-size: 20px;
+  font-weight: 200;
+  color: white;
+  padding: 0px;
+  background-color: transparent;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: solid 1px rgb(255, 255, 255, 0.2);
+}
+
+input::placeholder {
+  color: grey;
+}
+
+input:focus {
+  outline: none;
+  border-bottom: solid 1px rgb(255, 255, 255, 1.0);
+  transition: border .5s ease;
+}
+
+.input-title {
+  margin-top: 24px;
+}
+
+#forgot-button {
+  width: fit-content;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 300;
+  color: rgb(51,102,187);
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+#forgot-button:hover {
+  text-decoration: underline;
+}
+
+#signup-button {
+  height: 40px;
+  font-size: 16px;
+  font-weight: 300;
+  color: white;
+  background-color: transparent;
+  border: solid 1px white;
+  border-radius: 4px;
+  margin-top: 32px;
+}
+
+#signup-button:hover {
+  background-color: rgb(199, 69, 9);
+  transition: background .5s ease;
+}
