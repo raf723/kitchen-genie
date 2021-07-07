@@ -7,7 +7,7 @@
   margin-bottom: 4px;
 }
 
-input {
+.form-input {
   display: block;
   height: 32px;
   width: 97%;
@@ -20,14 +20,14 @@ input {
   padding-left: 8px;
 }
 
-input:focus {
+.form-input:focus {
   outline: none;
   border: solid 2px rgb(116,166,127);
   transition: border .5s ease;
 }
 
 /* Border color? */
-input:-webkit-autofill {
+.form-input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
