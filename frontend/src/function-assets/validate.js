@@ -51,16 +51,17 @@ export async function isUsernameTaken(proposedName) {
     }
 }
 
-export function validateTitle(proposedTitle) {
-    if (proposedTitle.length === 0) {
-        return { bool: false, msg: "Title must be given!" }
-    } else if (proposedTitle.length > 200) {
-        return { bool: false, msg: "Title is too long!" }
+export async function isEmailTaken(email) {
+    if(email) {
+      const existenceCheckResponse = await fetch(`http://localhost:8080/checkemail/${email}`)
+      const { emailExists } = await existenceCheckResponse.json()
+      this.setState({ isEmailTaken: emailExists })
+      return emailExists
     } else {
-        return { bool: true, msg: "" }
+      return false
     }
 }
 
-export const validate = { markTouched, isEmailValid, validatePassword, validateUsername, isUsernameTaken, validateTitle }
+export const validate = { markTouched, isEmailValid, validatePassword, validateUsername, isUsernameTaken, isEmailTaken }
 
 export default validate

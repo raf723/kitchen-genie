@@ -41,7 +41,7 @@
   width: 80%;
 }
 
-.email-input input, .password-input input, .password-confirmation-input input {
+.email-input input, .password-input input, .password-confirmation-input input, .username-input input {
   display: block;
   height: 32px;
   width: 100%;
