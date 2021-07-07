@@ -25,12 +25,6 @@ function getSuggestions(value) {
   return ingredients.filter(ingredient => regex.test(ingredient.name)).slice(0, 4)
 }
 
-// Set input value to selected suggestion
-const getSuggestionValue = suggestion => suggestion.name
-
-// Render element for each suggestion
-const renderSuggestion = suggestion => <span className="suggestion-span">{ suggestion.name }</span>
-
 
 
 //------------------------------ Home component ------------------------------//
@@ -38,7 +32,8 @@ class Home extends React.Component {
   // Declare initialState object where all values are empty
   initialState = {
     value: '',
-    suggestions: []
+    suggestions: [],
+    ingredients: []
   }
 
   // Set state to initialState
@@ -48,6 +43,12 @@ class Home extends React.Component {
   onChange = (event, { newValue, method }) => {
     this.setState({ value: newValue })
   }
+
+  // Set input value to selected suggestion
+  getSuggestionValue = suggestion => suggestion.name
+
+  // Render element for each suggestion
+  renderSuggestion = suggestion => <span className="suggestion-span">{ suggestion.name }</span>
 
   // Set state of suggestions to filtered array
   onSuggestionsFetchRequested = ({ value }) => {
@@ -88,8 +89,8 @@ class Home extends React.Component {
             suggestions={ suggestions }
             onSuggestionsFetchRequested={ this.onSuggestionsFetchRequested }
             onSuggestionsClearRequested={ this.onSuggestionsClearRequested }
-            getSuggestionValue={ getSuggestionValue }
-            renderSuggestion={ renderSuggestion }
+            getSuggestionValue={ this.getSuggestionValue }
+            renderSuggestion={ this.renderSuggestion }
             inputProps={ inputProps } />
           
           <button onClick={ () => this.searchHandler() }>GO</button>
