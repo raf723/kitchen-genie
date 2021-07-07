@@ -23,7 +23,7 @@ export function validatePassword(password) {
       return { bool: false, msg: "Password must include at least one uppercase letter!" }
     } else if (!includesNumber(password)) {
       return { bool: false, msg: "Password must include at least one numeric character!" }
-    } else if (!password.match(/[.!#$%&'*+/=?^_`{|}~-]/)) {
+    } else if (!password.match(/[^A-Za-z0-9]/)) {
       return { bool: false, msg: "Password must include at least one special character!" }
     } else {
       return { bool: true, msg: "" }
@@ -61,6 +61,6 @@ export function validateTitle(proposedTitle) {
     }
 }
 
-export const FormFuncs = { markTouched, isEmailValid, validatePassword, validateUsername, isUsernameTaken, validateTitle }
+export const validate = { markTouched, isEmailValid, validatePassword, validateUsername, isUsernameTaken, validateTitle }
 
-export default FormFuncs
+export default validate
