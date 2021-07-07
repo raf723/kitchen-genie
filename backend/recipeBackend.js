@@ -11,6 +11,7 @@ import { v4 } from 'https://deno.land/std/uuid/mod.ts'
 // Database imports
 import { Client } from "https://deno.land/x/postgres@v0.11.3/mod.ts"
 import { config } from 'https://deno.land/x/dotenv/mod.ts'
+
 import verify from './function-assets/verify'
 
 // Envirionment setup
@@ -35,8 +36,7 @@ const headersWhiteList = [
 let authenticated = false
 let userID = ''
 
-//Some useful functions
-
+//------------------------- Useful Functions -------------------------//
 //Authentication functions
 const universalSalt = "$2a$08$a1eVke4/bxYSkIJhBT6rcu"
 async function encryptPassword(password, salt="") {
@@ -76,7 +76,7 @@ export async function addUser(email, password, name) {
   try {
     const encryption = await encryptPassword(password)
     await client.queryObject(`INSERT INTO users (username, email, encrypted_password, salt, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, datetime('now'), datetime('now'));`, username, email, encryption.password, encryption.salt)
+      VALUES ($1, $2, $3, $4, NOW(), NOW();`, username, email, encryption.password, encryption.salt)
       return true
   } catch(error) {
     return false 
