@@ -1,3 +1,4 @@
+/* ==================== General ==================== */
 .home-container * {
   font-family: 'Poppins', sans-serif;
   color: rgb(50, 50, 50);
@@ -20,6 +21,9 @@
   margin-top: 2%;
 }
 
+
+
+/* ==================== Search ==================== */
 #search-container {
   position: relative;
   width: 46%;
@@ -28,6 +32,7 @@
   margin-top: 40px;
 }
 
+/* Container's child divs i.e. Autosuggest input's div */
 #search-container div {
   width: 80%;
 }
@@ -50,11 +55,12 @@
   transition: border .5s ease;
 } */
 
-/* Border color? */
+/* Input after autocomplete */
 .home-container input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
+/* Search button */
 #search-container button {
   height: 44px;
   width: 12%;
@@ -66,12 +72,16 @@
   transition: background .5s ease;
 }
 
+/* Search button hovered */
 #search-container button:hover {
   color: white;
   background-color: rgb(116,166,127);
   transition: background .5s ease;
 }
 
+
+
+/* ==================== Random recipe generator ==================== */
 #random-recipe-button {
   font-size: 16px;
   color: rgb(116,166,127);
@@ -84,14 +94,16 @@
   text-decoration: underline;
 }
 
-#react-autowhatever-1 {
-  width: 102.7% !important;
-}
 
+
+/* ==================== Autosuggest ==================== */
+
+/* Autosuggest container */
 .react-autosuggest__container {
   position: relative;
 }
 
+/* Autosuggest input */
 .react-autosuggest__input {
   height: 40px;
   width: 100%;
@@ -103,19 +115,28 @@
   border-radius: 20px;
 }
 
+/* Autosuggest input focused */
 .react-autosuggest__input--focused {
   outline: none;
 }
 
+/* Autosuggest input when suggestions container open */
 .react-autosuggest__input--open {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
+/* Suggestions container */
+#react-autowhatever-1 {
+  width: 102.7% !important;
+}
+
+/* Suggestions container */
 .react-autosuggest__suggestions-container {
   display: none;
 }
 
+/* Suggestions container open */
 .react-autosuggest__suggestions-container--open {
   display: block;
   position: absolute;
@@ -132,23 +153,27 @@
   z-index: 2;
 }
 
+/* Suggestion ul */
 .react-autosuggest__suggestions-list {
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
 
+/* Suggest li */
 .react-autosuggest__suggestion {
   cursor: pointer;
   padding: 8px 12px;
 }
 
+/* Suggestion hover */
 .react-autosuggest__suggestion--highlighted {
   background-color: rgba(116, 166, 127, 0.2);
   margin: 0px 6px;
   border-radius: 12px;
 }
 
+/* Suggestion span (text) */
 .suggestion-span {
   font-size: 14px;
   font-weight: 300;
