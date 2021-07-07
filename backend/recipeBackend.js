@@ -72,7 +72,7 @@ async function getUser({email: undefined, userID: undefined, username: undefined
 }
 
 //Function to add a user to the users table of the database
-export async function addUser(email, password, name) {
+export async function addUser(email, password, username) {
   try {
     const encryption = await encryptPassword(password)
     await client.queryObject(`INSERT INTO users (username, email, encrypted_password, salt, created_at, updated_at)
