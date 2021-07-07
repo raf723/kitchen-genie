@@ -8,9 +8,9 @@ const Input = (props) => {
       <p id="title">{ props.type }</p>
 
       <input
+        className="form-input"
         name={ props.type }
         type={ props.type }
-        className={ props.class }
         value={ props.email }
         onChange={ (e) => props.onChange(e) }
         onBlur={ () => props.onBlur(props.type) } />

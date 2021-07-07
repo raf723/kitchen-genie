@@ -38,10 +38,8 @@ class Register extends React.Component {
           && this.validateUsername(username).bool )
   }
 
-  // // When user clicks login
   async signupHandler(form) {
     form.preventDefault()
-
     if(this.areAllFieldsValid()){
       const { email, username, password } = this.state
 
