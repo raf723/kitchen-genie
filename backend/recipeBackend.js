@@ -12,8 +12,8 @@ import { v4 } from 'https://deno.land/std/uuid/mod.ts'
 import { Client } from "https://deno.land/x/postgres@v0.11.3/mod.ts"
 import { config } from 'https://deno.land/x/dotenv/mod.ts'
 
-import verify from './function-assets/verify'
-import { addUser, getUser, isRegisteredUser, encryptPassword } from './function-assets/serverFunctions' 
+import {addUser, getUser, isRegisteredUser, encryptPassword} from './function-assets/serverFunctions.js' 
+import verify from './function-assets/verify.js'
 
 // Envirionment setup
 const DENO_ENV = Deno.env.get('DENO_ENV') ?? 'development'
@@ -112,11 +112,13 @@ app
 
     if(verify.isEmailValid(email) && verify.isPasswordValid(password) && verify.isUsernameValid(username, true)) {
         username = username.trim()
+        email = email.trim()
         if (await getUser({ email })) {
             //Error:Already a user
             server.json({ response:`already registered` })
         } else {
             //All good
+            console.log('All good')
             await addUser(email, password, username)
             server.json({ response:`success`})
         }
@@ -126,6 +128,20 @@ app
     }
   })
 
+ //------------------------- Existence Check Handlers -------------------------//
+   .get('/checkname/:name', async (server) => {
+      const nameExists = !! (await client.queryObject('SELECT username FROM users WHERE username = $1;', server.params.name.trim())).rows.length
+      await server.json({ nameExists: nameExists })
+   })
+   .get('/checkemail/:email', async (server) => {
+      const email = server.params.email.trim()
+      if (verify.isEmailValid(email)) {
+        const emailExists = !!(await client.queryObject('SELECT email FROM users WHERE email = $1;', email)).rows.length
+        await server.json({ emailExists: emailExists })
+      } else {
+        await server.json({emailExists: false})
+      }
+   })
   //------------------------- Start server -------------------------//
   .start({ port: PORT })
 console.log(`Server running on http://localhost:${PORT}`)

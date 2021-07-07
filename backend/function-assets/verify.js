@@ -1,6 +1,6 @@
 /* A Library of boilerplate methods for forms with certain types of components */
 
-import { includesNumber } from "./helpers"
+import { includesNumber } from "./helpers.js"
 
 
 export function isEmailValid(email) {

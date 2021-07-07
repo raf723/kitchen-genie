@@ -2,14 +2,14 @@ import * as bcrypt from 'https://deno.land/x/bcrypt/mod.ts'
 import { Client } from "https://deno.land/x/postgres@v0.11.3/mod.ts"
 import { config } from 'https://deno.land/x/dotenv/mod.ts'
 
+// Envirionment setup
+const DENO_ENV = Deno.env.get('DENO_ENV') ?? 'development'
+config({ path: `./.env.${DENO_ENV}`, export: true })
 
 // DB connection
 const client = new Client(Deno.env.get('PG_URL'))
 await client.connect()
 
-// Envirionment setup
-const DENO_ENV = Deno.env.get('DENO_ENV') ?? 'development'
-config({ path: `./.env.${DENO_ENV}`, export: true })
 
 //------------------------- Library of Useful Functions -------------------------//
 //Authentication functions
@@ -34,13 +34,13 @@ export async function isRegisteredUser(email, password) {
 
 //Query functions
 //Function to get a user from the users table in database
-export async function getUser({email: undefined, userID: undefined, username: undefined}) {
-  if (userID !== undefined) {
-    return (await client.queryObject(`SELECT * FROM users WHERE id = $1;`, userID)).rows[0] || null
-  } else if (email !== undefined) {
-    return (await client.queryObject(`SELECT * FROM users WHERE email = $1;`, email)).rows[0] || null
-  } else if (username !== undefined) {
-    return (await client.queryObject(`SELECT * FROM users WHERE name = $1;`, username)).rows[0] || null
+export async function getUser(findBy={email: undefined, userID: undefined, username: undefined}) {
+  if (findBy.userID !== undefined) {
+    return (await client.queryObject(`SELECT * FROM users WHERE id = $1;`, findBy.userID)).rows[0] || null
+  } else if (findBy.email !== undefined) {
+    return (await client.queryObject(`SELECT * FROM users WHERE email = $1;`, findBy.email)).rows[0] || null
+  } else if (findBy.username !== undefined) {
+    return (await client.queryObject(`SELECT * FROM users WHERE name = $1;`, findBy.username)).rows[0] || null
   } else {
     return null 
   }
@@ -48,18 +48,11 @@ export async function getUser({email: undefined, userID: undefined, username: un
 
 //Function to add a user to the users table of the database
 export async function addUser(email, password, username) {
-  try {
     const encryption = await encryptPassword(password)
     await client.queryObject(`INSERT INTO users (username, email, encrypted_password, salt, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, NOW(), NOW();`, username, email, encryption.password, encryption.salt)
-      return true
-  } catch(error) {
-    return false 
-  }
+      VALUES ($1, $2, $3, $4, NOW(), NOW());`, username, email, encryption.password, encryption.salt)
 }
 
 export const serverFunctions = { addUser, getUser, isRegisteredUser, encryptPassword }
 
 export default serverFunctions
-
-await client.end()
