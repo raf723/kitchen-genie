@@ -60,17 +60,6 @@ app
 
 
 
-  //------------------------- Search handler -------------------------//
-  .post('/search', async (server) => {
-    // Get search query (array of ingredients or recipe name) from front-end
-    const { ingredients } = await server.body
-
-    // Server response
-    await server.json({ response })
-  })
-
-
-
   //------------------------- Login handler -------------------------//
   .post('/login', async (server) => {
     // Get email and password from front-end
