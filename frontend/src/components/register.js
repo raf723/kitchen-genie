@@ -30,10 +30,8 @@ class Register extends React.Component {
           && password === confirmationPassword )
   }
 
-  // // When user clicks login
   async signupHandler(form) {
     form.preventDefault()
-
     if(this.areAllFieldsValid()){
       const { email, password } = this.state
       // POST request to server
