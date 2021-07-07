@@ -1,0 +1,80 @@
+.home-container * {
+  font-family: 'Poppins', sans-serif;
+  color: rgb(50, 50, 50);
+}
+
+.home-container {
+  height: 100%;
+  background-image: url(../splash.jpeg);
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-container h1 {
+  height: fit-content;
+  font-size: 72px;
+  margin-top: 2%;
+}
+
+#search-container {
+  width: 46%;
+  display: flex;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.home-container input {
+  height: 40px;
+  width: 80%;
+  color: rgb(50, 50, 50);
+  font-weight: 400;
+  font-size: 16px;
+  border: solid 2px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  transition: border .5s ease;
+  padding-left: 16px;
+}
+
+.home-container input:focus {
+  outline: none;
+  border: solid 2px rgb(116,166,127);
+  transition: border .5s ease;
+}
+
+/* Border color? */
+.home-container input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+#search-container button {
+  height: 44px;
+  width: 12%;
+  color: rgb(116,166,127);
+  background-color: white;
+  border: solid 2px rgb(116,166,127);
+  border-radius: 22px;
+  margin-left: 12px;
+  transition: background .5s ease;
+}
+
+#search-container button:hover {
+  color: white;
+  background-color: rgb(116,166,127);
+  transition: background .5s ease;
+}
+
+#random-recipe-button {
+  font-size: 16px;
+  color: rgb(116,166,127);
+  background-color: transparent;
+  border: none;
+  margin-top: 16px;
+}
+
+#random-recipe-button:hover {
+  text-decoration: underline;
+}

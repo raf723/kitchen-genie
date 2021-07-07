@@ -37,6 +37,40 @@ let userID = ''
 app
   .use(cors({ allowHeaders: headersWhiteList, allowCredentials: true, allowOrigins: [Deno.env.get("ALLOWED_ORIGINS")] }))
 
+  //------------------------- Authenticate -------------------------//
+  .get('/authenticate', async (server) => {
+    // Get session cookie to authenticate current user
+    const serverCookie = server.cookies.sessionId
+
+    // Search sessions table to validate whether session cookie exists
+    const [ dbCookie ] = (await client.queryObject(`SELECT * FROM sessions WHERE uuid = $1`, serverCookie )).rows
+
+    // Set global variables depending on validation of session cookie
+    if (dbCookie !== undefined && serverCookie === dbCookie.uuid) {
+      authenticated = true
+      userID = dbCookie.user_id
+    } else {
+      authenticated = false
+      userID = ''
+    }
+
+    // Server response
+    await server.json( authenticated )
+  })
+
+
+
+  //------------------------- Search handler -------------------------//
+  .post('/search', async (server) => {
+    // Get search query (array of ingredients or recipe name) from front-end
+    const { ingredients } = await server.body
+
+    // Server response
+    await server.json({ response })
+  })
+
+
+
   //------------------------- Login handler -------------------------//
   .post('/login', async (server) => {
     // Get email and password from front-end
