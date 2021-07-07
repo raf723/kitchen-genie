@@ -9,11 +9,12 @@ import Navbar from './navbar'
 import Register from './register'
 import Login from './login'
 import Home from './home'
+import About from './About-us'
 
 class App extends React.Component {
   constructor() {
     super()
-    this.state = { userAuthenticated: true}
+    this.state = { userAuthenticated: false}
   }
 
   render() {
@@ -24,7 +25,7 @@ class App extends React.Component {
 
           <Switch>
             <Route path='/about-us'>
-              <h1>About Us</h1>
+              <About />
             </Route>
             <Route path='/favourites'>
               <h1>Favourites</h1>
