@@ -21,15 +21,20 @@
 }
 
 #search-container {
+  position: relative;
   width: 46%;
   display: flex;
   align-items: center;
   margin-top: 40px;
 }
 
+#search-container div {
+  width: 80%;
+}
+
 .home-container input {
   height: 40px;
-  width: 80%;
+  width: 100%;
   color: rgb(50, 50, 50);
   font-weight: 400;
   font-size: 16px;
@@ -57,7 +62,7 @@
   background-color: white;
   border: solid 2px rgb(116,166,127);
   border-radius: 22px;
-  margin-left: 12px;
+  margin-left: 32px;
   transition: background .5s ease;
 }
 
@@ -77,4 +82,12 @@
 
 #random-recipe-button:hover {
   text-decoration: underline;
+}
+
+ul {
+  list-style: none;
+  background-color: cornflowerblue;
+}
+
+.suggestion-span {
 }
