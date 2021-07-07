@@ -10,7 +10,7 @@
 input {
   display: block;
   height: 32px;
-  width: 100%;
+  width: 97%;
   color: rgb(50, 50, 50);
   font-weight: 400;
   font-size: 16px;
@@ -24,6 +24,11 @@ input:focus {
   outline: none;
   border: solid 2px rgb(116,166,127);
   transition: border .5s ease;
+}
+
+/* Border color? */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
 #error {

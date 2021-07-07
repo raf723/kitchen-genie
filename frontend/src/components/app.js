@@ -15,9 +15,9 @@ export default App
 function App() {
   return(
     <Router>
-      <div>
-        <Navbar />
+      <Navbar />
 
+      <div id="app-container">
         <Switch>
           <Route path='/about-us'>
             <h1>About Us</h1>
@@ -34,5 +34,5 @@ function App() {
         </Switch>
       </div>
     </Router>
-  );
+  )
 }

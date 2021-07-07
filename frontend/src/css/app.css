@@ -1,3 +1,7 @@
+#app-container {
+  flex-grow: 1;
+}
+
 .nav-link {
     margin: 1em;
     color: #6F829B;
