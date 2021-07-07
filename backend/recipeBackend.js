@@ -118,7 +118,6 @@ app
             server.json({ response:`already registered` })
         } else {
             //All good
-            console.log('All good')
             await addUser(email, password, username)
             server.json({ response:`success`})
         }
