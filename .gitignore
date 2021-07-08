@@ -1,9 +1,6 @@
 .DS_Store
 /node_modules
-<<<<<<< HEAD
 ./backend/.env.development
 .gitignore
 .env.development
-=======
 /backend/.env.development
->>>>>>> 51c3e2c7d0b51d7adc1992e6618e307349243208
