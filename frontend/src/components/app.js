@@ -11,6 +11,7 @@ import Register from './register'
 import Login from './login'
 import Results from './results'
 import About from './about'
+import Recipe from './Recipe'
 
 class App extends React.Component {
   constructor() {
@@ -59,6 +60,11 @@ class App extends React.Component {
 
             {/* Recipe results */}
             <Route path='/results' component={ Results }>
+            </Route>
+
+              {/* Saved recipes */}
+              <Route path='/recipe'>
+                <Recipe/>
             </Route>
 
           </Switch>
