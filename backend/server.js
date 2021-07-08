@@ -65,62 +65,83 @@ app
 
 
   //------------------------- Login handler -------------------------//
-  .post('/login', async (server) => {
-    // Get email and password from front-end
-    const { email, password, remember } = await server.body
+  // .post('/login', async (server) => {
+  //   // Get email and password from front-end
+  //   const { email, password, remember } = await server.body
 
-    // Dynamic block-scope variable to pass to front-end via server response
-    let errorMessage = ''
+  //   // Dynamic block-scope variable to pass to front-end via server response
+  //   let errorMessage = ''
 
-    // Look up user via email
-    const [ user ] = (await client.queryObject('SELECT * FROM users WHERE email = $1', email )).rows
+  //   // Look up user via email
+  //   const [ user ] = (await client.queryObject('SELECT * FROM users WHERE email = $1', email )).rows
 
-    // Validation
-    switch (true) {
-      case email.length === 0:
-        errorMessage = 'Please enter your email!'
-        break
-      case password.length === 0:
-        errorMessage = 'Please enter your password!'
-        break
-      case user === undefined:
-        errorMessage = 'No account associated with this email!'
-        break
-      default:
-        if (!isRegisteredUser(email)) errorMessage = 'Incorrect password. Please try again.'
-        break
-    }
+  //   // Validation
+  //   switch (true) {
+  //     case email.length === 0:
+  //       errorMessage = 'Please enter your email!'
+  //       break
+  //     case password.length === 0:
+  //       errorMessage = 'Please enter your password!'
+  //       break
+  //     case user === undefined:
+  //       errorMessage = 'No account associated with this email!'
+  //       break
+  //     default:
+  //       if (!isRegisteredUser(email)) errorMessage = 'Incorrect password. Please try again.'
+  //       break
+  //   }
 
-    // Login authenticated
-    if (errorMessage === '') {
-      // Set global variables
-      authenticated = true
-      userID = user.id
+  //   // Login authenticated
+  //   if (errorMessage === '') {
+  //     // Set global variables
+  //     authenticated = true
+  //     userID = user.id
       
-      // Set cookie if user checked 'Remember me'
-      if (remember) {
-        // Generate uuid for cookie
-        const sessionId = v4.generate()
+  //     // Set cookie if user checked 'Remember me'
+  //     if (remember) {
+  //       // Generate uuid for cookie
+  //       const sessionId = v4.generate()
 
-        // Store uuid in sessions
-        client.queryObject("INSERT INTO sessions (uuid, user_id, created_at) VALUES ($1, $2, NOW())", sessionId, userID ).rows
-        server.setCookie({
-          name: "sessionId",
-          value: sessionId,
-          expires: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
-          path: "/"
-        })
-      }
-    } else {
-      // Reset global variable, userID
-      userID = ''
-    }
+  //       // Store uuid in sessions
+  //       client.queryObject("INSERT INTO sessions (uuid, user_id, created_at) VALUES ($1, $2, NOW())", sessionId, userID ).rows
+  //       server.setCookie({
+  //         name: "sessionId",
+  //         value: sessionId,
+  //         expires: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+  //         path: "/"
+  //       })
+  //     }
+  //   } else {
+  //     // Reset global variable, userID
+  //     userID = ''
+  //   }
 
-    // Server response
-    await server.json({ errorMessage })
-  })
+  //   // Server response
+  //   await server.json({ errorMessage })
+  // })
 
+.post('/login', async (server) => {
+  let { email, password } = await server.body
+  const authenticated = await isRegisteredUser(email, password)
 
+  if (authenticated) {
+    const user = await getUser({ email })
+    const sessionId = v4.generate()
+    await client.queryObject(`INSERT INTO sessions (uuid, user_id, created_at, expiry_date)
+                    VALUES ($1, $2, NOW(), NOW() + interval '7 days');`, sessionId, user.id)
+    server.setCookie({
+      name: "sessionID",
+      value: sessionID,
+      expires: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+      path: "/"
+    })
+    const currentUser = { name: user.username, id: user.id }
+    server.json({ response: "success", currentUser })
+  } else {
+    server.json({ response: "bad credentials", currentUser: null})
+  }
+
+})
 
   //------------------------- Registration Handler -------------------------//
   .post('/register', async (server) => {
