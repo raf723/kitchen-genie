@@ -16,7 +16,6 @@ import About from './about'
 class App extends React.Component {
   initialState = {
     loggedInUser: null,
-    rememberLogin: false
   }
 
   state = {...this.initialState}
@@ -26,7 +25,7 @@ class App extends React.Component {
     if (currentSession) {
       const apiResponse = await fetch(`http://localhost:8080/sessions/${currentSession}`)
       const loggedInUser = await apiResponse.json()
-      this.setState({loggedInUser, rememberLogin: true })
+      this.setState({ loggedInUser })
     }
   }
 
@@ -35,13 +34,13 @@ class App extends React.Component {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password, remember })
     })
     
     const { response, currentUser } = await apiResponse.json()
     
     if (response === 'success') {
-      this.setState({ loggedInUser: currentUser, rememberLogin: remember })
+      this.setState({ loggedInUser: currentUser })
       window.location.replace('/')
     } else {
       alert("Either your email or password is incorrect!") 
