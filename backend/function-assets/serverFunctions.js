@@ -40,7 +40,7 @@ export async function getUser(findBy={email: undefined, userID: undefined, usern
   } else if (findBy.email !== undefined) {
     return (await client.queryObject(`SELECT * FROM users WHERE email = $1;`, findBy.email)).rows[0] || null
   } else if (findBy.username !== undefined) {
-    return (await client.queryObject(`SELECT * FROM users WHERE name = $1;`, findBy.username)).rows[0] || null
+    return (await client.queryObject(`SELECT * FROM users WHERE username = $1;`, findBy.username)).rows[0] || null
   } else {
     return null 
   }
