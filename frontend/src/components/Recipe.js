@@ -424,7 +424,7 @@ class Recipe extends Component {
 
         console.log('Logging')
 
-        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/information?includeNutrition=false&apiKey=f1e60ea98b204bac9657574150fa57ec`
+        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/information?includeNutrition=false&apiKey=${process.env.SPOONACULAR_API_KEY}`
 
         const spoonacularRes = await fetch(spoonacularEndpoint)
 
@@ -443,8 +443,8 @@ class Recipe extends Component {
 
         console.log('Getting recipe description')
 
-        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/summary?&apiKey=f1e60ea98b204bac9657574150fa57ec`
-
+        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/summary?&apiKey=${process.env.SPOONACULAR_API_KEY}`
+        
         const summaryRes = await fetch(spoonacularEndpoint)
 
         const summary = await summaryRes.json()
@@ -457,16 +457,13 @@ class Recipe extends Component {
 
         const { recipeId } = this.state 
 
-        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?&apiKey=f1e60ea98b204bac9657574150fa57ec`
+        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?&apiKey=${process.env.SPOONACULAR_API_KEY}`
 
         const instructionRes = await fetch (spoonacularEndpoint)
 
         const  [ instructions ] = await instructionRes.json()
 
         console.log(instructions)
-
-
-
 
 
     }
@@ -476,11 +473,11 @@ class Recipe extends Component {
     }
 
     render(){
-        const { title, imageSrc, description, example, descriptionExample } = this.state
+        const { example, descriptionExample } = this.state
         return (
             <div>
                 <section>
-                    <img src={example[0].image}/>
+                    <img src={example[0].image} alt=""/>
                     <h1>{example[0].title}</h1>
                 </section>
                 <section className="recipe-container">

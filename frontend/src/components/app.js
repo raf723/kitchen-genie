@@ -11,12 +11,11 @@ import Register from './register'
 import Login from './login'
 import Results from './results'
 import About from './about'
-import Recipe from './Recipe'
 
 class App extends React.Component {
   constructor() {
     super()
-    this.state = { userAuthenticated: false}
+    this.state = { userAuthenticated: true}
   }
 
   render() {
@@ -52,10 +51,7 @@ class App extends React.Component {
             <Route path='/favourites'>
               <h1>Favourites</h1>
             </Route>
-            {/* Single recipe */}
-            <Route path='/recipe'>
-              <Recipe/>
-            </Route>
+
             {/* Recipe results */}
             <Route path='/results' component={ Results }>
             </Route>
