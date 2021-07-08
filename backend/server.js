@@ -21,7 +21,7 @@ const client = new Client(Deno.env.get('PG_URL'))
 await client.connect()
 
 // Server functions
-import { addUser, getUser, isRegisteredUser, encryptPassword } from './function-assets/serverFunctions.js' 
+import { addUser, getUser, isRegisteredUser, getCurrentUser } from './function-assets/serverFunctions.js' 
 import verify from './function-assets/verify.js'
 
 const app = new Application()
@@ -65,73 +65,20 @@ app
 
 
   //------------------------- Login handler -------------------------//
-  // .post('/login', async (server) => {
-  //   // Get email and password from front-end
-  //   const { email, password, remember } = await server.body
-
-  //   // Dynamic block-scope variable to pass to front-end via server response
-  //   let errorMessage = ''
-
-  //   // Look up user via email
-  //   const [ user ] = (await client.queryObject('SELECT * FROM users WHERE email = $1', email )).rows
-
-  //   // Validation
-  //   switch (true) {
-  //     case email.length === 0:
-  //       errorMessage = 'Please enter your email!'
-  //       break
-  //     case password.length === 0:
-  //       errorMessage = 'Please enter your password!'
-  //       break
-  //     case user === undefined:
-  //       errorMessage = 'No account associated with this email!'
-  //       break
-  //     default:
-  //       if (!isRegisteredUser(email)) errorMessage = 'Incorrect password. Please try again.'
-  //       break
-  //   }
-
-  //   // Login authenticated
-  //   if (errorMessage === '') {
-  //     // Set global variables
-  //     authenticated = true
-  //     userID = user.id
-      
-  //     // Set cookie if user checked 'Remember me'
-  //     if (remember) {
-  //       // Generate uuid for cookie
-  //       const sessionId = v4.generate()
-
-  //       // Store uuid in sessions
-  //       client.queryObject("INSERT INTO sessions (uuid, user_id, created_at) VALUES ($1, $2, NOW())", sessionId, userID ).rows
-  //       server.setCookie({
-  //         name: "sessionId",
-  //         value: sessionId,
-  //         expires: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
-  //         path: "/"
-  //       })
-  //     }
-  //   } else {
-  //     // Reset global variable, userID
-  //     userID = ''
-  //   }
-
-  //   // Server response
-  //   await server.json({ errorMessage })
-  // })
 
 .post('/login', async (server) => {
-  let { email, password } = await server.body
+  let { email, password, remember } = await server.body
   const authenticated = await isRegisteredUser(email, password)
 
   if (authenticated) {
     const user = await getUser({ email })
     const sessionId = v4.generate()
+    const sessionLifespan = remember ? '7 days' : '1 hour'
     await client.queryObject(`INSERT INTO sessions (uuid, user_id, created_at, expiry_date)
-                    VALUES ($1, $2, NOW(), NOW() + interval '7 days');`, sessionId, user.id)
+                    VALUES ($1, $2, NOW(), NOW() + interval '${sessionLifespan}');`, sessionId, user.id)
     server.setCookie({
-      name: "sessionID",
-      value: sessionID,
+      name: "sessionId",
+      value: sessionId,
       expires: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
       path: "/"
     })
@@ -141,6 +88,17 @@ app
     server.json({ response: "bad credentials", currentUser: null})
   }
 
+})
+
+//--------------------- Sessions handler -----------------------------------// to revive sessions
+.get('/sessions/:sessionId', async (server) => {
+  const { sessionId } = server.params
+  const currentUser = await getCurrentUser(sessionId)
+  if (currentUser) {
+    server.json({ username: currentUser.username, id: currentUser.id })
+  } else {
+    server.json(null)
+  }
 })
 
   //------------------------- Registration Handler -------------------------//
