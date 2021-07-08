@@ -26,10 +26,8 @@ export async function isRegisteredUser(email, password) {
     if (userWithEmail) {
       return await bcrypt.compare(password + universalSalt + userWithEmail.salt,
           userWithEmail.encrypted_password)
-      } else {return false }
-  } else {
-      return false
-  }
+    } else return false
+  } else return false
 } 
 
 //Query functions

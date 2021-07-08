@@ -41,7 +41,7 @@ class Login extends React.Component {
     
     // Display alert if login error, else redirect to homepage
     if (errorMessage !== '') alert(errorMessage)
-    // else window.location.replace('/')
+    else window.location.replace('/')
   }
 
   // When input value is changed

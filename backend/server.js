@@ -12,9 +12,6 @@ import { v4 } from 'https://deno.land/std/uuid/mod.ts'
 import { Client } from "https://deno.land/x/postgres@v0.11.3/mod.ts"
 import { config } from 'https://deno.land/x/dotenv/mod.ts'
 
-import {addUser, getUser, isRegisteredUser, encryptPassword} from './function-assets/serverFunctions.js' 
-import verify from './function-assets/verify.js'
-
 // Envirionment setup
 const DENO_ENV = Deno.env.get('DENO_ENV') ?? 'development'
 config({ path: `./.env.${DENO_ENV}`, export: true })
@@ -22,6 +19,10 @@ config({ path: `./.env.${DENO_ENV}`, export: true })
 // DB connection
 const client = new Client(Deno.env.get('PG_URL'))
 await client.connect()
+
+// Server functions
+import { addUser, getUser, isRegisteredUser, encryptPassword } from './function-assets/serverFunctions.js' 
+import verify from './function-assets/verify.js'
 
 const app = new Application()
 const PORT = Number(Deno.env.get("PORT"))
@@ -36,7 +37,6 @@ const headersWhiteList = [
 // Global variables
 let authenticated = false
 let userID = ''
-
 
 app
   .use(cors({ allowHeaders: headersWhiteList, allowCredentials: true, allowOrigins: [Deno.env.get("ALLOWED_ORIGINS")] }))
@@ -64,17 +64,6 @@ app
 
 
 
-  //------------------------- Search handler -------------------------//
-  .post('/search', async (server) => {
-    // Get search query (array of ingredients or recipe name) from front-end
-    const { ingredients } = await server.body
-
-    // Server response
-    await server.json({ response })
-  })
-
-
-
   //------------------------- Login handler -------------------------//
   .post('/login', async (server) => {
     // Get email and password from front-end
@@ -98,31 +87,23 @@ app
         errorMessage = 'No account associated with this email!'
         break
       default:
-        // Password encryption
-        const [ salt ] = (await client.queryObject('SELECT salt FROM users WHERE email = $1', email )).rows
-        const passwordEncrypted = await bcrypt.hash(password, salt.salt)
-
-        // Get user's encrypted password
-        const [ userPassword ] = (await client.queryObject('SELECT encrypted_password FROM users WHERE email = $1', email )).rows
-        
-        if (passwordEncrypted !== userPassword.encrypted_password) errorMessage = 'Incorrect password. Please try again.'
+        if (!isRegisteredUser(email)) errorMessage = 'Incorrect password. Please try again.'
         break
     }
 
     // Login authenticated
     if (errorMessage === '') {
-      // Generate uuid for cookie
-      const sessionId = v4.generate()
-
       // Set global variables
       authenticated = true
       userID = user.id
-
-      // Store uuid in sessions
-      client.queryObject("INSERT INTO sessions (uuid, user_id, created_at) VALUES ($1, $2, NOW())", sessionId, userID ).rows
       
       // Set cookie if user checked 'Remember me'
       if (remember) {
+        // Generate uuid for cookie
+        const sessionId = v4.generate()
+
+        // Store uuid in sessions
+        client.queryObject("INSERT INTO sessions (uuid, user_id, created_at) VALUES ($1, $2, NOW())", sessionId, userID ).rows
         server.setCookie({
           name: "sessionId",
           value: sessionId,
@@ -138,6 +119,7 @@ app
     // Server response
     await server.json({ errorMessage })
   })
+
 
 
   //------------------------- Registration Handler -------------------------//
