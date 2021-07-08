@@ -1,22 +1,53 @@
-.nav-link, .signout-nav-link {
+.nav-link, .logo-link, .signout-nav-link {
   margin: 1em;
-  color: #6F829B;
+  color: rgb(116,166,127);
+  font-size: 15px;
+  font-weight: 500;
   display: inline-block;
-  border-bottom: 1px solid #8D99AE;
+  padding: 0 8px;
   cursor: pointer;
   text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Poppins', sans-serif;
+}
+
+.nav-link:after, .signout-nav-link::after {
+  content: "";
+  display: block;
+  margin: 0 auto;
+  width: 12px;
+  padding-top: 1px;
+  border-bottom: 1px solid rgb(116,166,127);
+  transition: .3s;
+}
+
+.nav-link:hover::after, .signout-nav-link:hover::after {
+  width: 100%;
+  border-bottom: 1px solid rgb(71, 116, 81);
+}
+
+.nav-link.active::after {
+  width: 100%;
+  border-bottom: 2px solid rgb(71, 116, 81);
+  transition: none;
 }
 
 .nav-link:hover, .nav-link.active, .signout-nav-link:hover {
-  color: #3B4654;
-  border-bottom: 1px solid #3B4654;
+  color: rgb(71, 116, 81);
+
 }
 
 .nav-link.active {
   font-weight: bold;
 }
 
+.middle-nav {
+  display: flex;
+  justify-content: center;
+}
+
 .page-nav {
   display: flex;
   justify-content: space-between;
+  padding: 0 40px;
 }
