@@ -21,10 +21,9 @@ class Results extends React.Component {
             id={ recipe.id }
             title={ recipe.title }
             image={ recipe.image }
-            rating={ 2 }
             numMissingIngredients={ recipe.missedIngredientCount }
             numIngredients={ recipe.usedIngredientCount + recipe.missedIngredientCount }
-            recipeLink={ 'idk' }>
+            link={ 'idk' }>
           </Recipe>
         </div>) }
       </div>
