@@ -9,30 +9,42 @@ import Navbar from './navbar'
 import Register from './register'
 import Login from './login'
 import Home from './home'
+// import About from './About-us'
+
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = { userAuthenticated: true}
+  }
+
+  render() {
+    return(
+      <Router>
+        <div>
+          <Navbar userAuthenticated={ this.state.userAuthenticated }/>
+
+          <Switch>
+            <Route path='/about-us'>
+              {/* <About /> */}
+              <h1>About Us</h1>
+            </Route>
+            <Route path='/favourites'>
+              <h1>Favourites</h1>
+            </Route>
+            <Route path='/register'>
+              <Register />
+            </Route>
+            <Route path='/login'>
+              <Login />
+            </Route>
+            <Route path='/'>
+              <Home />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
+    )
+  }
+}
 
 export default App
-
-function App() {
-  return(
-    <Router>
-      <Navbar />
-
-      <div id="app-container">
-        <Switch>
-          <Route path='/about-us'>
-            <h1>About Us</h1>
-          </Route>
-          <Route path='/register'>
-            <Register />
-          </Route>
-          <Route path='/login'>
-            <Login />
-          </Route>
-          <Route path='/'>
-            <Home />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
-  )
-}
