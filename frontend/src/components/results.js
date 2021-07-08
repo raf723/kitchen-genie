@@ -16,7 +16,7 @@ class Results extends React.Component {
 
     return (
       <div>
-        { results.map(recipe => <p>{ recipe.title }</p>) }
+        { results.map(recipe => <p key={recipe.id}>{ recipe.title }</p>) }
       </div>
     )
   }

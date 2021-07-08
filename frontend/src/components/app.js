@@ -21,10 +21,10 @@ class App extends React.Component {
   render() {
     return(
       <Router>
-        <div>
-          {/* Pass authentication result as a prop to toggle navigation bar buttons */}
-          <Navbar userAuthenticated={ this.state.userAuthenticated }/>
+        {/* Pass authentication result as a prop to toggle navigation bar buttons */}
+        <Navbar userAuthenticated={ this.state.userAuthenticated }/>
 
+        <div id="app-container">
           <Switch>
 
             {/* Homepage */}
