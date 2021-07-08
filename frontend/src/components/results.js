@@ -1,7 +1,7 @@
 import React from 'react'
 import '../css/results.css'
 
-import { useLocation } from 'react-router-dom'
+import Recipe from './RecipeCard'
 
 class Results extends React.Component {
   // Declare initialState object where all values are empty
@@ -15,8 +15,18 @@ class Results extends React.Component {
     const { results } = this.props.location.state
 
     return (
-      <div>
-        { results.map(recipe => <p key={recipe.id}>{ recipe.title }</p>) }
+      <div id="grid-container">
+        { results.map(recipe => <div className="card-container" key={ recipe.id }>
+          <Recipe
+            id={ recipe.id }
+            title={ recipe.title }
+            image={ recipe.image }
+            rating={ 2 }
+            numMissingIngredients={ recipe.missedIngredientCount }
+            numIngredients={ recipe.usedIngredientCount + recipe.missedIngredientCount }
+            recipeLink={ 'idk' }>
+          </Recipe>
+        </div>) }
       </div>
     )
   }
