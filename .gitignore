@@ -1,7 +1,15 @@
 .DS_Store
+<<<<<<< HEAD
+/node_modules
+./backend/.env.development
+.gitignore
+.env.development
+/backend/.env.development
+=======
 .gitignore
 .env.development
 ./backend/.env.development
 /backend/.env.development
 /node_modules
 /.vscode
+>>>>>>> b3dfd9aff73ad217db590a8f71bb27933cbe210c

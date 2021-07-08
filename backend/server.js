@@ -143,26 +143,21 @@ app
     }
   })
 
-
-
-  //------------------------- Existence Check Handlers -------------------------//
-  .get('/checkname/:name', async (server) => {
-    const nameExists = !! (await client.queryObject('SELECT username FROM users WHERE username = $1;', server.params.name.trim())).rows.length
-    await server.json({ nameExists: nameExists })
-  })
-
-  .get('/checkemail/:email', async (server) => {
-    const email = server.params.email.trim()
-    if (verify.isEmailValid(email)) {
-      const emailExists = !!(await client.queryObject('SELECT email FROM users WHERE email = $1;', email)).rows.length
-      await server.json({ emailExists: emailExists })
-    } else {
-      await server.json({emailExists: false})
-    }
-  })
-
-
-
+ //------------------------- Existence Check Handlers -------------------------//
+   .get('/checkname/:username', async (server) => {
+      const username = server.params.username.trim()
+      const nameExists = !! (await getUser({ username })) //getUser retrieves a user given an username, email, or id. If unable to find user with matching credentials, it returns null.
+      await server.json({ nameExists: nameExists })
+   })
+   .get('/checkemail/:email', async (server) => {
+      const email = server.params.email.trim()
+      if (verify.isEmailValid(email)) {
+        const emailExists = !! (await getUser({ email }))
+        await server.json({ emailExists: emailExists })
+      } else {
+        await server.json({emailExists: false})
+      }
+   })
   //------------------------- Start server -------------------------//
   .start({ port: PORT })
 console.log(`Server running on http://localhost:${PORT}`)

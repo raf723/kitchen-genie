@@ -1,6 +1,7 @@
 /* A Library of boilerplate methods for forms with certain types of components */
 
 import { includesNumber } from "./helpers.js"
+import { getUser } from "./serverFunctions.js"
 
 
 export function isEmailValid(email) {
@@ -19,11 +20,12 @@ export function isPasswordValid(password) {
   )
 }
 
-export function isUsernameValid(proposedName) {
+export async function isUsernameValid(username, checkNameIsNew=false) {
   return (
-    proposedName
-    && proposedName.length !== 0
-    && proposedName.length <= 50
+    username
+    && username.length !== 0
+    && username.length <= 50
+    && !(checkNameIsNew && await getUser({username}))
   )
 }
 

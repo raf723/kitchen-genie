@@ -1,4 +1,4 @@
-.nav-link, .signout-nav-link {
+.tab {
     margin: 1em;
     color: #6F829B;
     display: inline-block;
@@ -7,16 +7,16 @@
     text-decoration: none;
   }
   
-  .nav-link:hover, .nav-link.active, .signout-nav-link:hover {
+  .tab:hover, .tab.active {
     color: #3B4654;
     border-bottom: 1px solid #3B4654;
   }
 
-  .nav-link.active {
+  .tab.active {
     font-weight: bold;
   }
   
-  .page-nav {
+  .all-tabs {
     display: flex;
     justify-content: space-between;
   }
