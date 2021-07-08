@@ -91,7 +91,7 @@ class Home extends React.Component {
             onSuggestionsClearRequested={ this.onSuggestionsClearRequested }
             getSuggestionValue={ this.getSuggestionValue }
             renderSuggestion={ this.renderSuggestion }
-            inputProps={ inputProps } />
+            inputProps={ inputProps } /> 
           
           <button onClick={ () => this.searchHandler() }>GO</button>
         </div>
