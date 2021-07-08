@@ -2,15 +2,14 @@ import React from 'react'
 import '../css/app.css'
 
 // Routing imports
-import { BrowserRouter as Router, Switch, Route, Redirect, } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
 // Component imports
 import Navbar from './navbar'
+import Home from './home'
 import Register from './register'
 import Login from './login'
-import Home from './home'
-
-export default App
+import Results from './results'
 
 function App() {
   return(
@@ -19,20 +18,30 @@ function App() {
 
       <div id="app-container">
         <Switch>
-          <Route path='/about-us'>
-            <h1>About Us</h1>
+
+          <Route exact path='/'>
+            <Home />
           </Route>
+
           <Route path='/register'>
             <Register />
           </Route>
+
           <Route path='/login'>
             <Login />
           </Route>
-          <Route path='/'>
-            <Home />
+          
+          <Route path='/about-us'>
+            <h1>About Us</h1>
           </Route>
+          
+          <Route path='/results' component={ Results }>
+          </Route>
+
         </Switch>
       </div>
     </Router>
   )
 }
+
+export default App
