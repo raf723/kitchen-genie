@@ -1,5 +1,6 @@
 import React from 'react'
 import '../css/app.css'
+import { setCookie, getCookie } from '../function-assets/helpers'
 
 // Routing imports
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
@@ -13,16 +14,32 @@ import Results from './results'
 import About from './about'
 
 class App extends React.Component {
-  constructor() {
-    super()
-    this.state = { userAuthenticated: true}
+  initialState = {
+    loggedInUser: null,
+  }
+
+  state = {...this.initialState}
+
+  async componentDidMount(){
+    const currentSession = getCookie('sessionId') ?? null
+    if (currentSession) {
+      const apiResponse = await fetch(`http://localhost:8080/sessions/${currentSession}`)
+      const loggedInUser = await apiResponse.json()
+      this.setState({loggedInUser})
+    }
+  }
+  
+  handleLogout() {
+    setCookie('sessionID', null, 0)
+    this.setState(this.initialState)
+    window.location.replace("/")
   }
 
   render() {
     return(
       <Router>
         {/* Pass authentication result as a prop to toggle navigation bar buttons */}
-        <Navbar userAuthenticated={ this.state.userAuthenticated }/>
+        <Navbar userAuthenticated={ !!this.state.loggedInUser }/>
 
         <div id="app-container">
           <Switch>
