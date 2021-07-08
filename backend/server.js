@@ -149,6 +149,7 @@ app
       const nameExists = !! (await getUser({ username })) //getUser retrieves a user given an username, email, or id. If unable to find user with matching credentials, it returns null.
       await server.json({ nameExists: nameExists })
    })
+   
    .get('/checkemail/:email', async (server) => {
       const email = server.params.email.trim()
       if (verify.isEmailValid(email)) {
