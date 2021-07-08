@@ -453,6 +453,24 @@ class Recipe extends Component {
 
     }
 
+    async fetchRecipeIntructions () {
+
+        const { recipeId } = this.state 
+
+        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?&apiKey=f1e60ea98b204bac9657574150fa57ec`
+
+        const instructionRes = await fetch (spoonacularEndpoint)
+
+        const  [ instructions ] = await instructionRes.json()
+
+        console.log(instructions)
+
+
+
+
+
+    }
+
     removeHtmlTagsFromString(string){
         return string.replace(/(<([^>]+)>)/gi, "")
     }
@@ -467,6 +485,8 @@ class Recipe extends Component {
                 </section>
                 <section className="recipe-container">
                     <div className="ingredients-container">
+                    <ul>
+                    </ul>
                     </div>
                     <div className="instructions-container">
                      <p className='recipe-description'></p>
