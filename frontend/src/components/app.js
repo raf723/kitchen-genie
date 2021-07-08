@@ -38,7 +38,7 @@ class App extends React.Component {
               <Register />
             </Route>
 
-            {/* Login page */}
+            {/* Login */}
             <Route path='/login'>
               <Login />
             </Route>
@@ -46,6 +46,11 @@ class App extends React.Component {
             {/* About us */}
             <Route path='/about'>
               <About />
+            </Route>
+
+            {/* FAQ */}
+            <Route path='/faq'>
+              <h1>FAQ</h1>
             </Route>
 
             {/* Saved recipes */}
