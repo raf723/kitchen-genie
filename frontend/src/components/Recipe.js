@@ -7,10 +7,7 @@ class Recipe extends Component {
         imageSrc: '',
         description: '',
         instructions: [],
-        ingredients: {
-            pressent: [],
-            missing:[]
-        },
+        ingredients: []
     }
 
  componentDidMount(){
@@ -34,9 +31,9 @@ class Recipe extends Component {
 
         const spoonacularData = await spoonacularRes.json()
 
-        console.log(spoonacularData)
+        const { extendedIngredients } = spoonacularData
 
-        this.setState({ title: spoonacularData.title, imageSrc: spoonacularData.image })
+        this.setState({ title: spoonacularData.title, imageSrc: spoonacularData.image, ingredients: extendedIngredients })
     }
 
     async summariseRecipe (){
@@ -63,14 +60,19 @@ class Recipe extends Component {
 
         const instructionRes = await fetch (spoonacularEndpoint)
 
-        const [ { steps }]  = await instructionRes.json()
+        const [{ steps }]  = await instructionRes.json()
 
-        this.setState({instructions: steps})
-
+        this.setState({
+        instructions: steps
+        })
     }
 
     renderInstructions(instructionsArr){
         return instructionsArr.map(instruction => <li>{instruction.step}</li>)
+    }
+
+    renderIngredients(){
+        return this.state.ingredients.map(ingredient => <li key={ingredient.id}>{ingredient.name}</li>)
     }
 
     removeHtmlTagsFromString(string){
@@ -88,6 +90,7 @@ class Recipe extends Component {
                 <section className="recipe-container">
                     <div className="ingredients-container">
                     <ul>
+                        {this.renderIngredients()}
                     </ul>
                     </div>
                     <div className="instructions-container">
