@@ -16,6 +16,7 @@ import About from './about'
 class App extends React.Component {
   initialState = {
     loggedInUser: null,
+    rememberLogin: false
   }
 
   state = {...this.initialState}
@@ -25,21 +26,38 @@ class App extends React.Component {
     if (currentSession) {
       const apiResponse = await fetch(`http://localhost:8080/sessions/${currentSession}`)
       const loggedInUser = await apiResponse.json()
-      this.setState({loggedInUser})
+      this.setState({loggedInUser, rememberLogin: true })
+    }
+  }
+
+ loginHandler = async ({ email, password, remember }) => {
+    const apiResponse = await fetch(`http://localhost:8080/login`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
+    
+    const { response, currentUser } = await apiResponse.json()
+    
+    if (response === 'success') {
+      this.setState({ loggedInUser: currentUser, rememberLogin: remember })
+      window.location.replace('/')
+    } else {
+      alert("Either your email or password is incorrect!") 
     }
   }
   
   handleLogout() {
     setCookie('sessionID', null, 0)
-    this.setState(this.initialState)
-    window.location.replace("/")
+    this.setState({...this.initialState})
   }
 
   render() {
     return(
       <Router>
         {/* Pass authentication result as a prop to toggle navigation bar buttons */}
-        <Navbar userAuthenticated={ !!this.state.loggedInUser }/>
+        <Navbar userAuthenticated={ !!this.state.loggedInUser } onLogout={() => this.handleLogout()}/>
 
         <div id="app-container">
           <Switch>
@@ -56,7 +74,7 @@ class App extends React.Component {
 
             {/* Login page */}
             <Route path='/login'>
-              <Login />
+              <Login onLogin={this.loginHandler}/>
             </Route>
 
             {/* About us */}
