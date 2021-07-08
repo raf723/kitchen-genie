@@ -5,26 +5,18 @@ import '../css/app.css'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
 // Component imports
-import Navbar from './navbar'
-import Home from './home'
-import Register from './register'
-import Login from './login'
-import Results from './results'
-import About from './about'
+import Navbar from './Navbar'
+import Home from './Home'
+import Register from './Register'
+import Login from './Login'
+import Results from './Results'
+import About from './About'
 import Recipe from './Recipe'
 
 class App extends React.Component {
   constructor() {
     super()
-    this.state = { 
-      userAuthenticated: false,
-      recipe: {
-        id: 0,
-        image: '',
-        ingredients: [],
-        missingIngredients: []
-      }
-    }
+    this.state = { userAuthenticated: false}
   }
 
   render() {

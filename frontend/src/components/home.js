@@ -5,7 +5,7 @@ import '../css/home.css'
 import { withRouter } from 'react-router-dom'
 
 // Component imports
-import Search from './reusable/search'
+import Search from './reusable/Search'
 
 
 

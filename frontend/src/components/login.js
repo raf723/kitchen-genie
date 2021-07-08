@@ -6,7 +6,7 @@ import splash from '../splash.jpeg';
 import { NavLink } from 'react-router-dom'
 
 // Component imports
-import Input from './reusable/input'
+import Input from './reusable/Input'
 
 // Function imports
 
