@@ -17,4 +17,4 @@ function Navbar( {userAuthenticated} ) {
         )
     }
 
-    export default Navbar
+export default Navbar
