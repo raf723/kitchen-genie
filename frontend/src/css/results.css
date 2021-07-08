@@ -1,9 +1,17 @@
+#results-search-container {
+  width: 60%;
+  margin-top: 12px;
+  margin-left: 21%;
+}
+
 #grid-container {
   display: flex;
   flex-wrap: wrap;
+  margin-top: 24px;
+  margin-left: 20%;
 }
 
 .card-container {
-  width: 23%;
-  margin: 8px 1%;
+  width: 22%;
+  margin: 16px 12px;
 }

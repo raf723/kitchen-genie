@@ -19,14 +19,12 @@ class RecipeCard extends React.Component {
   }
 
   render() {
-    const { id, title, image, numIngredients, numMissingIngredients, link } = this.props
+    const { id, title, image, numIngredients, numMissingIngredients } = this.props
 
     return (
       <article id={ id } className="recipe-card" onClick={ () => this.recipeHandler(id, image, numIngredients, numMissingIngredients) }>
         {/* Card image */}
-        <div className="recipe-card-top">
-          <img className="recipe-image" src={ image } alt="prepared recipe" height="100%" width="100%"/>
-        </div>
+        <img className="recipe-image" src={ image } alt="prepared recipe" height="100%" width="100%"/>
 
         {/* Card meta */}
         <div className="recipe-card-bottom">

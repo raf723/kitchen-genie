@@ -1,6 +1,8 @@
 import React from 'react'
 import '../css/results.css'
 
+// Component imports
+import Search from './reusable/Search'
 import Recipe from './RecipeCard'
 
 class Results extends React.Component {
@@ -15,17 +17,22 @@ class Results extends React.Component {
     const { results } = this.props.location.state
 
     return (
-      <div id="grid-container">
-        { results.map(recipe => <div className="card-container" key={ recipe.id }>
-          <Recipe
-            id={ recipe.id }
-            title={ recipe.title }
-            image={ recipe.image }
-            numMissingIngredients={ recipe.missedIngredientCount }
-            numIngredients={ recipe.usedIngredientCount + recipe.missedIngredientCount }
-            link={ 'idk' }>
-          </Recipe>
-        </div>) }
+      <div>
+        <div id="results-search-container">
+          <Search />
+        </div>
+
+        <div id="grid-container">
+          { results.map(recipe => <div className="card-container" key={ recipe.id }>
+            <Recipe
+              id={ recipe.id }
+              title={ recipe.title }
+              image={ recipe.image }
+              numMissingIngredients={ recipe.missedIngredientCount }
+              numIngredients={ recipe.usedIngredientCount + recipe.missedIngredientCount }>
+            </Recipe>
+          </div>) }
+        </div>
       </div>
     )
   }
