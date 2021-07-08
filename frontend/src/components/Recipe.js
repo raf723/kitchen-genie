@@ -88,16 +88,16 @@ class Recipe extends Component {
                     <h1>{title}</h1>
                 </section>
                 <section className="recipe-container">
-                    <div className="ingredients-container">
-                    <ul>
-                        {this.renderIngredients()}
-                    </ul>
-                    </div>
                     <div className="instructions-container">
-                    <p className='recipe-description'>{ description }</p>
-                    <ul>
-                        {this.renderInstructions(instructions)}
-                    </ul>
+                        <p className='recipe-description'>{ description }</p>
+                        <ul>
+                            {this.renderInstructions(instructions)}
+                        </ul>
+                    </div>
+                    <div className="ingredients-container">
+                        <ul>
+                            {this.renderIngredients()}
+                        </ul>
                     </div>
                 </section>
             </div>
