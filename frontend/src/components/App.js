@@ -15,7 +15,6 @@ import About from './About'
 import Recipe from './Recipe'
 
 class App extends React.Component {
-<<<<<<< HEAD:frontend/src/components/app.js
   initialState = {
     loggedInUser: null,
   }
@@ -52,11 +51,6 @@ class App extends React.Component {
   handleLogout() {
     setCookie('sessionID', null, 0)
     this.setState({...this.initialState})
-=======
-  constructor() {
-    super()
-    this.state = { userAuthenticated: false}
->>>>>>> 98a19932893268b72a5ce4bbaeba5b61dfac7fad:frontend/src/components/App.js
   }
 
   render() {
