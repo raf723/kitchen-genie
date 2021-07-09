@@ -152,7 +152,6 @@ app
       const savedRecipeIds = (await client.queryObject(`
         SELECT recipe_id FROM saved_recipes 
         WHERE user_id = $1 AND active = t;`, currentUser.id)).rows
-
       let recipes = []
       const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/information?includeNutrition=false&apiKey=f1e60ea98b204bac9657574150fa57ec`
       for (const recipeId of savedRecipeIds) {
@@ -160,14 +159,40 @@ app
         const recipe = await spoonacularApiResponse.json()
         recipes.push(recipe)
       }
-
+      //All good: Return a list of saved recipes if any
       await server.json({ response: 'success', recipes })
     } else {
+      //Bad Credentials
       await server.json({ response: 'unauthorized' })
     }
 
   })
 
+  //------------------------- Post Saved Recipe -------------------------//
+  .post('/save/:recipeId/:action', async (server) => {
+    const { sessionId } = server.cookies
+    const currentUser = await getCurrentUser(sessionId)
+
+    if (currentUser) {
+      const { recipeId, action } = server.params
+
+      const toggleActiveSavesFalse = ` 
+        UPDATE saved_recipes 
+        SET active = f
+        WHERE user_id = $1 AND recipe_id = $2 AND acitve = t;
+      `
+      const createActiveSave = ` 
+        UPDATE saved_recipes 
+        SET active = f
+        WHERE user_id = $1 AND recipe_id = $2 AND acitve = t;
+      `
+      client.queryObject(`${toggleActiveSavesFalse} ${ action === 'unsave'? createActiveSave: ''}`, currentUser.id, recipeId) 
+
+      await server.json({ response: 'success' })
+    } else {
+      await server.json({ response: 'unauthorized' })
+    }
+  })
 
 
   //------------------------- Start server -------------------------//
