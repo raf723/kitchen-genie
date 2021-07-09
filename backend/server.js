@@ -95,7 +95,7 @@ app
   const { sessionId } = server.params
   const currentUser = await getCurrentUser(sessionId)
   if (currentUser) {
-    server.json({ username: currentUser.username, id: currentUser.id })
+    server.json({ username: currentUser.username, id: currentUser.id }) //respond with whose session it is
   } else {
     server.json(null)
   }
