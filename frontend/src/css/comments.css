@@ -1,0 +1,15 @@
+.commentText {
+    height: min-content;
+    width: 500px;
+    font-size: 15px;
+}
+
+/* .commentText:focus {
+    border-bottom: 1px solid black;
+} */
+
+.comments {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

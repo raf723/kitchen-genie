@@ -59,7 +59,7 @@ class App extends React.Component {
     return(
       <Router>
         {/* Pass authentication result as a prop to toggle navigation bar buttons */}
-        <Navbar userAuthenticated={ !!this.state.loggedInUser } onLogout={() => this.handleLogout()}/>
+        <Navbar userAuthenticated={ !!this.state.loggedInUser } onLogout={() => this.handleLogout()} />
 
         <div id="app-container">
           <Switch>
@@ -96,7 +96,7 @@ class App extends React.Component {
 
             {/* V Remove V */}
             <Route path='/comments'>
-              <Comments />
+              <Comments userAuthenticated={ !!this.state.loggedInUser } />
             </Route>
 
             {/* Recipe results */}
