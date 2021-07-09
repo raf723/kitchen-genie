@@ -1,5 +1,6 @@
 import React from 'react'
 import '../css/app.css'
+import { setCookie, getCookie } from '../function-assets/helpers'
 
 // Routing imports
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
@@ -14,16 +15,49 @@ import About from './About'
 import Recipe from './Recipe'
 
 class App extends React.Component {
-  constructor() {
-    super()
-    this.state = { userAuthenticated: false}
+  initialState = {
+    loggedInUser: null,
+  }
+
+  state = {...this.initialState}
+
+  async componentDidMount(){
+    const currentSession = getCookie('sessionId') ?? null
+    if (currentSession) {
+      const apiResponse = await fetch(`http://localhost:8080/sessions/${currentSession}`)
+      const loggedInUser = await apiResponse.json()
+      this.setState({ loggedInUser })
+    }
+  }
+
+ loginHandler = async ({ email, password, remember }) => {
+    const apiResponse = await fetch(`http://localhost:8080/login`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, remember })
+    })
+    
+    const { response, currentUser } = await apiResponse.json()
+    
+    if (response === 'success') {
+      this.setState({ loggedInUser: currentUser })
+      window.location.replace('/')
+    } else {
+      alert("Either your email or password is incorrect!") 
+    }
+  }
+  
+  handleLogout() {
+    setCookie('sessionID', null, 0)
+    this.setState({...this.initialState})
   }
 
   render() {
     return(
       <Router>
         {/* Pass authentication result as a prop to toggle navigation bar buttons */}
-        <Navbar userAuthenticated={ this.state.userAuthenticated }/>
+        <Navbar userAuthenticated={ !!this.state.loggedInUser } onLogout={() => this.handleLogout()}/>
 
         <div id="app-container">
           <Switch>
@@ -40,7 +74,7 @@ class App extends React.Component {
 
             {/* Login */}
             <Route path='/login'>
-              <Login />
+              <Login onLogin={this.loginHandler}/>
             </Route>
 
             {/* About us */}

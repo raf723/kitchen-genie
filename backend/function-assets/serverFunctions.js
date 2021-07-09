@@ -51,6 +51,18 @@ export async function addUser(email, password, username) {
       VALUES ($1, $2, $3, $4, NOW(), NOW());`, username, email, encryption.password, encryption.salt)
 }
 
-export const serverFunctions = { addUser, getUser, isRegisteredUser, encryptPassword }
+//Function to get current user from the database
+export async function getCurrentUser(sessionId) {
+  //queries the database with sessionID and returns a user if the session is present in the database and no longer than a week old
+  const [user] = (await client.queryObject(
+    `SELECT * FROM users 
+     WHERE id = (SELECT user_id FROM sessions 
+                 WHERE uuid = $1
+                       AND NOW() < expiry_date);`, sessionId ?? '_')).rows
+  return user || null
+}
+
+export const serverFunctions = { addUser, getUser, isRegisteredUser, encryptPassword, getCurrentUser }
 
 export default serverFunctions
+
