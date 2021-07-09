@@ -2,6 +2,7 @@ import '../css/recipe-card.css'
 import StarsRatings from 'react-star-ratings'
 import { withRouter } from 'react-router-dom'
 import React from 'react'
+import SaveButton from './SaveButton'
 
 class RecipeCard extends React.Component {
   // Navigate to recipe page with recipe data
@@ -19,13 +20,15 @@ class RecipeCard extends React.Component {
   }
 
   render() {
-    const { id, title, image, numIngredients, numMissingIngredients } = this.props
+    const { id, title, image, numIngredients, numMissingIngredients, onSave, isCurrentlySaved } = this.props
 
     return (
       <article id={ id } className="recipe-card" onClick={ () => this.recipeHandler(id, image, numIngredients, numMissingIngredients) }>
+        <div className="recipe-card-top">
         {/* Card image */}
-        <img className="recipe-image" src={ image } alt="prepared recipe" height="100%" width="100%"/>
-
+          <img className="recipe-image" src={ image } alt="prepared recipe" height="100%" width="100%"/>
+          {onSave && <SaveButton onSave={() => onSave(id)} isCurrentlySaved={isCurrentlySaved}/>}
+        </div>
         {/* Card meta */}
         <div className="recipe-card-bottom">
           {/* Recipe title */}

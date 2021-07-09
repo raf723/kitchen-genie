@@ -13,6 +13,7 @@ import Login from './Login'
 import Results from './Results'
 import About from './About'
 import Recipe from './Recipe'
+import SavedRecipes from './SavedRecipes'
 
 class App extends React.Component {
   initialState = {
@@ -89,7 +90,7 @@ class App extends React.Component {
 
             {/* Saved recipes */}
             <Route path='/favourites'>
-              <h1>Favourites</h1>
+              <SavedRecipes />
             </Route>
 
             {/* Recipe results */}
