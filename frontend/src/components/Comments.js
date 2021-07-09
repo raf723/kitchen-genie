@@ -7,20 +7,23 @@ import '../css/comments.css'
 class Comments extends React.Component {
     initialState = { comment: "", userId: "", recipeId: "" }
     state = {...this.initialState}
-    
-    resetText() {
-        document.querySelector(".commentText").value = ""
-        this.setState({ comment: "" });
+        
+    handleSubmit(e) {
+        e.preventDefault()
+        
     }
-    
+
     render() {
+        const { comment } = this.state
         return (
             <div>
                 <div className="comments">
                     <p>Username</p>
-                    <textarea placeholder="Add a comment..." className="commentText" onChange={(e) => this.setState({comment: e.target.value})}>{this.state.comment}</textarea>
-                    <button>Post</button>
-                    <button value="Clear" onClick={() => this.resetText()}>Cancel</button>
+                    <form onSubmit={(e) => this.handleSubmit(e)}>
+                      <textarea name="comment" value={comment} placeholder="Add a comment..." className="commentText" onChange={(e) => this.setState({comment: e.target.value})}></textarea>
+                      <input type="submit" name="post" value="Post"/>
+                      <input type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })} />
+                    </form>
                 </div>
                 {/* Display comments */}
                 <h2>Comments (10)</h2>

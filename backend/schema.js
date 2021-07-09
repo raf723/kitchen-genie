@@ -69,7 +69,7 @@ await client.queryObject(`
         created_at TIMESTAMP NOT NULL,
         updated_at TIMESTAMP NOT NULL,
         comment TEXT NOT NULL,
- 
+        recipe_id INTEGER NOT NULL,
         user_id INTEGER NOT NULL,
         FOREIGN KEY(user_id) REFERENCES users(id)
     );`
