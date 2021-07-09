@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS users (
     salt TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
-    );`  
- )
+    );`
+)
 
 //Create sessions table/
 await client.queryObject(`
