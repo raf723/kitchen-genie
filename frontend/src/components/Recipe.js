@@ -1,18 +1,24 @@
 import { Component } from 'react'
+import StarsRatings from 'react-star-ratings'
 
 class Recipe extends Component {
+
     state = {
-        recipeId: 345589,
+        recipeId: this.props.location.state.id,
         title: '',
         description: '',
         instructions: [],
-        ingredients: []
+        ingredients: [],
+        rating: 3
     }
 
  componentDidMount(){
-         this.fetchRecipeInfomation()
-         this.summariseRecipe()
-         this.fetchRecipeIntructions()
+
+        //  this.fetchRecipeInfomation()
+        //  this.summariseRecipe()
+        //  this.fetchRecipeIntructions()
+
+        this.postStarRating()
     }
 
 
@@ -20,7 +26,7 @@ class Recipe extends Component {
         
         const { recipeId } = this.state
 
-        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/information?includeNutrition=false&apiKey=f1e60ea98b204bac9657574150fa57ec`
+        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/information?includeNutrition=false&apiKey=${process.env.REACT_APP_API_KEY}`
 
         const spoonacularRes = await fetch(spoonacularEndpoint)
 
@@ -29,15 +35,14 @@ class Recipe extends Component {
         const { extendedIngredients } = spoonacularData
 
         this.setState({ title: spoonacularData.title, imageSrc: spoonacularData.image, ingredients: extendedIngredients })
+
     }
 
     async summariseRecipe (){
 
         const { recipeId } = this.state
 
-        console.log('Getting recipe description')
-
-        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/summary?&apiKey=f1e60ea98b204bac9657574150fa57ec`
+        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/summary?&apiKey=${process.env.REACT_APP_API_KEY}`
         
         const summaryRes = await fetch(spoonacularEndpoint)
 
@@ -51,7 +56,7 @@ class Recipe extends Component {
 
         const { recipeId } = this.state 
 
-        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?&apiKey=f1e60ea98b204bac9657574150fa57ec`
+        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?&apiKey=${process.env.REACT_APP_API_KEY}`
 
         const instructionRes = await fetch (spoonacularEndpoint)
 
@@ -63,7 +68,7 @@ class Recipe extends Component {
     }
 
     renderInstructions(instructionsArr){
-        return instructionsArr.map(instruction => <li>{instruction.step}</li>)
+        return instructionsArr.map(instruction => <li key={instruction.id}>{instruction.step}</li>)
     }
 
     renderIngredients(){
@@ -74,18 +79,55 @@ class Recipe extends Component {
         return string.replace(/(<([^>]+)>)/gi, "")
     }
 
+    // getStarRating(){
+
+    //     const endpoint = `${process.env.REACT_APP_URL}/`
+
+    // }
+
+    handleRateRecipe(){
+        this.setState({
+            rating: 3
+        })
+    }
+
+    async postStarRating(){
+
+        const { recipeId, rating } = this.state
+       
+        const postRatingEndPoint = `${process.env.REACT_APP_URL}/rating`
+
+        const postRatingRes = await fetch(postRatingEndPoint, {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                rating: rating,
+                recipeId: recipeId
+            })
+        })
+    
+    }
+
     render(){
         
         const {  title, description, instructions } = this.state
-        const { id, image, numIngredients, numMissingIngredients } = this.props.location.state
+
+        const { image, numIngredients, numMissingIngredients } = this.props.location.state
 
         return (
             <div>
                 <section>
                     <img src={image} alt=""/>
                     <h1>{title}</h1>
+                    <StarsRatings
+                        className="star-rating"
+                        rating={ 0 }
+                        starRatedColor="gold"
+                        starDimension="15px"
+                        starSpacing="3px" />
                 </section>
-                <section className="recipe-container">
+                {/* <section className="recipe-container">
                     <div className="instructions-container">
                         <p className='recipe-description'>{ description }</p>
                         <span>{numIngredients}</span>
@@ -99,7 +141,7 @@ class Recipe extends Component {
                             {this.renderIngredients()}
                         </ul>
                     </div>
-                </section>
+                </section> */}
             </div>
         )
     }

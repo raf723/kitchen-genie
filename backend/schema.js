@@ -38,12 +38,13 @@ await client.queryObject(`
 
 //Create rating table. Should the user be allowed to rate 0? 
 await client.queryObject(`
-    CREATE TABLE IF NOT EXISTS rating (
+    CREATE TABLE IF NOT EXISTS recipe_rating (
         id SERIAL PRIMARY KEY,
         rating INT NOT NULL,
         CHECK (rating BETWEEN 1 AND 5),
         created_at TIMESTAMP NOT NULL,
         updated_at TIMESTAMP NOT NULL,
+        recipe_id INTEGER NOT NULL,
         user_id INTEGER,
         FOREIGN KEY(user_id) REFERENCES users(id)
     );`
@@ -69,7 +70,7 @@ await client.queryObject(`
         created_at TIMESTAMP NOT NULL,
         updated_at TIMESTAMP NOT NULL,
         comment TEXT NOT NULL,
- 
+        recipe_id INTEGER NOT NULL,
         user_id INTEGER NOT NULL,
         FOREIGN KEY(user_id) REFERENCES users(id)
     );`

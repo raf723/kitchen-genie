@@ -144,6 +144,26 @@ app
     }
   })
 
+  //------------------------- Get Recipe Rating ---------------------//
+
+  .get('/rating/:id', async (server) => {
+
+  })
+
+
+  //--------------------------- Post Rating ------------------------//
+
+  .post('/rating', async (server) => {
+    console.log('Somthing is woriking')
+
+    const { rating } = await server.body
+
+    console.log(rating)
+
+    
+
+  })
+
 
 
   //------------------------- Start server -------------------------//
