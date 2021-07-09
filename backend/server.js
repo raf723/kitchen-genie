@@ -154,13 +154,16 @@ app
   //--------------------------- Post Rating ------------------------//
 
   .post('/rating', async (server) => {
-    console.log('Somthing is woriking')
 
-    const { rating } = await server.body
+    const { rating, recipeId } = await server.body
 
-    console.log(rating)
+    console.log(rating, recipeId)
 
-    
+    console.log(server.cookies)
+
+
+
+
 
   })
 

@@ -31,6 +31,7 @@ await client.queryObject(`
     CREATE TABLE IF NOT EXISTS sessions (
         uuid TEXT PRIMARY KEY,
         created_at TIMESTAMP NOT NULL,
+        expiry_date TIMESTAMP NOT NULL,
         user_id INTEGER,
         FOREIGN KEY (user_id) REFERENCES users(id)
     );`
