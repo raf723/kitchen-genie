@@ -13,6 +13,8 @@ import Login from './Login'
 import Results from './Results'
 import About from './About'
 import Recipe from './Recipe'
+// V Remove V
+import Comments from './Comments'
 
 class App extends React.Component {
   initialState = {
@@ -90,6 +92,11 @@ class App extends React.Component {
             {/* Saved recipes */}
             <Route path='/favourites'>
               <h1>Favourites</h1>
+            </Route>
+
+            {/* V Remove V */}
+            <Route path='/comments'>
+              <Comments />
             </Route>
 
             {/* Recipe results */}
