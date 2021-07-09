@@ -3,7 +3,7 @@ import '../css/results.css'
 
 // Component imports
 import Search from './reusable/Search'
-import Recipe from './RecipeCard'
+import RecipeCard from './RecipeCard'
 
 class Results extends React.Component {
   // Declare initialState object where all values are empty
@@ -24,13 +24,13 @@ class Results extends React.Component {
 
         <div id="grid-container">
           { results.map(recipe => <div className="card-container" key={ recipe.id }>
-            <Recipe
+            <RecipeCard
               id={ recipe.id }
               title={ recipe.title }
               image={ recipe.image }
               numMissingIngredients={ recipe.missedIngredientCount }
               numIngredients={ recipe.usedIngredientCount + recipe.missedIngredientCount }>
-            </Recipe>
+            </RecipeCard>
           </div>) }
         </div>
       </div>

@@ -21,7 +21,7 @@ function getSuggestions(value) {
   // Function to check one string against another
   const regex = new RegExp('^' + escapedValue, 'i')
 
-  // Filter through the array of ingredients to return an array of suggested ingredients
+  // Filter through the array of ingredients to return an array of suggested ingredients (4 suggestions max)
   return ingredients.filter(ingredient => regex.test(ingredient.name)).slice(0, 4)
 }
 
@@ -37,27 +37,34 @@ class Search extends React.Component {
   // Set state to initialState
   state = this.initialState
 
-  // Set state of value to selected suggestion
+  // On input change
   onChange = (event, { newValue, method }) => {
     this.setState({ value: newValue })
     this.props.onChange(newValue)
   }
 
-  // Set input value to selected suggestion
+  // If user hits Enter, pass true to parent and clear input
+  onKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      // Execute parent function
+      this.props.onKeyPress()
+
+      // Clear input
+      this.setState({ value: '' })
+    }
+  }
+
+  // On suggested value click
   getSuggestionValue = suggestion => suggestion.name
 
   // Render element for each suggestion
   renderSuggestion = suggestion => <span className="suggestion-span">{ suggestion.name }</span>
 
   // Set state of suggestions to filtered array
-  onSuggestionsFetchRequested = ({ value }) => {
-    this.setState({ suggestions: getSuggestions(value) })
-  }
+  onSuggestionsFetchRequested = ({ value }) => this.setState({ suggestions: getSuggestions(value) })
 
   // Set state of suggestions to empty array
-  onSuggestionsClearRequested = () => {
-    this.setState({ suggestions: [] })
-  }
+  onSuggestionsClearRequested = () => this.setState({ suggestions: [] })
 
   render() {
     const { value, suggestions } = this.state;
@@ -65,8 +72,9 @@ class Search extends React.Component {
     // Set properties for Autosuggest's input
     const inputProps = {
       placeholder: "Find a recipe!",
-      value,
-      onChange: this.onChange
+      onChange: this.onChange,
+      onKeyPress: this.onKeyPress,
+      value
     }
 
     return (

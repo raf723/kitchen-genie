@@ -7,14 +7,17 @@ import { withRouter } from 'react-router-dom'
 // Component imports
 import Search from './reusable/Search'
 
+// Asset imports
+import DeleteIcon from '../delete.png'
+
 
 
 //------------------------------ Home component ------------------------------//
 class Home extends React.Component {
   // Declare initialState object where all values are empty
   initialState = {
-    value: '',
-    ingredients: []
+    value: '', // Search input's value
+    ingredients: [] // Array of ingredients selected by the client
   }
 
   // Set state to initialState
@@ -22,16 +25,32 @@ class Home extends React.Component {
 
   // Set state of value to selected suggestion
   onChange = (newValue) => {
-    this.setState({ value: newValue })
+    this.setState({ 
+      value: newValue,
+    })
   }
+
+  // If user hits Enter, add to state's ingredients array and clear input
+  onKeyPress = () => {
+    // Push input value to this.state's array of ingredients
+    const updatedIngredients = this.state.ingredients
+    if (this.state.value !== '') updatedIngredients.push(this.state.value.trim())
+    this.setState({ ingredients: updatedIngredients })
+
+    // Clear input
+    this.setState({ value: '' })
+  }
+
+  // Remove ingredient from this.state's ingredients on user click
+  removeIngredient = (deletedIngredient) => this.setState({ ingredients: this.state.ingredients.filter(ingredient => ingredient !== deletedIngredient) })
 
   // Search for recipes via ingredients
   searchHandler = async() => {
-    const ingredients = this.state.value
-    const ingredientsArray = ingredients.split(',').map(ingredient => ingredient.trim())
+    // Convert this.state's ingredients to comma separated string
+    const ingredients = this.state.ingredients.join(',')
 
     // Get recipes from Spoonacular
-    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientsArray}&number=30&ranking=1&ignorePantry=true&apiKey=d45bc24e8cc84723b6786271e498854f`)
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=160&ranking=2&apiKey=d45bc24e8cc84723b6786271e498854f`)
     const recipes = await spoonacular.json()
 
     // Pass data another parent component (page)
@@ -47,8 +66,17 @@ class Home extends React.Component {
         <h1>Supercook</h1>
 
         <div id="search-container">
-          <Search onChange={ this.onChange } />
+          <Search value={ this.state.value } onChange={ this.onChange } onKeyPress={ this.onKeyPress }/>
           <button onClick={ () => this.searchHandler() }>GO</button>
+        </div>
+
+        {/* Ingredients buttons */}
+        <div id="ingredients-container">
+          { this.state.ingredients.map(ingredient => 
+            <button className="ingredient-button" key={ ingredient } onClick={ () => this.removeIngredient(ingredient) }>
+              { ingredient }<img className="delete-icon" alt="delete-ingredient" src={ DeleteIcon }/>
+            </button>
+          )}
         </div>
 
         <button id="random-recipe-button">Serve me up!</button>
