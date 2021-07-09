@@ -144,6 +144,30 @@ app
     }
   })
 
+  //------------------------- Get Saved Recipes -------------------------//
+  .get('/myrecipes', async (server) => {
+    const sessionId = server.cookies.sessionId
+    const currentUser = await getCurrentUser(sessionId)
+    if (currentUser) {
+      const savedRecipeIds = (await client.queryObject(`
+        SELECT recipe_id FROM saved_recipes 
+        WHERE user_id = $1 AND active = t;`, currentUser.id)).rows
+
+      let recipes = []
+      const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/information?includeNutrition=false&apiKey=f1e60ea98b204bac9657574150fa57ec`
+      for (const recipeId of savedRecipeIds) {
+        const spoonacularApiResponse = await fetch(spoonacularEndpoint)
+        const recipe = await spoonacularApiResponse.json()
+        recipes.push(recipe)
+      }
+
+      await server.json({ response: 'success', recipes })
+    } else {
+      await server.json({ response: 'unauthorized' })
+    }
+
+  })
+
 
 
   //------------------------- Start server -------------------------//
