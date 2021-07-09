@@ -24,11 +24,7 @@ class Home extends React.Component {
   state = this.initialState
 
   // Set state of value to selected suggestion
-  onChange = (newValue) => {
-    this.setState({ 
-      value: newValue,
-    })
-  }
+  onChange = (newValue) => this.setState({ value: newValue })
 
   // If user hits Enter, add to state's ingredients array and clear input
   onKeyPress = () => {
