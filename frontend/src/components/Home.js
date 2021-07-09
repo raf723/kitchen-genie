@@ -2,10 +2,10 @@ import React from 'react'
 import '../css/home.css'
 
 // Routing ingredients
-import { Link, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 // Component imports
-import Search from './reusable/search'
+import Search from './reusable/Search'
 
 
 
@@ -13,7 +13,8 @@ import Search from './reusable/search'
 class Home extends React.Component {
   // Declare initialState object where all values are empty
   initialState = {
-    value: ''
+    value: '',
+    ingredients: []
   }
 
   // Set state to initialState
@@ -32,8 +33,8 @@ class Home extends React.Component {
     // Get recipes from Spoonacular
     const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientsArray}&number=30&ranking=1&ignorePantry=true&apiKey=d45bc24e8cc84723b6786271e498854f`)
     const recipes = await spoonacular.json()
-    console.log(recipes)
 
+    // Pass data another parent component (page)
     this.props.history.push({
       pathname: '/results',
       state: { results: recipes }

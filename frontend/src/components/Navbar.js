@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import '../css/navbar.css'
 
-function Navbar( {userAuthenticated, onLogout} ) {
+function Navbar( {userAuthenticated} ) {
   return(
     <div>
       <nav className="page-nav">
@@ -14,7 +14,7 @@ function Navbar( {userAuthenticated, onLogout} ) {
           <NavLink className="nav-link" activeClassName="active" to='/faq'>FAQ</NavLink>
           <NavLink className="nav-link" activeClassName="active" to='/about'>About Us</NavLink>
         </div>
-        {userAuthenticated && <NavLink className="signout-nav-link" to='/' onClick={onLogout}>Sign Out</NavLink>}
+        {userAuthenticated && <NavLink className="signout-nav-link" to='/'>Sign Out</NavLink>}
       </nav>
     </div>
   )

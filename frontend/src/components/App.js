@@ -6,14 +6,16 @@ import { setCookie, getCookie } from '../function-assets/helpers'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
 // Component imports
-import Navbar from './navbar'
-import Home from './home'
-import Register from './register'
-import Login from './login'
-import Results from './results'
-import About from './about'
+import Navbar from './Navbar'
+import Home from './Home'
+import Register from './Register'
+import Login from './Login'
+import Results from './Results'
+import About from './About'
+import Recipe from './Recipe'
 
 class App extends React.Component {
+<<<<<<< HEAD:frontend/src/components/app.js
   initialState = {
     loggedInUser: null,
   }
@@ -50,6 +52,11 @@ class App extends React.Component {
   handleLogout() {
     setCookie('sessionID', null, 0)
     this.setState({...this.initialState})
+=======
+  constructor() {
+    super()
+    this.state = { userAuthenticated: false}
+>>>>>>> 98a19932893268b72a5ce4bbaeba5b61dfac7fad:frontend/src/components/App.js
   }
 
   render() {
@@ -71,7 +78,7 @@ class App extends React.Component {
               <Register />
             </Route>
 
-            {/* Login page */}
+            {/* Login */}
             <Route path='/login'>
               <Login onLogin={this.loginHandler}/>
             </Route>
@@ -81,6 +88,11 @@ class App extends React.Component {
               <About />
             </Route>
 
+            {/* FAQ */}
+            <Route path='/faq'>
+              <h1>FAQ</h1>
+            </Route>
+
             {/* Saved recipes */}
             <Route path='/favourites'>
               <h1>Favourites</h1>
@@ -88,6 +100,10 @@ class App extends React.Component {
 
             {/* Recipe results */}
             <Route path='/results' component={ Results }>
+            </Route>
+
+            {/* Single recipe */}
+            <Route path='/recipe' component={ Recipe }>
             </Route>
 
           </Switch>

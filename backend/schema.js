@@ -13,19 +13,6 @@ await client.connect()
 
 //Todo: if exits drop table. 
 
-//Create recipe table.
-await client.queryObject(
-`CREATE TABLE IF NOT EXISTS recipes (
-    id SERIAL PRIMARY KEY,
-    name TEXT UNIQUE NOT NULL,
-    instructions TEXT NOT NULL,
-    ingredients TEXT NOT NULL,
-    tags TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL
-    );`
-)
-
 //Create user table.
 await client.queryObject(`
 CREATE TABLE IF NOT EXISTS users (
@@ -36,18 +23,14 @@ CREATE TABLE IF NOT EXISTS users (
     salt TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
-    );
-
-    CREATE INDEX email_index ON users(email);
-    CREATE INDEX username_index ON users(username);`  
+    );`  
  )
-  
+
 //Create sessions table/
 await client.queryObject(`
     CREATE TABLE IF NOT EXISTS sessions (
         uuid TEXT PRIMARY KEY,
         created_at TIMESTAMP NOT NULL,
-        expiry_date TIMESTAMP NOT NULL,
         user_id INTEGER,
         FOREIGN KEY (user_id) REFERENCES users(id)
     );`
@@ -75,7 +58,6 @@ await client.queryObject(`
         active BOOLEAN NOT NULL,
         recipe_id INTEGER NOT NULL,
         user_id INTEGER NOT NULL,
-        FOREIGN KEY(recipe_id) REFERENCES recipes(id),
         FOREIGN KEY(user_id) REFERENCES users(id)
     );`
 )
@@ -87,9 +69,8 @@ await client.queryObject(`
         created_at TIMESTAMP NOT NULL,
         updated_at TIMESTAMP NOT NULL,
         comment TEXT NOT NULL,
-        recipe_id INTEGER NOT NULL,
+ 
         user_id INTEGER NOT NULL,
-        FOREIGN KEY(recipe_id) REFERENCES recipes(id),
         FOREIGN KEY(user_id) REFERENCES users(id)
     );`
 )
