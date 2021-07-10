@@ -9,7 +9,7 @@ class Recipe extends Component {
         description: '',
         instructions: [],
         ingredients: [],
-        rating: 4,
+        averageRating: undefined,
         personalRating: undefined,
     }
 
@@ -86,7 +86,7 @@ class Recipe extends Component {
 
     async postStarRating(){
 
-        const { recipeId, rating } = this.state
+        const { recipeId, personalRating } = this.state
        
         const postRatingEndPoint = `${process.env.REACT_APP_URL}/recipe/rating`
 
@@ -95,7 +95,7 @@ class Recipe extends Component {
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                rating: rating,
+                rating: personalRating,
                 recipeId: recipeId
             })
         })
@@ -106,12 +106,12 @@ class Recipe extends Component {
     
     }
 
-    async changeRating(newRating){
+    async handleChangeRating(newRating){
         this.setState({
             personalRating: newRating
+        }, () => {
+            this.postStarRating()
         })
-        //Todo: Post new rating.
-        await this.postStarRating()
     }
 
     componentDidMount(){
@@ -120,8 +120,9 @@ class Recipe extends Component {
         //  this.summariseRecipe()
         //  this.fetchRecipeIntructions()
 
-        this.postStarRating()
     }
+
+
 
 
     render(){
@@ -152,7 +153,7 @@ class Recipe extends Component {
                         starRatedColor="gold"
                         starDimension="15px"
                         starSpacing="3px" 
-                        changeRating={(newRating) => {this.changeRating(newRating)}}
+                        changeRating={(newRating) => {this.handleChangeRating(newRating)}}
                         />
 
                 </section>
