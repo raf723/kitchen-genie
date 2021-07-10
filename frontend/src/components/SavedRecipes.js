@@ -28,10 +28,10 @@ export class SavedRecipes extends Component {
             this.setState({savedRecipes: recipes, isCurrentlySaved, loggedInUser, pageState})
         } else if (response === 'unauthorized') {
             //do nothing
-            this.setState({pageState: 'Please log in to save and access favourite recipes!'})
+            this.setState({loggedInUser, pageState: 'Please log in to save and access favourite recipes!'})
         } else if (response === 'service down') { 
             //notify the user (e.g. when access limit reached )
-            this.setState({pageState: 'Service is currently down. Please try again later!'})
+            this.setState({loggedInUser, pageState: 'Service is currently down. Please try again later!'})
         }else {
             window.location.replace('/error')
         }
