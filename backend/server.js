@@ -154,20 +154,24 @@ app
         WHERE user_id = $1 AND active = 't'
         ORDER BY created_at DESC;`, currentUser.id)).rows 
 
-      const recipeString = savedRecipeIds.reduce((accumulator, [recipe], i) => accumulator + recipe + (i === savedRecipeIds.length - 1 ? "" : ","), "") 
 
-      //******************INSERT YOUR API KEY ********************************/
-      const spoonacularEndpoint = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeString}&apiKey=`
-      const spoonacularApiResponse = await fetch(spoonacularEndpoint)
-      const recipes = await spoonacularApiResponse.json()
-
-      if (recipes.status === "failure") {
-        //Problem with spoonacular
-        await server.json({ response: 'service down', recipes: [], loggedInUser: { username: currentUser.username, id: currentUser.id } })
+      if (savedRecipeIds.length !== 0) {
+        const recipeString = savedRecipeIds.reduce((accumulator, [recipe], i) => accumulator + recipe + (i === savedRecipeIds.length - 1 ? "" : ","), "") 
+        //******************INSERT YOUR API KEY ********************************/
+        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeString}&apiKey=109411015c2f4df5942a3143fb7b3c36`
+        const spoonacularApiResponse = await fetch(spoonacularEndpoint)
+        const recipes = await spoonacularApiResponse.json()
+        if (recipes.status === "failure") {
+          //Problem with spoonacular
+          await server.json({ response: 'service down', recipes: [], loggedInUser: { username: currentUser.username, id: currentUser.id } })
+        } else {
+          //All good: Return a list of saved recipes if any
+          await server.json({ response: 'success', recipes, loggedInUser: { username: currentUser.username, id: currentUser.id } })
+        } 
       } else {
-        //All good: Return a list of saved recipes if any
-        await server.json({ response: 'success', recipes, loggedInUser: { username: currentUser.username, id: currentUser.id } })
-      } 
+        //All good: User did not save any recipe
+        await server.json({ response: 'success', recipes: [], loggedInUser: { username: currentUser.username, id: currentUser.id } })
+      }
     } else {
       //Bad Credentials
       await server.json({ response: 'unauthorized' })
