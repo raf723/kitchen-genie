@@ -8,7 +8,7 @@ export class SavedRecipes extends Component {
         loggedInUser: {},
         savedRecipes: [],
         isCurrentlySaved: {},
-        pageState: ["Loading...", "Calling our chefs...", "Searching the recipe books...", "It's worth the wait..."][Math.floor(Math.random() * 4)],
+        pageState: ["Loading...", "Calling our chefs...", "Searching the recipe books...", "It's worth the wait...", "Licking lips in anticipation..."][Math.floor(Math.random() * 5)],
     }
 
     state = this.initialState
@@ -24,6 +24,7 @@ export class SavedRecipes extends Component {
             recipes.forEach((recipe) => isCurrentlySaved[recipe.id] = true)
             let pageState 
             if (recipes.length === 0) {pageState = 'No favourite recipes yet!'} else {pageState = ''} 
+            //Upadte state
             this.setState({savedRecipes: recipes, isCurrentlySaved, loggedInUser, pageState})
         } else if (response === 'unauthorized') {
             //do nothing
