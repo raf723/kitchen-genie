@@ -8,7 +8,7 @@ export class SavedRecipes extends Component {
         loggedInUser: {},
         savedRecipes: [],
         isCurrentlySaved: {},
-        pageState: 'Loading...',
+        pageState: ["Loading...", "Calling our chefs...", "Searching the recipe books...", "It's worth the wait..."][Math.floor(Math.random() * 4)],
     }
 
     state = this.initialState
