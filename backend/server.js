@@ -146,24 +146,36 @@ app
 
   //------------------------- Get Recipe Rating ---------------------//
 
-  .get('/rating/:id', async (server) => {
+  .get('/rating/recipe/:id', async (server) => {
 
   })
 
 
   //--------------------------- Post Rating ------------------------//
 
-  .post('/rating', async (server) => {
+  .post('/recipe/rating', async (server) => {
+
+    if(!server.cookies.sessionId){
+      server.json({message: 'You need to be a registered user to rate.'})
+    }
 
     const { rating, recipeId } = await server.body
 
-    console.log(rating, recipeId)
+    //Is sequential id numbering a security risk
+    const user = await getCurrentUser(server.cookies.sessionId)
 
-    console.log(server.cookies)
+    // Todo: Make user only able to vote once, when rating has been complete. 
+    const postRatingQuery = `
+      INSERT INTO recipe_rating 
+        (rating, created_at, updated_at, recipe_id, user_id)
+      VALUES 
+        ($1, NOW(), NOW(), $2, $3)
+        RETURNING rating;
+        `
 
+      const [ ratingResponse ] = (await client.queryObject(postRatingQuery, rating, recipeId, user.id)).rows
 
-
-
+    server.json({ rating: ratingResponse.rating })
 
   })
 

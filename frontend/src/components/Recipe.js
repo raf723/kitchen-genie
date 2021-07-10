@@ -9,17 +9,10 @@ class Recipe extends Component {
         description: '',
         instructions: [],
         ingredients: [],
-        rating: 3
+        rating: 4,
+        personalRating: undefined,
     }
 
- componentDidMount(){
-
-        //  this.fetchRecipeInfomation()
-        //  this.summariseRecipe()
-        //  this.fetchRecipeIntructions()
-
-        this.postStarRating()
-    }
 
 
     async fetchRecipeInfomation () {
@@ -79,23 +72,23 @@ class Recipe extends Component {
         return string.replace(/(<([^>]+)>)/gi, "")
     }
 
-    // getStarRating(){
+    getStarRatings(){
 
-    //     const endpoint = `${process.env.REACT_APP_URL}/`
+        //Todo: Has user rated this meal before 
+        //Todo: If so, return most recent rating.
+        //Todo: If not, set rating to zero. 
+        //Todo: Get Average star ratings 
 
-    // }
+        const endpoint = `${process.env.REACT_APP_URL}/rating/recipe/id`
 
-    handleRateRecipe(){
-        this.setState({
-            rating: 3
-        })
     }
+    
 
     async postStarRating(){
 
         const { recipeId, rating } = this.state
        
-        const postRatingEndPoint = `${process.env.REACT_APP_URL}/rating`
+        const postRatingEndPoint = `${process.env.REACT_APP_URL}/recipe/rating`
 
         const postRatingRes = await fetch(postRatingEndPoint, {
             method: 'POST',
@@ -106,12 +99,34 @@ class Recipe extends Component {
                 recipeId: recipeId
             })
         })
+
+        const dbResponse = await postRatingRes.json()
+        
+        this.setState({ personalRating: dbResponse.rating })
     
     }
 
+    async changeRating(newRating){
+        this.setState({
+            personalRating: newRating
+        })
+        //Todo: Post new rating.
+        await this.postStarRating()
+    }
+
+    componentDidMount(){
+
+        //  this.fetchRecipeInfomation()
+        //  this.summariseRecipe()
+        //  this.fetchRecipeIntructions()
+
+        this.postStarRating()
+    }
+
+
     render(){
         
-        const {  title, description, instructions } = this.state
+        const {  title, description, instructions, personalRating } = this.state
 
         const { image, numIngredients, numMissingIngredients } = this.props.location.state
 
@@ -126,6 +141,20 @@ class Recipe extends Component {
                         starRatedColor="gold"
                         starDimension="15px"
                         starSpacing="3px" />
+
+                    <h3>{`Your personal rating is ${personalRating}`}</h3>
+
+                    <h3>{`Tried this recipe, why not rate it?`}</h3>
+
+                    <StarsRatings
+                        className="star-rating"
+                        rating={ personalRating }
+                        starRatedColor="gold"
+                        starDimension="15px"
+                        starSpacing="3px" 
+                        changeRating={(newRating) => {this.changeRating(newRating)}}
+                        />
+
                 </section>
                 {/* <section className="recipe-container">
                     <div className="instructions-container">
