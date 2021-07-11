@@ -52,12 +52,7 @@ export class SavedRecipes extends Component {
                     <SaveButton onSave={ async () => await this.handleSaveRecipe(recipe.id)} 
                     isCurrentlySaved={isCurrentlySaved[recipe.id]}/>
                 }
-                <RecipeCard  
-                            id={recipe.id} 
-                            title={recipe.title}
-                            image={recipe.image} 
-                            numIngredients={recipe.numIngredients} 
-                            numMissingIngredients={recipe.numMissingIngredients} />
+                <RecipeCard recipe={ recipe }/>
             </div>
         )
     }

@@ -5,47 +5,47 @@ import React from 'react'
 
 class RecipeCard extends React.Component {
   // Navigate to recipe page with recipe data
-  recipeHandler = (id, image, numIngredients, numMissingIngredients) => {
+  recipeHandler = (recipe) => {
     // Pass data another parent component (page)
     this.props.history.push({
       pathname: '/recipe',
       state: {
-        id: id,
-        image: image,
-        numIngredients: numIngredients,
-        numMissingIngredients: numMissingIngredients
+        id: recipe.id,
+        image: recipe.image,
+        numIngredients: recipe.usedIngredientCount + recipe.missedIngredientCount,
+        numMissingIngredients: recipe.missedIngredientCount
       }
     })
   }
 
 
   render() {
-    const { id, title, image, numIngredients, numMissingIngredients, rating } = this.props
+    const { recipe, rating } = this.props
 
     return (
-      <article id={ id } className="recipe-card" onClick={ () => this.recipeHandler(id, image, numIngredients, numMissingIngredients) }>
+      <article id={ recipe.id } className="recipe-card" onClick={ () => this.recipeHandler(recipe) }>
         <div className="recipe-card-top">
         {/* Card image */}
-          <img className="recipe-image" src={ image } alt="prepared recipe" height="100%" width="100%"/>
+          <img className="recipe-image" src={ recipe.image } alt="prepared recipe" height="100%" width="100%"/>
         </div>
         {/* Card meta */}
         <div className="recipe-card-bottom">
           {/* Recipe title */}
-          <h5 className="recipe-title">{ title }</h5>
+          <h5 className="recipe-title">{ recipe.title }</h5>
 
           {/* Star rating */}
           {
             (!rating && <div className="unrated-recipe-tag">No rating yet!</div>)
             || <StarsRatings
               className="star-rating"
-              rating={ 0 }
+              rating={ rating }
               starRatedColor="gold"
               starDimension="15px"
               starSpacing="3px" />
           }
 
           {/* Ingredients info */}
-          { ( numMissingIngredients && <p className="some-missing">Missing { numMissingIngredients } ingredients</p> ) 
+          { ( recipe.missedIngredientCount && <p className="some-missing">Missing { recipe.missedIngredientCount } ingredients</p> ) 
             || <p className="none-missing">You've got all the ingredients! </p> }
         </div>
       </article>
