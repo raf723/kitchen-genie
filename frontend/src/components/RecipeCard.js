@@ -2,6 +2,8 @@ import '../css/recipe-card.css'
 import StarsRatings from 'react-star-ratings'
 import { withRouter } from 'react-router-dom'
 import React from 'react'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
 
 class RecipeCard extends React.Component {
   // Navigate to recipe page with recipe data
@@ -21,6 +23,15 @@ class RecipeCard extends React.Component {
 
   render() {
     const { recipe, rating } = this.props
+
+    function listToTitleString(lst, maxNumberOfItems=3) {
+      if (lst.length > maxNumberOfItems) {
+        const reducedLst = lst.slice(0, maxNumberOfItems)
+        return reducedLst.map((ingredient) => ingredient.name).join(', ') + '...'
+      } else {
+        return lst.map((ingredient) => ingredient.name).join(', ') 
+      }
+    }
 
     return (
       <article id={ recipe.id } className="recipe-card" onClick={ () => this.recipeHandler(recipe) }>
@@ -45,8 +56,17 @@ class RecipeCard extends React.Component {
           }
 
           {/* Ingredients info */}
-          { ( recipe.missedIngredientCount && <p className="some-missing">Missing { recipe.missedIngredientCount } ingredients</p> ) 
-            || <p className="none-missing">You've got all the ingredients! </p> }
+          { ( 
+              recipe.missedIngredientCount && 
+              <Tippy placement="bottom" content={"Missing: " + listToTitleString(recipe.missedIngredients)}>
+                <p className="some-missing"> Missing { recipe.missedIngredientCount } ingredients</p>  
+              </Tippy>
+            )
+            || ( 
+              <Tippy placement="bottom" content={"Using: " + listToTitleString(recipe.usedIngredients)}>
+                <p className="none-missing">You've got all the ingredients! </p> 
+              </Tippy>
+            ) }
         </div>
       </article>
     )
