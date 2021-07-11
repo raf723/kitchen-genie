@@ -28,8 +28,6 @@ class Results extends React.Component {
       this.setState({savedRecipeIds, displaySaveFeature: true})
     } else if (response === 'unauthorized') {
       //do nothing
-    } else if (response === 'service down') {
-      //notify the user 
     } else {
       window.location.replace('/error')
     }
@@ -52,7 +50,7 @@ class Results extends React.Component {
         this.setState({ savedRecipeIds: savedRecipeIds.filter((id) => id !== recipeId) })
       }
       this.setState(savedRecipeIds)
-    } else if (response === 'bad credential') {
+    } else if (response === 'unauthorized') {
         alert("Unauthorized access!\nYou must log in to access saved recipes!")
         window.location.replace('/login')
     } else {
