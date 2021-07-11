@@ -20,7 +20,7 @@ class RecipeCard extends React.Component {
 
 
   render() {
-    const { id, title, image, numIngredients, numMissingIngredients } = this.props
+    const { id, title, image, numIngredients, numMissingIngredients, rating } = this.props
 
     return (
       <article id={ id } className="recipe-card" onClick={ () => this.recipeHandler(id, image, numIngredients, numMissingIngredients) }>
@@ -31,15 +31,18 @@ class RecipeCard extends React.Component {
         {/* Card meta */}
         <div className="recipe-card-bottom">
           {/* Recipe title */}
-          <h5>{ title }</h5>
+          <h5 className="recipe-title">{ title }</h5>
 
           {/* Star rating */}
-          <StarsRatings
-            className="star-rating"
-            rating={ 0 }
-            starRatedColor="gold"
-            starDimension="15px"
-            starSpacing="3px" />
+          {
+            (!rating && <div className="unrated-recipe-tag">No rating yet!</div>)
+            || <StarsRatings
+              className="star-rating"
+              rating={ 0 }
+              starRatedColor="gold"
+              starDimension="15px"
+              starSpacing="3px" />
+          }
 
           {/* Ingredients info */}
           { ( numMissingIngredients && <p className="some-missing">Missing { numMissingIngredients } ingredients</p> ) 
