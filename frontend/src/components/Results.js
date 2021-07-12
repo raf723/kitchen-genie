@@ -18,7 +18,7 @@ const intolerances = ['Dairy', 'Egg', 'Grain', 'Gluten', 'Nut', 'Peanut', 'Seafo
 class Results extends React.Component {
   // Declare initialState object where all values are empty
   initialState = {
-    ingredients: this.props.location.state.ingredients
+    ingredients: this.props.location.state.ingredients,
     savedRecipeIds: [],
     displaySaveFeature: false
   }
@@ -94,6 +94,7 @@ class Results extends React.Component {
             <h2>Intolerances</h2>
             { intolerances.map(intolerance => <div><input type="checkbox" value={ intolerance }/><span> { intolerance }</span></div> )}
           </div>
+        </div>
  
         <div id="checkbox-adjacent-container">
           <div id="autosuggest-container">
@@ -116,7 +117,7 @@ class Results extends React.Component {
                 && <SaveButton onSave={() => this.handleSaveRecipe(recipe.id, !savedRecipeIds.includes(recipe.id))} 
                 isCurrentlySaved={savedRecipeIds.includes(recipe.id)}/>
               }
-              <Recipe recipe={ recipe } forPage="results" />
+              <RecipeCard recipe={ recipe } forPage="results" />
             </div>) }
           </div>
         </div>

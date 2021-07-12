@@ -2,7 +2,7 @@ import '../css/recipe-card.css'
 import StarsRatings from 'react-star-ratings'
 import { withRouter } from 'react-router-dom'
 import React from 'react'
-import Tippy from '@tippyjs/react'
+import Tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'
 
 class RecipeCard extends React.Component {
@@ -57,7 +57,6 @@ class RecipeCard extends React.Component {
 
   render() {
     const { recipe, forPage, rating } = this.props
-
 
     // console.log(recipe.extendedIngredients.map((ingredient) => ingredient.name ))
     return (
