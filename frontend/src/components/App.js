@@ -118,8 +118,8 @@ class App extends React.Component {
 
             {/* V Remove V */}
             <Route path='/comments'>
-              <InputComments recipeId={1} />
-              {/* <Comments /> */}
+              {/* <InputComments recipeId={1} /> */}
+              <Comments recipeId={1} />
             </Route>
 
             {/* Recipe results */}

@@ -2,16 +2,32 @@ import React from 'react'
 
 
 class Comments extends React.Component {
-    initialState = { comments: [], recipeID: "", loggedInUser: {} }
+    initialState = { comments: [], recipeId: "", loggedInUser: {} }
 
-    componentWillUnmount() {
-        // take recipeID from props
-        // fetch comments from backend
+    async componentWillUnmount() {
+        const { recipeId } = this.props
+        const apiResponse = await fetch(`http://localhost:8080/comments/${recipeId}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' }
+        })
+
+        const { response, comments }= await apiResponse.json()
+
+        console.log(response)
+        
+        if (response === 'success') {
+            this.setState(this.initialState)
+        } else {
+            window.location.replace('/error')
+        }
+
+
         // set loggedInUser from backend
-        // insert commnets from backend into state
+        // insert comments from backend into state
     }
 
-    
+
 
     render() {
         return(

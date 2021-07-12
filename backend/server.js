@@ -236,7 +236,8 @@ app
             SELECT * FROM recipe_comments 
             WHERE recipe_id = $1;`, recipeId)).rows
 
-    console.log({queryResults})
+    console.log(queryResults)
+    console.log('Hello')
     await server.json({response: 'success', comments: queryResults })
   })
 
