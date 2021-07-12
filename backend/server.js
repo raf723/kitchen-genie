@@ -150,7 +150,6 @@ app
 
     const { id } = server.params
 
-    //! This does not take into account the user's most recent vote. 
     const averageRatingQuery = `SELECT ROUND(AVG(rating), 2)::float AS value FROM recipe_rating WHERE recipe_id = $1;`
 
     const [ averageRating ] = (await client.queryObject(averageRatingQuery, id)).rows
@@ -178,7 +177,10 @@ app
     const user = await getCurrentUser(server.cookies.sessionId)
 
     // Todo: Make user only able to vote once, when rating has been complete. 
-    const postRatingQuery = `
+    const deleteOldPostNewRating = `
+      DELETE FROM recipe_rating
+        WHERE user_id = $3 AND recipe_id = $2;
+
       INSERT INTO recipe_rating 
         (rating, created_at, updated_at, recipe_id, user_id)
       VALUES 
@@ -186,9 +188,7 @@ app
         RETURNING rating;
         `
 
-      const [ ratingResponse ] = (await client.queryObject(postRatingQuery, rating, recipeId, user.id)).rows
-
-      console.log(ratingResponse.rating)
+      const [ ratingResponse ] = (await client.queryObject(deleteOldPostNewRating, rating, recipeId, user.id)).rows
 
     server.json({ rating: ratingResponse.rating })
 
