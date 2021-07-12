@@ -14,6 +14,7 @@ import Results from './Results'
 import About from './About'
 import Recipe from './Recipe'
 // V Remove V
+import InputComments from './InputComments'
 import Comments from './Comments'
 
 class App extends React.Component {
@@ -96,7 +97,8 @@ class App extends React.Component {
 
             {/* V Remove V */}
             <Route path='/comments'>
-              <Comments userAuthenticated={ !!this.state.loggedInUser } />
+              {/* <InputComments userAuthenticated={ !!this.state.loggedInUser } /> */}
+              <Comments />
             </Route>
 
             {/* Recipe results */}
