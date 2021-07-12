@@ -1,10 +1,10 @@
 /* ==================== General ==================== */
-.home-container * {
+#home-container * {
   font-family: 'Poppins', sans-serif;
   color: rgb(50, 50, 50);
 }
 
-.home-container {
+#home-container {
   height: 100%;
   background-image: url(../splash.jpeg);
   background-position: top;
@@ -15,7 +15,7 @@
   align-items: center;
 }
 
-.home-container h1 {
+#home-container h1 {
   height: fit-content;
   font-size: 72px;
   margin-top: 2%;
@@ -24,7 +24,7 @@
 
 
 /* ==================== Search ==================== */
-#search-container {
+#home-container #search-container {
   position: relative;
   width: 46%;
   display: flex;
@@ -33,11 +33,11 @@
 }
 
 /* Container's child divs i.e. Autosuggest input's div */
-#search-container div {
+#home-container #search-container div {
   width: 80%;
 }
 
-/* .home-container input {
+/* #home-container input {
   height: 40px;
   width: 100%;
   color: rgb(50, 50, 50);
@@ -49,19 +49,19 @@
   padding-left: 16px;
 }
 
-.home-container input:focus {
+#home-container input:focus {
   outline: none;
   border: solid 2px rgb(116,166,127);
   transition: border .5s ease;
 } */
 
 /* Input after autocomplete */
-.home-container input:-webkit-autofill {
+#home-container input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
 /* Search button */
-#search-container button {
+#home-container #search-container button {
   height: 44px;
   width: 12%;
   color: rgb(116,166,127);
@@ -72,13 +72,13 @@
   transition: background .5s ease;
 }
 
-#search-container button:hover {
+#home-container #search-container button:hover {
   color: white;
   background-color: rgb(116,166,127);
   transition: background .5s ease;
 }
 
-#ingredients-container {
+#home-container #ingredients-container {
   position: relative;
   width: 44%;
   display: flex;
@@ -87,7 +87,7 @@
   margin-top: 8px;
 }
 
-#ingredients-container button {
+#home-container #ingredients-container button {
   color: white;
   background-color: rgb(116,166,127);
   border: none;
@@ -97,7 +97,7 @@
   transition: background .5s ease;
 }
 
-#ingredients-container button:hover {
+#home-container #ingredients-container button:hover {
   background-color: rgb(204, 82, 52, 0.9);
   transition: background .5s ease;
 }

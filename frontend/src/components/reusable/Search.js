@@ -71,7 +71,7 @@ class Search extends React.Component {
 
     // Set properties for Autosuggest's input
     const inputProps = {
-      placeholder: "Find a recipe!",
+      placeholder: "Search for an ingredient and hit 'Enter'!",
       onChange: this.onChange,
       onKeyPress: this.onKeyPress,
       value

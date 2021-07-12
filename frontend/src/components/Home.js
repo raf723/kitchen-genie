@@ -12,7 +12,6 @@ import DeleteIcon from '../delete.png'
 
 
 
-//------------------------------ Home component ------------------------------//
 class Home extends React.Component {
   // Declare initialState object where all values are empty
   initialState = {
@@ -52,13 +51,16 @@ class Home extends React.Component {
     // Pass data another parent component (page)
     this.props.history.push({
       pathname: '/results',
-      state: { results: recipes }
+      state: { 
+        results: recipes,
+        ingredients: this.state.ingredients
+      }
     })
   }
 
   render() {
     return (
-      <div className="home-container">
+      <div id="home-container">
         <h1>Supercook</h1>
 
         <div id="search-container">
