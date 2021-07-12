@@ -188,7 +188,9 @@ app
 
       const [ ratingResponse ] = (await client.queryObject(postRatingQuery, rating, recipeId, user.id)).rows
 
-    server.json({ averageRating: ratingResponse.value })
+      console.log(ratingResponse.rating)
+
+    server.json({ rating: ratingResponse.rating })
 
   })
 

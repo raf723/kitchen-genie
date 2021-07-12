@@ -97,7 +97,7 @@ class App extends React.Component {
             </Route>
 
             {/* Single recipe */}
-            <Route path='/recipe' userAuthenticated={this.state.loggedInUser } component={ Recipe }>
+            <Route path='/recipe' render={(props) => <Recipe {...props} userAuthenticated={this.state.loggedInUser}/>}>
             </Route>
 
           </Switch>

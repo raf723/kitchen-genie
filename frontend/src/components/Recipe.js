@@ -101,6 +101,8 @@ class Recipe extends Component {
     async postStarRating(){
 
         const { recipeId, personalRating } = this.state
+
+        console.log(personalRating)
        
         const postRatingEndPoint = `${process.env.REACT_APP_URL}/recipe/rating`
 
@@ -116,6 +118,7 @@ class Recipe extends Component {
 
         const dbResponse = await postRatingRes.json()
         
+
         this.setState({ personalRating: dbResponse.rating })
     
     }
@@ -129,14 +132,10 @@ class Recipe extends Component {
     }
 
     componentDidMount(){
-
-        //  this.fetchRecipeInfomation()
-        //  this.summariseRecipe()
-        //  this.fetchRecipeIntructions()
-        
-        
-        this.getAverageStarRatings()
-
+         this.fetchRecipeInfomation()
+         this.summariseRecipe()
+         this.fetchRecipeIntructions()
+         this.getAverageStarRatings()
     }
 
     render(){
@@ -146,8 +145,6 @@ class Recipe extends Component {
         const { image, numIngredients, numMissingIngredients } = this.props.location.state
 
         const { userAuthenticated } = this.props
-
-        console.log(userAuthenticated)
 
         return (
             <div>
@@ -166,23 +163,21 @@ class Recipe extends Component {
                         {userAuthenticated && <h3>{`Your personal rating is ${personalRating}`}</h3>}
                     </div>
 
-                    <h3>{`Tried this recipe, why not rate it?`}</h3>
-
                     { userAuthenticated && <StarsRatings
                         className="star-rating"
                         rating={ personalRating }
                         starRatedColor="gold"
                         starDimension="15px"
                         starSpacing="3px" 
-                        changeRating={(newRating) => {this.handleChangeRating(newRating)}}
-                        />}
+                        changeRating={(newRating) => {this.handleChangeRating(newRating)}}/>  
+                        }
 
                 </section>
-                {/* <section className="recipe-container">
+                <section className="recipe-container">
                     <div className="instructions-container">
                         <p className='recipe-description'>{ description }</p>
-                        <span>{numIngredients}</span>
-                        <span>{numMissingIngredients}</span>
+                        <p>Number of Ingredients: {numIngredients}</p>
+                        <p>Missing Ingredients: {numMissingIngredients}</p>
                         <ul>
                             {this.renderInstructions(instructions)}
                         </ul>
@@ -192,7 +187,7 @@ class Recipe extends Component {
                             {this.renderIngredients()}
                         </ul>
                     </div>
-                </section> */}
+                </section>
             </div>
         )
     }
