@@ -21,9 +21,14 @@
 }
 
 #checkbox-container .subgroup-container {
-  margin: 12px;
-  margin-left: 24px;
-  margin-top: 12px;
+  background-color: rgba(116,166,127,0.1);
+  border-radius: 4px;
+  padding: 12px;
+  margin: 0px 20px
+}
+
+#checkbox-container .subgroup-container:not(:first-child) {
+  margin-top: 20px;
 }
 
 #checkbox-container .subgroup-container h2 {
@@ -38,7 +43,6 @@
   font-size: 12px;
   padding-bottom: 10px;
 }
-
 
 
 
@@ -105,12 +109,4 @@
 #results-container .card-container {
   width: 22%;
   margin: 12px 12px;
-  min-width: 300px;
-  max-width: 1200px;
-  margin: 24px 149px;
-}
-
-.card-container {
-  width: 250px;
-  margin: 16px 12px;
 }

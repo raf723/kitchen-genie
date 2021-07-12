@@ -18,7 +18,13 @@ const intolerances = ['Dairy', 'Egg', 'Grain', 'Gluten', 'Nut', 'Peanut', 'Seafo
 class Results extends React.Component {
   // Declare initialState object where all values are empty
   initialState = {
+    value: '',
     ingredients: this.props.location.state.ingredients,
+    results: this.props.location.state.results,
+    type: [],
+    diet: [],
+    cuisine: [],
+    intolerances: [],
     savedRecipeIds: [],
     displaySaveFeature: false
   }
@@ -26,20 +32,50 @@ class Results extends React.Component {
   // Set state to initialState
   state = this.initialState
 
- async componentDidMount(){
-  const apiResponse = await fetch(`http://localhost:8080/myrecipes/id-only`, {
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-  })
-    const { response, savedRecipeIds } = await apiResponse.json()
+  async componentDidMount() {
+    const myRecipes = await fetch(`http://localhost:8080/myrecipes/id-only`, {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    })
 
-    if (response === 'success') { 
-      this.setState({savedRecipeIds, displaySaveFeature: true})
-    } else if (response === 'unauthorized') {
-      //do nothing
-    } else {
-      // window.location.replace('/error')
-    }
+    const { response, savedRecipeIds } = await myRecipes.json()
+
+    if (response === 'success') this.setState({ savedRecipeIds, displaySaveFeature: true })
+    else if (response !== 'unauthorized') window.location.replace('/error')
+  }
+
+  // Set state of value to selected suggestion
+  onChange = (newValue) => this.setState({ value: newValue })
+
+  // If user hits Enter, add to state's ingredients array and clear input
+  onKeyPress = () => {
+    // Push input value to this.state's array of ingredients
+    const updatedIngredients = this.state.ingredients
+    if (this.state.value !== '') updatedIngredients.push(this.state.value.trim())
+    this.setState({ ingredients: updatedIngredients })
+
+    // Clear input
+    this.setState({ value: '' })
+  }
+
+  // Remove ingredient from this.state's ingredients on user click
+  removeIngredient = (deletedIngredient) => this.setState({ ingredients: this.state.ingredients.filter(ingredient => ingredient !== deletedIngredient) })
+
+  // Complex search using filters
+  async getRecipes() {
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/complexSearch?includeIngredients=${this.state.ingredients}&type=${this.state.type}&diet=${this.state.diet}&cuisine=${this.state.cuisine}&intolerances=${this.state.intolerances}&number=12&ranking=2&apiKey=f1e60ea98b204bac9657574150fa57ec`)
+    const recipes = await spoonacular.json()
+    this.setState({ results: recipes.results })
+  }
+
+  // Add/remove checkbox value from this.state on check/uncheck
+  checkHandler = async (parameter, e) => {
+    if (e.target.checked) {
+      const updatedState = this.state[parameter]
+      updatedState.push(e.target.value)
+      this.setState({ [parameter]: updatedState })
+    } else this.setState({ [parameter]: this.state[parameter].filter(value => value !== e.target.value) })
+    this.getRecipes()
   }
 
   handleSaveRecipe = async (recipeId, toSave=true) => {
@@ -67,9 +103,8 @@ class Results extends React.Component {
     }
   }
 
-
   render() {
-    const { results } = this.props.location.state
+    const results = this.state.results
     const {savedRecipeIds, displaySaveFeature} = this.state
 
     return (
@@ -77,28 +112,28 @@ class Results extends React.Component {
         <div id="checkbox-container">
           <div className="subgroup-container">
             <h2>Meal type</h2>
-            { mealTypes.map(mealType => <div><input type="checkbox" value={ mealType }/><span> { mealType }</span></div> )}
+            { mealTypes.map(mealType => <div key={ mealType }><input type="checkbox" value={ mealType } onChange={ (e) => this.checkHandler('type', e) }/><span> { mealType }</span></div> )}
           </div>
 
           <div className="subgroup-container">
-            <h2>Dietary requirement</h2>
-            { diets.map(diet => <div><input type="checkbox" value={ diet }/><span> { diet }</span></div> )}
+            <h2>Diet</h2>
+            { diets.map(diet => <div key={ diet }><input type="checkbox" value={ diet } onChange={ (e) => this.checkHandler('diet', e) }/><span> { diet }</span></div> )}
           </div>
 
           <div className="subgroup-container">
-            <h2>Cuisines</h2>
-            { cuisines.map(cuisine => <div><input type="checkbox" value={ cuisine }/><span> { cuisine }</span></div> )}
+            <h2>Cuisine</h2>
+            { cuisines.map(cuisine => <div key={ cuisine }><input type="checkbox" value={ cuisine } onChange={ (e) => this.checkHandler('cuisine', e) }/><span> { cuisine }</span></div> )}
           </div>
 
           <div className="subgroup-container">
             <h2>Intolerances</h2>
-            { intolerances.map(intolerance => <div><input type="checkbox" value={ intolerance }/><span> { intolerance }</span></div> )}
+            { intolerances.map(intolerance => <div key={ intolerance }><input type="checkbox" value={ intolerance } onChange={ (e) => this.checkHandler('intolerances', e) }/><span> { intolerance }</span></div> )}
           </div>
         </div>
  
         <div id="checkbox-adjacent-container">
           <div id="autosuggest-container">
-            <Search />
+            <Search value={ this.state.value } onChange={ this.onChange } onKeyPress={ this.onKeyPress }/>
             <button onClick={ () => this.searchHandler() }>GO</button>
           </div>
 

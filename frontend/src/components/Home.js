@@ -10,8 +10,6 @@ import Search from './reusable/Search'
 // Asset imports
 import DeleteIcon from '../delete.png'
 
-
-
 class Home extends React.Component {
   // Declare initialState object where all values are empty
   initialState = {
@@ -45,7 +43,7 @@ class Home extends React.Component {
     const ingredients = this.state.ingredients.join(',')
 
     // Get recipes from Spoonacular
-    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=160&ranking=2&apiKey=d45bc24e8cc84723b6786271e498854f`)
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=12&ranking=2&apiKey=f1e60ea98b204bac9657574150fa57ec`)
     const recipes = await spoonacular.json()
 
     // Pass data another parent component (page)
