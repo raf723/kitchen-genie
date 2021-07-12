@@ -12,11 +12,22 @@ class InputComments extends React.Component {
         e.preventDefault()
         const { comment } = this.state
         const apiResponse = await fetch(`http://localhost:8080/comment/${this.props.recipeId}`, {
-            method: 'PUT',
+            method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ comment })
         })
+
+        const { response }= await apiResponse.json()
+
+        if (response === 'success') {
+            this.setState(this.initialState)
+        } else if ( response === 'unauthorized') {
+            alert('You must be logged in to comment!')
+            window.location.replace('/login')
+        } else {
+            window.location.replace('/error')
+        }
     }
 
     render() {

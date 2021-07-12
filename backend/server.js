@@ -245,10 +245,21 @@ app
     const sessionId = server.cookies.sessionId
     const currentUser = await getCurrentUser(sessionId)
     const { recipeId } = server.params
-    console.log(recipeId)
+    const { comment } = await server.body
 
     if (currentUser) {
-      //do authenticated stuff
+      const outCome =  (await client.queryArray(`INSERT INTO 
+        recipe_comments(comment, recipe_id, user_id, created_at, updated_at)
+        VALUES ($1, $2, $3, NOW(), NOW())
+        RETURNING 't';`, comment, recipeId, currentUser.id)).rows[0][0]
+     if (outCome === 't')  {
+       //All good
+      await server.json({ response: 'success' })
+     } else {
+       //Something when wrong processing the query
+      await server.json({ response: 'failure' })
+     }
+
     } else {
       //Bad Credentials
       await server.json({ response: 'unauthorized' })
