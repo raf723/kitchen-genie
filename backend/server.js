@@ -209,12 +209,10 @@ app
 
   //-------------------------- Get List of Recipes -------------------//
   .get('/myrecipes/id-only', async (server) => {
-    await server.json({ response: 'unauthorized' })
     const sessionId = server.cookies.sessionId
     const currentUser = await getCurrentUser(sessionId)
 
     if (currentUser) {
-
       const queryResults = (await client.queryArray(`
         SELECT recipe_id FROM saved_recipes 
         WHERE user_id = $1 AND active = 't';`, currentUser.id)).rows
@@ -230,6 +228,31 @@ app
   })
 
 
+  //-------------------------- Get List of Comments -------------------//
+  .get('/comments/:recipeId', async (server) => {
+    const { recipeId } = server.params
+
+    const queryResults = (await client.queryArray(`
+            SELECT * FROM recipe_comments 
+            WHERE recipe_id = $1;`, recipeId)).rows
+
+    console.log({queryResults})
+    await server.json({response: 'success', comments: queryResults })
+  })
+
+  //-------------------------- Get List of Comments -------------------//
+  .post('/comment/:recipeId', async (server) => {
+    const sessionId = server.cookies.sessionId
+    const currentUser = await getCurrentUser(sessionId)
+
+    if (currentUser) {
+      //do authenticated stuff
+    } else {
+      //Bad Credentials
+      await server.json({ response: 'unauthorized' })
+    }
+
+  })
   //------------------------- Start server -------------------------//
   .start({ port: PORT })
 console.log(`Server running on http://localhost:${PORT}`)
