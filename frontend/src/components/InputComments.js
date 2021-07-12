@@ -5,12 +5,18 @@ import '../css/input-comments.css'
 
 
 class InputComments extends React.Component {
-    initialState = { comment: "", userId: "", recipeId: "" }
+    initialState = { comment: ""}
     state = {...this.initialState}
         
-    handleSubmit(e) {
+    async handleSubmit(e) {
         e.preventDefault()
-        
+        const { comment } = this.state
+        const apiResponse = await fetch(`http://localhost:8080/comment/${this.props.recipeId}`, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ comment })
+        })
     }
 
     render() {
@@ -21,8 +27,8 @@ class InputComments extends React.Component {
                     <p>Username</p>
                     <form onSubmit={(e) => this.handleSubmit(e)}>
                       <textarea name="comment" value={comment} placeholder="Add a comment..." className="commentText" onChange={(e) => this.setState({comment: e.target.value})}></textarea>
-                      <input type="submit" name="post" value="Post"/>
-                      <input type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })} />
+                      <button type="submit" name="post" value="Post">Submit</button>
+                      <button type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })}>Cancel</button>
                     </form>
                 </div>
                 {/* Display comments */}
@@ -33,19 +39,3 @@ class InputComments extends React.Component {
 }
 
 export default InputComments
-            
-            // class Comments extends React.Component {
-            //     render() {
-            //         return (
-            //             <div className="Comments">
-            //             <h2>Comments (10)</h2>
-            //             {/* Display comments */}
-            //             <textarea>
-            //             <p>You need to either <button>Log-in</button>Or <button>Register</button> to post a comment.</p>
-            //             </textarea>
-            //             </div>
-            //             )
-            //         }
-            //     }
-                
-            //     export default Comments

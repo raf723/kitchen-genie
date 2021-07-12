@@ -240,10 +240,12 @@ app
     await server.json({response: 'success', comments: queryResults })
   })
 
-  //-------------------------- Get List of Comments -------------------//
+  //-------------------------- Post a Comment -------------------//
   .post('/comment/:recipeId', async (server) => {
     const sessionId = server.cookies.sessionId
     const currentUser = await getCurrentUser(sessionId)
+    const { recipeId } = server.params
+    console.log(recipeId)
 
     if (currentUser) {
       //do authenticated stuff

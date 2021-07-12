@@ -11,6 +11,8 @@ class Comments extends React.Component {
         // insert commnets from backend into state
     }
 
+    
+
     render() {
         return(
             <div className="comments-container">

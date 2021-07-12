@@ -8,9 +8,6 @@ config({ path: `./.env.${DENO_ENV}`, export: true })
 const client = new Client(Deno.env.get("PG_URL"))
 //Connect to db.
 await client.connect()
-<<<<<<< HEAD
-//Todo: if exits drop table. 
-=======
 
 //Remove old tables
 await client.queryObject(`DROP TABLE IF EXISTS sessions;`)
@@ -20,7 +17,6 @@ await client.queryObject(`DROP TABLE IF EXISTS recipe_comment_votes;`)
 await client.queryObject(`DROP TABLE IF EXISTS recipe_comments;`)
 await client.queryObject(`DROP TABLE IF EXISTS users;`)
 
->>>>>>> 6f9b0e396cfbaf564e8b71d54a901e1be754bd85
 //Create user table.
 await client.queryObject(`
 CREATE TABLE IF NOT EXISTS users (
@@ -33,21 +29,13 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP NOT NULL
     );`
 )
-<<<<<<< HEAD
-=======
-
->>>>>>> 6f9b0e396cfbaf564e8b71d54a901e1be754bd85
 //Create sessions table/
 await client.queryObject(`
     CREATE TABLE IF NOT EXISTS sessions (
         uuid TEXT PRIMARY KEY,
         created_at TIMESTAMP NOT NULL,
         expiry_date TIMESTAMP NOT NULL,
-<<<<<<< HEAD
-        user_id INTEGER,
-=======
         user_id INTEGER NOT NULL,
->>>>>>> 6f9b0e396cfbaf564e8b71d54a901e1be754bd85
         FOREIGN KEY (user_id) REFERENCES users(id)
     );`
 )
