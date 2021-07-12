@@ -1,6 +1,6 @@
 import React from 'react'
 import { format } from 'date-fns'
-
+import '../css/comments.css'
 
 class Comments extends React.Component {
     initialState = { 
@@ -35,12 +35,15 @@ class Comments extends React.Component {
     renderComment(comment) {
         return (
             <li className="comment" key={comment.id}>
-                <p className="comment-header"><strong>{comment.username}</strong> said:</p>
+                <p className="comment-header"><strong><span className="highlight">{comment.username}</span></strong> said:</p>
+                <div className="separator"><hr/></div>
                 <p className="comment-body">
                     {comment.comment}
                 </p>
-                <p className="comment-footer"><strong>Comment Ref: </strong>{comment.id} | <strong>Date: </strong>{format(new Date(comment.created_at), 'MM/dd/yyyy h:mmbbb ')}</p>
                 <hr/>
+                <p className="comment-footer">
+                    <strong>Comment Ref: </strong>{comment.id} | <strong>Date: </strong><span className="highlight">{format(new Date(comment.created_at), 'MM/dd/yyyy h:mmbbb ')}</span>
+                </p>
             </li>
         )
     }
