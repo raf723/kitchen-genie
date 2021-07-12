@@ -2,7 +2,7 @@ import '../css/recipe-card.css'
 import StarsRatings from 'react-star-ratings'
 import { withRouter } from 'react-router-dom'
 import React from 'react'
-import Tippy from 'tippy.js';
+import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
 class RecipeCard extends React.Component {

@@ -209,8 +209,10 @@ app
 
   //-------------------------- Get List of Recipes -------------------//
   .get('/myrecipes/id-only', async (server) => {
+    await server.json({ response: 'unauthorized' })
     const sessionId = server.cookies.sessionId
     const currentUser = await getCurrentUser(sessionId)
+
     if (currentUser) {
 
       const queryResults = (await client.queryArray(`
