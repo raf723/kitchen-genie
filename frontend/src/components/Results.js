@@ -64,7 +64,7 @@ class Results extends React.Component {
     const {savedRecipeIds, displaySaveFeature} = this.state
 
     return (
-      <div>
+      <div className="results-page-container">
         <div id="results-search-container">
           <Search />
         </div>
@@ -76,13 +76,7 @@ class Results extends React.Component {
               && <SaveButton onSave={() => this.handleSaveRecipe(recipe.id, !savedRecipeIds.includes(recipe.id))} 
               isCurrentlySaved={savedRecipeIds.includes(recipe.id)}/>
             }
-            <Recipe
-              id={ recipe.id }
-              title={ recipe.title }
-              image={ recipe.image }
-              numMissingIngredients={ recipe.missedIngredientCount }
-              numIngredients={ recipe.usedIngredientCount + recipe.missedIngredientCount }>
-            </Recipe>
+            <Recipe recipe={recipe} forPage="results"/>
           </div>) }
         </div>
       </div>
