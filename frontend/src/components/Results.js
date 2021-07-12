@@ -38,7 +38,7 @@ class Results extends React.Component {
     } else if (response === 'unauthorized') {
       //do nothing
     } else {
-      window.location.replace('/error')
+      // window.location.replace('/error')
     }
   }
 
