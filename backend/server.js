@@ -21,7 +21,7 @@ const client = new Client(Deno.env.get('PG_URL'))
 await client.connect()
 
 // Server functions
-import { addUser, getUser, isRegisteredUser, encryptPassword } from './function-assets/serverFunctions.js' 
+import { addUser, getUser, isRegisteredUser, getCurrentUser } from './function-assets/serverFunctions.js' 
 import verify from './function-assets/verify.js'
 
 const app = new Application()
@@ -65,62 +65,41 @@ app
 
 
   //------------------------- Login handler -------------------------//
-  .post('/login', async (server) => {
-    // Get email and password from front-end
-    const { email, password, remember } = await server.body
 
-    // Dynamic block-scope variable to pass to front-end via server response
-    let errorMessage = ''
+.post('/login', async (server) => {
+  let { email, password, remember } = await server.body
+  const authenticated = await isRegisteredUser(email, password)
 
-    // Look up user via email
-    const [ user ] = (await client.queryObject('SELECT * FROM users WHERE email = $1', email )).rows
+  if (authenticated) {
+    const user = await getUser({ email })
+    const sessionId = v4.generate()
+    const sessionLifespan = remember ? '7 days' : '1 day'
+    await client.queryObject(`INSERT INTO sessions (uuid, user_id, created_at, expiry_date)
+                    VALUES ($1, $2, NOW(), NOW() + interval '${sessionLifespan}');`, sessionId, user.id)
+    server.setCookie({
+      name: "sessionId",
+      value: sessionId,
+      expires: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+      path: "/"
+    })
+    const currentUser = { name: user.username, id: user.id }
+    server.json({ response: "success", currentUser })
+  } else {
+    server.json({ response: "bad credentials", currentUser: null})
+  }
 
-    // Validation
-    switch (true) {
-      case email.length === 0:
-        errorMessage = 'Please enter your email!'
-        break
-      case password.length === 0:
-        errorMessage = 'Please enter your password!'
-        break
-      case user === undefined:
-        errorMessage = 'No account associated with this email!'
-        break
-      default:
-        if (!isRegisteredUser(email)) errorMessage = 'Incorrect password. Please try again.'
-        break
-    }
+})
 
-    // Login authenticated
-    if (errorMessage === '') {
-      // Set global variables
-      authenticated = true
-      userID = user.id
-      
-      // Set cookie if user checked 'Remember me'
-      if (remember) {
-        // Generate uuid for cookie
-        const sessionId = v4.generate()
-
-        // Store uuid in sessions
-        client.queryObject("INSERT INTO sessions (uuid, user_id, created_at) VALUES ($1, $2, NOW())", sessionId, userID ).rows
-        server.setCookie({
-          name: "sessionId",
-          value: sessionId,
-          expires: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
-          path: "/"
-        })
-      }
-    } else {
-      // Reset global variable, userID
-      userID = ''
-    }
-
-    // Server response
-    await server.json({ errorMessage })
-  })
-
-
+//--------------------- Sessions handler -----------------------------------// to revive sessions
+.get('/sessions/:sessionId', async (server) => {
+  const { sessionId } = server.params
+  const currentUser = await getCurrentUser(sessionId)
+  if (currentUser) {
+    server.json({ username: currentUser.username, id: currentUser.id }) //respond with whose session it is
+  } else {
+    server.json(null)
+  }
+})
 
   //------------------------- Registration Handler -------------------------//
   .post('/register', async (server) => {
@@ -165,6 +144,88 @@ app
     }
   })
 
+  //------------------------- Get Saved Recipes -------------------------//
+  .get('/myrecipes', async (server) => {
+    const sessionId = server.cookies.sessionId
+    const currentUser = await getCurrentUser(sessionId)
+    if (currentUser) {
+      const savedRecipeIds = (await client.queryArray(`
+        SELECT recipe_id FROM saved_recipes 
+        WHERE user_id = $1 AND active = 't'
+        ORDER BY created_at DESC;`, currentUser.id)).rows 
+
+
+      if (savedRecipeIds.length !== 0) {
+        const recipeString = savedRecipeIds.reduce((accumulator, [recipe], i) => accumulator + recipe + (i === savedRecipeIds.length - 1 ? "" : ","), "") 
+        //******************INSERT YOUR API KEY ********************************/
+        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeString}&apiKey=109411015c2f4df5942a3143fb7b3c36`
+        const spoonacularApiResponse = await fetch(spoonacularEndpoint)
+        const recipes = await spoonacularApiResponse.json()
+        if (recipes.status === "failure") {
+          //Problem with spoonacular
+          await server.json({ response: 'service down', recipes: [], loggedInUser: { username: currentUser.username, id: currentUser.id } })
+        } else {
+          //All good: Return a list of saved recipes if any
+          await server.json({ response: 'success', recipes, loggedInUser: { username: currentUser.username, id: currentUser.id } })
+        } 
+      } else {
+        //All good: User did not save any recipe
+        await server.json({ response: 'success', recipes: [], loggedInUser: { username: currentUser.username, id: currentUser.id } })
+      }
+    } else {
+      //Bad Credentials
+      await server.json({ response: 'unauthorized' })
+    }
+
+  })
+
+  //------------------------- Post Saved Recipe -------------------------//
+  .post('/save/:recipeId/:action', async (server) => {
+    const { sessionId } = server.cookies
+    const currentUser = await getCurrentUser(sessionId)
+
+    if (currentUser) {
+      const { recipeId, action } = server.params
+
+      const toggleActiveSavesFalse = ` 
+        UPDATE saved_recipes 
+        SET active = 'f', updated_at = NOW()
+        WHERE user_id = $1 AND recipe_id = $2 AND active = 't';
+      `
+      const createActiveSave = ` 
+        INSERT INTO saved_recipes(user_id, recipe_id, active, created_at, updated_at)
+        VALUES ($1, $2, 't', NOW(), NOW());
+      `
+      await client.queryObject(`${toggleActiveSavesFalse}`, currentUser.id, recipeId) 
+      if (action === 'save') {
+        await client.queryObject(`${ createActiveSave }`, currentUser.id, recipeId)
+      }
+
+      await server.json({ response: 'success' })
+    } else {
+      await server.json({ response: 'unauthorized' })
+    }
+  })
+
+  //-------------------------- Get List of Recipes -------------------//
+  .get('/myrecipes/id-only', async (server) => {
+    const sessionId = server.cookies.sessionId
+    const currentUser = await getCurrentUser(sessionId)
+    if (currentUser) {
+
+      const queryResults = (await client.queryArray(`
+        SELECT recipe_id FROM saved_recipes 
+        WHERE user_id = $1 AND active = 't';`, currentUser.id)).rows
+      const savedRecipeIds = queryResults.reduce((accumulator, id) => accumulator.concat(id), []) //Technicality: removes nesting from results
+
+      //All good: Return a list of saved recipeIds if any
+      await server.json({ response: 'success', savedRecipeIds, loggedInUser: { username: currentUser.username, id: currentUser.id }})
+    } else {
+
+      //Bad Credentials
+      await server.json({ response: 'unauthorized' })
+    }
+  })
 
 
   //------------------------- Start server -------------------------//
