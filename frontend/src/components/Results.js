@@ -77,22 +77,22 @@ class Results extends React.Component {
         <div id="checkbox-container">
           <div className="subgroup-container">
             <h2>Meal type</h2>
-            { mealTypes.map(mealType => <div><input type="checkbox" value={ mealType }/><span> { mealType }</span></div> )}
+            { mealTypes.map((mealType, i) => <div key={i}><input type="checkbox" value={ mealType }/><span> { mealType }</span></div> )}
           </div>
 
           <div className="subgroup-container">
             <h2>Dietary requirement</h2>
-            { diets.map(diet => <div><input type="checkbox" value={ diet }/><span> { diet }</span></div> )}
+            { diets.map((diet, i) => <div key={i}><input type="checkbox" value={ diet }/><span> { diet }</span></div> )}
           </div>
 
           <div className="subgroup-container">
             <h2>Cuisines</h2>
-            { cuisines.map(cuisine => <div><input type="checkbox" value={ cuisine }/><span> { cuisine }</span></div> )}
+            { cuisines.map((cuisine, i) => <div key={i}><input type="checkbox" value={ cuisine }/><span> { cuisine }</span></div> )}
           </div>
 
           <div className="subgroup-container">
             <h2>Intolerances</h2>
-            { intolerances.map(intolerance => <div><input type="checkbox" value={ intolerance }/><span> { intolerance }</span></div> )}
+            { intolerances.map((intolerance, i) => <div key={i}><input type="checkbox" value={ intolerance }/><span> { intolerance }</span></div> )}
           </div>
         </div>
  
