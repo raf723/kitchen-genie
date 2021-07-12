@@ -1,0 +1,38 @@
+.active-save-button {
+    position: relative;
+    cursor: pointer;
+    top: 99%;
+    left: 80%;
+    filter: brightness(0.32) sepia(1) hue-rotate(-70deg) saturate(5) drop-shadow(1.95px 1.95px 2.6px);
+}
+
+.inactive-save-button {
+    position: relative;
+    cursor: pointer;
+    top: 99%;
+    left: 80%;
+    filter: brightness(0.17) sepia(0.7) hue-rotate(-70deg) saturate(5) drop-shadow(1.95px 1.95px 2.6px);
+}
+.active-save-button:hover, .inactive-save-button:hover {
+    transform: scale(1);
+	animation: pulse 2s infinite;
+}
+
+
+/*Animation adapted from from https://www.florin-pop.com/blog/2019/03/css-pulse-effect/*/
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+        filter: drop-shadow(1.95px 1.95px 2.6px);
+	}
+
+	70% {
+		transform: scale(1);
+        filter: drop-shadow(0 0 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+        filter: drop-shadow(0 0 0);
+	}
+}

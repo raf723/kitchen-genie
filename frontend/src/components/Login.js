@@ -24,26 +24,6 @@ class Login extends React.Component {
   // Set state to initialState
   state = this.initialState
 
-  // When user logs in
-  loginHandler = async() => {
-    const { email, password, remember } = this.state
-
-    // POST request to server
-    const response = await fetch(`http://localhost:8080/login`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, password: password, remember: remember })
-    })
-    
-    // Server response
-    const { errorMessage } = await response.json()
-    
-    // Display alert if login error, else redirect to homepage
-    if (errorMessage !== '') alert(errorMessage)
-    else window.location.replace('/')
-  }
-
   // When input value is changed
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value })
@@ -57,6 +37,7 @@ class Login extends React.Component {
   }
 
   render() {
+    const {email, password, remember} = this.state
     return (
       <div className="page-container">
         { /* Splash background */ }
@@ -78,7 +59,7 @@ class Login extends React.Component {
             </label>
 
             { /* Login button */ }
-            <button id="login-button" onClick={ () => this.loginHandler() }>Login</button>
+            <button id="login-button" onClick={ () => this.props.onLogin({email, password, remember}) }>Login</button>
 
             { /* Register option */ }
             <span>Don't have an account? Register <NavLink id="register-button" exact to="/register">here</NavLink></span>

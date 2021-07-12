@@ -34,7 +34,12 @@ h5 {
 
 .recipe-card-bottom > * {
   padding: 0;
-  margin: 2px;
+  margin: 6px;
+}
+
+.recipe-title {
+  height: 2.5rem;
+  overflow-y: scroll;
 }
 
 .star-rating {
@@ -55,4 +60,16 @@ h5 {
 .recipe-link {
   text-decoration: none;
   color: #181A18;
+}
+
+.unrated-recipe-tag {
+  background: rgba(192, 192, 192, 0.603);
+  width: 80px;
+  font-size: x-small;
+  font-weight: 600;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius:5px 30px 30px 5px;
+  text-align: center;
+  color: green;
 }
