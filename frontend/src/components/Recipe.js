@@ -95,6 +95,8 @@ class Recipe extends Component {
 
     async getUserStarRating(){
 
+        
+
     }
     
 
