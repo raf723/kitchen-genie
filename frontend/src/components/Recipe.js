@@ -81,6 +81,8 @@ class Recipe extends Component {
 
         const endpoint = `${process.env.REACT_APP_URL}/rating/recipe/id`
 
+        
+
     }
     
 
@@ -121,9 +123,6 @@ class Recipe extends Component {
         //  this.fetchRecipeIntructions()
 
     }
-
-
-
 
     render(){
         
