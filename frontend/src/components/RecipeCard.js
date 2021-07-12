@@ -2,7 +2,7 @@ import '../css/recipe-card.css'
 import StarsRatings from 'react-star-ratings'
 import { withRouter } from 'react-router-dom'
 import React from 'react'
-import Tippy from 'tippy.js';
+import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
 class RecipeCard extends React.Component {
@@ -60,7 +60,7 @@ class RecipeCard extends React.Component {
 
     // console.log(recipe.extendedIngredients.map((ingredient) => ingredient.name ))
     return (
-      <article id={ recipe.id } className="recipe-card" onClick={ () => this.recipeHandler(recipe) }>
+      <article  key={recipe.id} id={ recipe.id } className="recipe-card" onClick={ () => this.recipeHandler(recipe) }>
         <div className="recipe-card-top">
         {/* Card image */}
           <img className="recipe-image" src={ recipe.image } alt="prepared recipe" height="100%" width="100%"/>
