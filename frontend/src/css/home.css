@@ -72,26 +72,41 @@
   transition: background .5s ease;
 }
 
-/* Search button hovered */
 #search-container button:hover {
   color: white;
   background-color: rgb(116,166,127);
   transition: background .5s ease;
 }
 
-
-
-/* ==================== Random recipe generator ==================== */
-#random-recipe-button {
-  font-size: 16px;
-  color: rgb(116,166,127);
-  background-color: transparent;
-  border: none;
-  margin-top: 16px;
+#ingredients-container {
+  position: relative;
+  width: 44%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-top: 8px;
 }
 
-#random-recipe-button:hover {
-  text-decoration: underline;
+#ingredients-container button {
+  color: white;
+  background-color: rgb(116,166,127);
+  border: none;
+  border-radius: 20px;
+  padding: 4px 8px;
+  margin-right: 4px;
+  transition: background .5s ease;
+}
+
+#ingredients-container button:hover {
+  background-color: rgb(204, 82, 52, 0.9);
+  transition: background .5s ease;
+}
+
+.delete-icon {
+  height: 8px;
+  width: 8px;
+  margin-left: 6px;
+  margin-right: 2px;
 }
 
 
@@ -177,4 +192,19 @@
 .suggestion-span {
   font-size: 14px;
   font-weight: 300;
+}
+
+
+
+/* ==================== Random recipe generator ==================== */
+#random-recipe-button {
+  font-size: 16px;
+  color: rgb(116,166,127);
+  background-color: transparent;
+  border: none;
+  margin-top: 16px;
+}
+
+#random-recipe-button:hover {
+  text-decoration: underline;
 }

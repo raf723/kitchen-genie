@@ -4,7 +4,7 @@ import '../css/save-button.css'
 
 // Component imports
 import Search from './reusable/Search'
-import Recipe from './RecipeCard'
+import RecipeCard from './RecipeCard'
 import SaveButton from './SaveButton'
 
 class Results extends React.Component {
