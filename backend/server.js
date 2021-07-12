@@ -146,8 +146,21 @@ app
 
   //------------------------- Get Recipe Rating ---------------------//
 
-  .get('/rating/recipe/:id', async (server) => {
+  .get('/recipe/averagerating/:id', async (server) => {
 
+    const { id } = server.params
+
+    //! This does not take into account the user's most recent vote. 
+    const averageRatingQuery = `SELECT ROUND(AVG(rating), 2)::float AS value FROM recipe_rating WHERE recipe_id = $1;`
+
+    const [ averageRating ] = (await client.queryObject(averageRatingQuery, id)).rows
+
+    if(Number.isNaN(Number.parseFloat(averageRating.value))){
+      averageRating.value = 0
+    }
+
+    server.json(averageRating)
+  
   })
 
 
@@ -175,7 +188,7 @@ app
 
       const [ ratingResponse ] = (await client.queryObject(postRatingQuery, rating, recipeId, user.id)).rows
 
-    server.json({ rating: ratingResponse.rating })
+    server.json({ averageRating: ratingResponse.value })
 
   })
 

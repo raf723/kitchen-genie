@@ -69,19 +69,31 @@ class Recipe extends Component {
     }
 
     removeHtmlTagsFromString(string){
-        return string.replace(/(<([^>]+)>)/gi, "")
+        return string === '' ? 'No description' : string.replace(/(<([^>]+)>)/gi, "")
     }
 
-    getStarRatings(){
+    async getAverageStarRatings(){
 
         //Todo: Has user rated this meal before 
         //Todo: If so, return most recent rating.
         //Todo: If not, set rating to zero. 
         //Todo: Get Average star ratings 
 
-        const endpoint = `${process.env.REACT_APP_URL}/rating/recipe/id`
+        const { recipeId } = this.state
 
-        
+        //Endpoint for getting rating by recipe by id.
+        const endpoint = `${process.env.REACT_APP_URL}/recipe/averagerating/${recipeId}`
+
+        console.log(endpoint)
+
+        const fetchAverageRating = await fetch (endpoint)
+
+        const averageRating = await fetchAverageRating.json()
+
+        this.setState({averageRating: parseFloat(averageRating.value)})
+    }
+
+    async getUserStarRating(){
 
     }
     
@@ -121,39 +133,49 @@ class Recipe extends Component {
         //  this.fetchRecipeInfomation()
         //  this.summariseRecipe()
         //  this.fetchRecipeIntructions()
+        
+        
+        this.getAverageStarRatings()
 
     }
 
     render(){
         
-        const {  title, description, instructions, personalRating } = this.state
+        const {  title, description, instructions, personalRating, averageRating } = this.state
 
         const { image, numIngredients, numMissingIngredients } = this.props.location.state
+
+        const { userAuthenticated } = this.props
+
+        console.log(userAuthenticated)
 
         return (
             <div>
                 <section>
                     <img src={image} alt=""/>
                     <h1>{title}</h1>
-                    <StarsRatings
-                        className="star-rating"
-                        rating={ 0 }
-                        starRatedColor="gold"
-                        starDimension="15px"
-                        starSpacing="3px" />
-
-                    <h3>{`Your personal rating is ${personalRating}`}</h3>
+                    <div>
+                        {averageRating !== undefined  && 
+                        <StarsRatings
+                            className="star-rating"
+                            rating={ averageRating }
+                            starRatedColor="gold"
+                            starDimension="15px"
+                            starSpacing="3px" />}
+                        {averageRating === 0  && <p>(No rating yet)</p>}
+                        {userAuthenticated && <h3>{`Your personal rating is ${personalRating}`}</h3>}
+                    </div>
 
                     <h3>{`Tried this recipe, why not rate it?`}</h3>
 
-                    <StarsRatings
+                    { userAuthenticated && <StarsRatings
                         className="star-rating"
                         rating={ personalRating }
                         starRatedColor="gold"
                         starDimension="15px"
                         starSpacing="3px" 
                         changeRating={(newRating) => {this.handleChangeRating(newRating)}}
-                        />
+                        />}
 
                 </section>
                 {/* <section className="recipe-container">
