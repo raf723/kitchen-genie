@@ -76,7 +76,7 @@ class Results extends React.Component {
               && <SaveButton onSave={() => this.handleSaveRecipe(recipe.id, !savedRecipeIds.includes(recipe.id))} 
               isCurrentlySaved={savedRecipeIds.includes(recipe.id)}/>
             }
-            <Recipe recipe={recipe}/>
+            <Recipe recipe={recipe} forPage="results"/>
           </div>) }
         </div>
       </div>
