@@ -2,9 +2,11 @@ import React from 'react'
 
 
 class Comments extends React.Component {
-    initialState = { comments: [], recipeId: "", loggedInUser: {} }
+    initialState = { comments: [], recipeId: "" }
 
-    async componentWillUnmount() {
+    state = this.initialState
+
+    async componentWillMount() {
         const { recipeId } = this.props
         const apiResponse = await fetch(`http://localhost:8080/comments/${recipeId}`, {
             method: 'GET',
@@ -14,31 +16,36 @@ class Comments extends React.Component {
 
         const { response, comments }= await apiResponse.json()
 
-        console.log(response)
-        
         if (response === 'success') {
-            this.setState(this.initialState)
+            this.setState({comments, recipeId})
         } else {
             window.location.replace('/error')
         }
+    }
 
-
-        // set loggedInUser from backend
-        // insert comments from backend into state
+    renderComment(comment) {
+        return (
+            <li key={comment.id}>
+                <p><strong>{comment.username}</strong> said:</p>
+                <p>
+                    {comment.comment}
+                </p>
+                <p><strong>Comment Ref: </strong>{comment.id} | <strong>Date: </strong>{comment.created_at}</p>
+            </li>
+        )
     }
 
 
 
     render() {
+        const { comments } = this.state
         return(
             <div className="comments-container">
                 <ul>
-                    <li>
-                        {/* comment body */}
-                        {/* which user made a comment */}
+                    { comments.map((comment) => this.renderComment(comment))}
+                    
                         {/* time / date of comment */}
                         {/* pass in reference id */}
-                    </li>
                 </ul>
             </div>
         )
