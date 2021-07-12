@@ -1,8 +1,13 @@
 import React from 'react'
+import { format } from 'date-fns'
 
 
 class Comments extends React.Component {
-    initialState = { comments: [], recipeId: "" }
+    initialState = { 
+        comments: [], 
+        recipeId: "",
+        componentStatus: "Loading..."
+    }
 
     state = this.initialState
 
@@ -17,7 +22,11 @@ class Comments extends React.Component {
         const { response, comments }= await apiResponse.json()
 
         if (response === 'success') {
-            this.setState({comments, recipeId})
+            if ( comments.length === 0) {
+                this.setState({comments, recipeId, componentStatus: 'No comments yet!'})
+            } else {
+                this.setState({comments, recipeId, componentStatus: ''})
+            }
         } else {
             window.location.replace('/error')
         }
@@ -25,27 +34,24 @@ class Comments extends React.Component {
 
     renderComment(comment) {
         return (
-            <li key={comment.id}>
-                <p><strong>{comment.username}</strong> said:</p>
-                <p>
+            <li className="comment" key={comment.id}>
+                <p className="comment-header"><strong>{comment.username}</strong> said:</p>
+                <p className="comment-body">
                     {comment.comment}
                 </p>
-                <p><strong>Comment Ref: </strong>{comment.id} | <strong>Date: </strong>{comment.created_at}</p>
+                <p className="comment-footer"><strong>Comment Ref: </strong>{comment.id} | <strong>Date: </strong>{format(new Date(comment.created_at), 'MM/dd/yyyy h:mmbbb ')}</p>
+                <hr/>
             </li>
         )
     }
 
-
-
     render() {
-        const { comments } = this.state
+        const { comments, componentStatus } = this.state
         return(
             <div className="comments-container">
-                <ul>
+                <p className="comments-status">{componentStatus}</p>
+                <ul className="comments-list">
                     { comments.map((comment) => this.renderComment(comment))}
-                    
-                        {/* time / date of comment */}
-                        {/* pass in reference id */}
                 </ul>
             </div>
         )
