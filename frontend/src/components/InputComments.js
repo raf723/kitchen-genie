@@ -1,5 +1,6 @@
 import React from 'react'
 import '../css/input-comments.css'
+import Comments from './Comments'
 
 // If user is logged in then run Comments, if not then run CommentsLogin
 
@@ -42,8 +43,8 @@ class InputComments extends React.Component {
                       <button type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })}>Cancel</button>
                     </form>
                 </div>
-                {/* Display comments */}
                 <h2>Comments (10)</h2>
+                <Comments recipeId={1}/>
             </div>
         )
     }

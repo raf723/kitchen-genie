@@ -52,6 +52,7 @@ class Comments extends React.Component {
         const { comments, componentStatus } = this.state
         return(
             <div className="comments-container">
+                <h2>Comments ({comments.length})</h2>
                 <p className="comments-status">{componentStatus}</p>
                 <ul className="comments-list">
                     { comments.map((comment) => this.renderComment(comment))}

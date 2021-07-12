@@ -116,10 +116,8 @@ class App extends React.Component {
               <SavedRecipes onSaveRecipe={this.handleSaveRecipe}/>
             </Route>
 
-            {/* V Remove V */}
             <Route path='/comments'>
-              {/* <InputComments recipeId={1} /> */}
-              <Comments recipeId={1} />
+              <InputComments recipeId={1} />
             </Route>
 
             {/* Recipe results */}

@@ -1,10 +1,18 @@
 .comments-container {
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
     width: 100%;
     min-width: 700px;
     height: 30%;
     min-width: 600px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.comments-container h2 {
+    margin-bottom: 0px;
+    color: #74a67f;
 }
 
 .separator {
