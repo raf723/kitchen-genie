@@ -1,6 +1,6 @@
 import React from 'react'
-import { Router, Link } from 'react-router-dom'
-import '../css/input-comments.css'
+import { Link } from 'react-router-dom'
+import '../css/comment-input.css'
 
 
 class InputComments extends React.Component {
@@ -47,7 +47,6 @@ class InputComments extends React.Component {
         } else {
             return <p>Log in <Link className="login-link" to="/login">here</Link> to add a comment!</p>
         }
-        
     }
 
     render() {
