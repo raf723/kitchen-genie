@@ -2,13 +2,14 @@ import { Component } from 'react'
 import StarsRatings from 'react-star-ratings'
 import SaveButton from './SaveButton'
 import { getCookie } from '../function-assets/helpers'
+import '../css/recipe.css'
 
 class Recipe extends Component {
-
+    //Think about pulling instructions from Recipe Card
     initialState = {
         recipeId: this.props.location.state.id,
         isCurrentlySaved: false,
-        title: '',
+        title: this.props.location.state.title,
         description: '',
         instructions: [],
         ingredients: [],
@@ -17,8 +18,6 @@ class Recipe extends Component {
     }
 
     state = this.initialState
-
-
 
     async fetchRecipeInfomation() {
 
@@ -78,7 +77,6 @@ class Recipe extends Component {
     async getPersonalStarRating() {
         const { recipeId } = this.state
         const currentSession = getCookie('sessionId') ?? null
-
         if (currentSession) {
             const apiResponse= await fetch(`${process.env.REACT_APP_URL}/recipe/personalrating/${recipeId}/${currentSession}`)
             const { response, recipe } = await apiResponse.json()
@@ -121,12 +119,12 @@ class Recipe extends Component {
     }
 
     renderIngredients() {
-        return this.state.ingredients.map((ingredient, i) => <li key={i}>{ingredient.name}</li>)
+        return this.state.ingredients.map((ingredient, i) => <li key={i} className="recipe-list-items">{ingredient.name}</li>)
     }
 
 
     renderInstructions(instructionsArr) {
-        return instructionsArr.map((instruction, i) => <li key={i}>{instruction.step}</li>)
+        return instructionsArr.map((instruction, i) => <li key={i} className="recipe-list-items">{instruction.step}</li>)
     }
 
     removeHtmlTagsFromString(string) {
@@ -155,8 +153,8 @@ class Recipe extends Component {
         await this.getPersonalStarRating()
         await this.checkSavedRecipe()
         await this.fetchRecipeInfomation()
-        await this.summariseRecipe()
-        await this.fetchRecipeIntructions()
+        await this.summariseRecipe() //! May not need this as it is passed from recipeCard.sj
+        await this.fetchRecipeIntructions() //! May not need this as this is also passed from recipeCard
     }
 
 
@@ -176,50 +174,59 @@ class Recipe extends Component {
         const { userAuthenticated } = this.props
 
         return (
-            <div>
-                <section>
-                    <img src={image} alt="" />
-                    <h1>{title}</h1>
-                    <div>
-                        <StarsRatings
+                <div className="recipe-page-root">
+                    <section className="recipe-header-container">
+                            <img src={image} className="recipe-page-image" alt="food" />
+                            <h1>{title}</h1>
+                                <div className="rating-fav-container flex row">
+                                    <StarsRatings
+                                        className="star-rating"
+                                        rating={averageRating}
+                                        starRatedColor="gold"
+                                        starDimension="15px"
+                                        starSpacing="5px" 
+                                        />
+                                    {userAuthenticated && ( 
+                                        <div className="flex row"> 
+                                        <span>Save to Favourites</span>
+                                         <SaveButton onSave={() => this.handleSaveRecipe()} isCurrentlySaved={this.state.isCurrentlySaved} />
+                                    </div>
+                                    )}    
+                                </div>
+                       
+                    </section>
+                    <section className="recipe-section recipe-body flex row">
+                         <article className="ingredients">
+                            <h4>Ingredients</h4>
+                            <p>Number of Ingredients: {numIngredients}</p>
+                            <p>Missing Ingredients: {numMissingIngredients}</p>
+                            <ul>
+                                {this.renderIngredients()}
+                            </ul>
+                        </article>
+                        <article className="instructions">
+                            <h4>Description</h4>
+                            <p className='recipe-description'>{description}</p>
+                            <h4>Instructions</h4>
+                            <ol>
+                                {this.renderInstructions(instructions)}
+                            </ol>
+                        </article>
+
+                       
+                    </section>
+                    <section className="recipe-section personal-rating">
+                        {userAuthenticated && <h3>{`Your personal rating is ${personalRating}`}</h3>}
+                        {userAuthenticated && <StarsRatings
                             className="star-rating"
-                            rating={averageRating}
+                            rating={personalRating}
                             starRatedColor="gold"
                             starDimension="15px"
-                            starSpacing="3px" />
-                        {averageRating === 0 && <p>(No rating yet)</p>}
-                        {userAuthenticated && <h3>{`Your personal rating is ${personalRating}`}</h3>}
-                    </div>
-                
-
-                    {userAuthenticated && <StarsRatings
-                        className="star-rating"
-                        rating={personalRating}
-                        starRatedColor="gold"
-                        starDimension="15px"
-                        starSpacing="3px"
-                        changeRating={(newRating) => { this.handleChangeRating(newRating) }} />
-                    }
-
-                    { userAuthenticated && <SaveButton onSave={() => this.handleSaveRecipe()} isCurrentlySaved={this.state.isCurrentlySaved} />}
-
-                </section>
-                <section className="recipe-container">
-                    <div className="instructions-container">
-                        <p className='recipe-description'>{description}</p>
-                        <p>Number of Ingredients: {numIngredients}</p>
-                        <p>Missing Ingredients: {numMissingIngredients}</p>
-                        <ul>
-                            {this.renderInstructions(instructions)}
-                        </ul>
-                    </div>
-                    <div className="ingredients-container">
-                        <ul>
-                            {this.renderIngredients()}
-                        </ul>
-                    </div>
-                </section>
-            </div>
+                            starSpacing="5px"
+                            changeRating={(newRating) => { this.handleChangeRating(newRating) }} />
+                        }
+                    </section>
+                </div>
         )
     }
 }
