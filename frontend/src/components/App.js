@@ -3,7 +3,7 @@ import '../css/app.css'
 import { setCookie, getCookie } from '../function-assets/helpers'
 
 // Routing imports
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 // Component imports
 import Navbar from './Navbar'

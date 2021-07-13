@@ -34,37 +34,10 @@ const headersWhiteList = [
   'User-Agent'
 ]
 
-// Global variables
-let authenticated = false
-let userID = ''
-
 app
   .use(cors({ allowHeaders: headersWhiteList, allowCredentials: true, allowOrigins: [Deno.env.get("ALLOWED_ORIGINS")] }))
 
-  //------------------------- Authenticate -------------------------//
-  .get('/authenticate', async (server) => {
-    // Get session cookie to authenticate current user
-    const serverCookie = server.cookies.sessionId
-
-    // Search sessions table to validate whether session cookie exists
-    const [ dbCookie ] = (await client.queryObject(`SELECT * FROM sessions WHERE uuid = $1`, serverCookie )).rows
-
-    // Set global variables depending on validation of session cookie
-    if (dbCookie !== undefined && serverCookie === dbCookie.uuid) {
-      authenticated = true
-      userID = dbCookie.user_id
-    } else {
-      authenticated = false
-      userID = ''
-    }
-
-    // Server response
-    await server.json( authenticated )
-  })
-
-
-
-  //------------------------- Login handler -------------------------//
+//------------------------- Login handler -------------------------//
 
 .post('/login', async (server) => {
   let { email, password, remember } = await server.body
@@ -101,7 +74,7 @@ app
   }
 })
 
-  //------------------------- Registration Handler -------------------------//
+//------------------------- Registration Handler -------------------------//
   .post('/register', async (server) => {
     let { email, password, username } = await server.body
 
@@ -122,18 +95,14 @@ app
     }
   })
 
-
-
-  //------------------------- Get username -------------------------//
+//------------------------- Get username -------------------------//
   .get('/checkname/:username', async (server) => {
     const username = server.params.username.trim()
     const nameExists = !! (await getUser({ username })) //getUser retrieves a user given an username, email, or id. If unable to find user with matching credentials, it returns null.
     await server.json({ nameExists: nameExists })
   })
 
-
-
-  //------------------------- Get email -------------------------//
+//------------------------- Get email -------------------------//
   .get('/checkemail/:email', async (server) => {
     const email = server.params.email.trim()
     if (verify.isEmailValid(email)) {
@@ -144,34 +113,18 @@ app
     }
   })
 
-  //------------------------- Get Saved Recipes -------------------------//
+//------------------------- Get Saved Recipes -------------------------//
   .get('/myrecipes', async (server) => {
     const sessionId = server.cookies.sessionId
     const currentUser = await getCurrentUser(sessionId)
     if (currentUser) {
-      const savedRecipeIds = (await client.queryArray(`
-        SELECT recipe_id FROM saved_recipes 
+      const recipes = (await client.queryArray(`
+        SELECT recipe FROM saved_recipes 
         WHERE user_id = $1 AND active = 't'
         ORDER BY created_at DESC;`, currentUser.id)).rows 
 
-
-      if (savedRecipeIds.length !== 0) {
-        const recipeString = savedRecipeIds.reduce((accumulator, [recipe], i) => accumulator + recipe + (i === savedRecipeIds.length - 1 ? "" : ","), "") 
-        //******************INSERT YOUR API KEY ********************************/
-        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeString}&apiKey=109411015c2f4df5942a3143fb7b3c36`
-        const spoonacularApiResponse = await fetch(spoonacularEndpoint)
-        const recipes = await spoonacularApiResponse.json()
-        if (recipes.status === "failure") {
-          //Problem with spoonacular
-          await server.json({ response: 'service down', recipes: [], loggedInUser: { username: currentUser.username, id: currentUser.id } })
-        } else {
-          //All good: Return a list of saved recipes if any
-          await server.json({ response: 'success', recipes, loggedInUser: { username: currentUser.username, id: currentUser.id } })
-        } 
-      } else {
-        //All good: User did not save any recipe
-        await server.json({ response: 'success', recipes: [], loggedInUser: { username: currentUser.username, id: currentUser.id } })
-      }
+      //All good: Return a list of saved recipes if any
+      await server.json({ response: 'success', recipes, loggedInUser: { username: currentUser.username, id: currentUser.id } })
     } else {
       //Bad Credentials
       await server.json({ response: 'unauthorized' })
@@ -180,56 +133,35 @@ app
   })
 
   //------------------------- Post Saved Recipe -------------------------//
-  .post('/save/:recipeId/:action', async (server) => {
+  .post('/save/:action', async (server) => {
     const { sessionId } = server.cookies
     const currentUser = await getCurrentUser(sessionId)
 
     if (currentUser) {
-      const { recipeId, action } = server.params
+      const { action } = server.params
+      const recipe = await server.body
 
       const toggleActiveSavesFalse = ` 
         UPDATE saved_recipes 
         SET active = 'f', updated_at = NOW()
-        WHERE user_id = $1 AND recipe_id = $2 AND active = 't';
+        WHERE user_id = $1 AND recipe = $2 AND active = 't';
       `
       const createActiveSave = ` 
-        INSERT INTO saved_recipes(user_id, recipe_id, active, created_at, updated_at)
+        INSERT INTO saved_recipes(user_id, recipe, active, created_at, updated_at)
         VALUES ($1, $2, 't', NOW(), NOW());
       `
-      await client.queryObject(`${toggleActiveSavesFalse}`, currentUser.id, recipeId) 
+      await client.queryObject(`${toggleActiveSavesFalse}`, currentUser.id, recipe) 
       if (action === 'save') {
-        await client.queryObject(`${ createActiveSave }`, currentUser.id, recipeId)
+        await client.queryObject(`${ createActiveSave }`, currentUser.id, recipe)
       }
-
+      //Recipe successfully saved
       await server.json({ response: 'success' })
     } else {
+      //Must login to save recipes
       await server.json({ response: 'unauthorized' })
     }
   })
-
-  //-------------------------- Get List of Recipes -------------------//
-  .get('/myrecipes/id-only', async (server) => {
-    await server.json({ response: 'unauthorized' })
-    const sessionId = server.cookies.sessionId
-    const currentUser = await getCurrentUser(sessionId)
-
-    if (currentUser) {
-
-      const queryResults = (await client.queryArray(`
-        SELECT recipe_id FROM saved_recipes 
-        WHERE user_id = $1 AND active = 't';`, currentUser.id)).rows
-      const savedRecipeIds = queryResults.reduce((accumulator, id) => accumulator.concat(id), []) //Technicality: removes nesting from results
-
-      //All good: Return a list of saved recipeIds if any
-      await server.json({ response: 'success', savedRecipeIds, loggedInUser: { username: currentUser.username, id: currentUser.id }})
-    } else {
-
-      //Bad Credentials
-      await server.json({ response: 'unauthorized' })
-    }
-  })
-
-
-  //------------------------- Start server -------------------------//
+  
+//------------------------- Start server -------------------------//
   .start({ port: PORT })
 console.log(`Server running on http://localhost:${PORT}`)

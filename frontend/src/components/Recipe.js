@@ -77,7 +77,7 @@ class Recipe extends Component {
     render(){
         
         const {  title, description, instructions } = this.state
-        const { id, image, numIngredients, numMissingIngredients } = this.props.location.state
+        const { image, numIngredients, numMissingIngredients } = this.props.location.state
 
         return (
             <div>

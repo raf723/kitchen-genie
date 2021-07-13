@@ -20,12 +20,16 @@ export class SavedRecipes extends Component {
         })
         const { response, recipes, loggedInUser } = await apiResponse.json()
         if (response === 'success') { 
+            //Parse the stringified recipes from the backend
+            const savedRecipes = recipes.map((stringifiedRecipe) => JSON.parse(stringifiedRecipe))
+
             const isCurrentlySaved =  {}
-            recipes.forEach((recipe) => isCurrentlySaved[recipe.id] = true)
+            savedRecipes.forEach((recipe) => isCurrentlySaved[recipe.id] = true)
             let pageState 
-            if (recipes.length === 0) {pageState = 'No favourite recipes yet!'} else {pageState = ''} 
+
+            if (savedRecipes.length === 0) {pageState = 'No favourite recipes yet!'} else {pageState = ''} 
             //Upadte state
-            this.setState({savedRecipes: recipes, isCurrentlySaved, loggedInUser, pageState})
+            this.setState({savedRecipes, isCurrentlySaved, loggedInUser, pageState})
         } else if (response === 'unauthorized') {
             //do nothing
             this.setState({loggedInUser, pageState: 'Please log in to save and access favourite recipes!'})

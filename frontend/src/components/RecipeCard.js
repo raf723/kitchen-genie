@@ -33,8 +33,8 @@ class RecipeCard extends React.Component {
 
     if (forPage === 'saved-recipes') {
       return (
-        <Tippy placement="bottom" content={ listToTitleString(recipe.extendedIngredients) }>
-          <p className="none-missing">Uses {recipe.extendedIngredients.length} ingredients! </p> 
+        <Tippy placement="bottom" content={ listToTitleString(recipe.usedIngredients.concat(recipe.missedIngredients)) }>
+          <p className="none-missing">Uses {recipe.missedIngredientCount + recipe.usedIngredientCount} ingredients! </p> 
         </Tippy>
       )
     } else {
@@ -58,7 +58,6 @@ class RecipeCard extends React.Component {
   render() {
     const { recipe, forPage, rating } = this.props
 
-    // console.log(recipe.extendedIngredients.map((ingredient) => ingredient.name ))
     return (
       <article  key={recipe.id} id={ recipe.id } className="recipe-card" onClick={ () => this.recipeHandler(recipe) }>
         <div className="recipe-card-top">

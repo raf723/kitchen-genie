@@ -17,7 +17,7 @@ await client.queryObject(`DROP TABLE IF EXISTS rating;`)
 await client.queryObject(`DROP TABLE IF EXISTS saved_recipes;`)
 await client.queryObject(`DROP TABLE IF EXISTS recipe_comment_votes;`)
 await client.queryObject(`DROP TABLE IF EXISTS recipe_comments;`)
-await client.queryObject(`DROP TABLE IF EXISTS users;`)
+// await client.queryObject(`DROP TABLE IF EXISTS users;`)
 
 //Create user table.
 await client.queryObject(`
@@ -63,10 +63,11 @@ await client.queryObject(`
         created_at TIMESTAMP NOT NULL,
         updated_at TIMESTAMP NOT NULL,
         active BOOLEAN NOT NULL,
-        recipe_id INTEGER NOT NULL,
+        recipe TEXT NOT NULL,
         user_id INTEGER NOT NULL,
         FOREIGN KEY(user_id) REFERENCES users(id)
-    );`
+    );
+    CREATE INDEX recipe_index ON saved_recipes(recipe);`
 )
 
 //Add recipe comments table
