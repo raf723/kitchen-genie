@@ -31,21 +31,31 @@ class InputComments extends React.Component {
         }
     }
 
-    render() {
+    renderCommentBox(loggedInUser){
         const { comment } = this.state
-        return (
-            <div>
-                <div className="comments">
-                    <p>Username</p>
-                    <form onSubmit={(e) => this.handleSubmit(e)}>
-                      <textarea name="comment" value={comment} placeholder="Add a comment..." className="commentText" onChange={(e) => this.setState({comment: e.target.value})}></textarea>
-                      <button type="submit" name="post" value="Post">Submit</button>
-                      <button type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })}>Cancel</button>
-                    </form>
+        if (!!loggedInUser) {
+            return (
+                <div>
+                    <div className="comments">
+                        <p>Username</p>
+                        <form onSubmit={(e) => this.handleSubmit(e)}>
+                        <textarea name="comment" value={comment} placeholder="Add a comment..." className="commentText" onChange={(e) => this.setState({comment: e.target.value})}></textarea>
+                        <button type="submit" name="post" value="Post">Submit</button>
+                        <button type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })}>Cancel</button>
+                        </form>
+                    </div>
                 </div>
-                <h2>Comments (10)</h2>
-                <Comments recipeId={1}/>
-            </div>
+            )
+        } else {
+            return <p>Log in to comment!</p>
+        }
+        
+    }
+
+    render() {
+        const { loggedInUser } = this.props
+        return (
+            this.renderCommentBox(loggedInUser)
         )
     }
 }
