@@ -11,7 +11,13 @@ const client = new Client(Deno.env.get("PG_URL"))
 //Connect to db.
 await client.connect()
 
-//Todo: if exits drop table. 
+//Remove old tables
+await client.queryObject(`DROP TABLE IF EXISTS sessions;`)
+await client.queryObject(`DROP TABLE IF EXISTS rating;`)
+await client.queryObject(`DROP TABLE IF EXISTS saved_recipes;`)
+await client.queryObject(`DROP TABLE IF EXISTS recipe_comment_votes;`)
+await client.queryObject(`DROP TABLE IF EXISTS recipe_comments;`)
+await client.queryObject(`DROP TABLE IF EXISTS users;`)
 
 //Create user table.
 await client.queryObject(`
@@ -32,7 +38,7 @@ await client.queryObject(`
         uuid TEXT PRIMARY KEY,
         created_at TIMESTAMP NOT NULL,
         expiry_date TIMESTAMP NOT NULL,
-        user_id INTEGER,
+        user_id INTEGER NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id)
     );`
 )
