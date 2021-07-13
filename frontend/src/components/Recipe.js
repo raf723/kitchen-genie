@@ -134,6 +134,9 @@ class Recipe extends Component {
     }
 
     async componentDidMount() {
+
+        //Todo: Return values and update stage once.
+        
         await this.getAverageStarRatings()
         await this.getPersonalStarRating()
         await this.fetchRecipeInfomation()
