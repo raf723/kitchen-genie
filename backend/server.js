@@ -162,6 +162,27 @@ app
   
   })
 
+  //------------------------- Get Personal Recipe Rating ---------------------//
+
+  .get('/recipe/personalrating/:recipeId/:sessionId', async(server) => {
+
+    const { sessionId, recipeId } = server.params
+
+    const currentUser = await getCurrentUser(sessionId)
+
+    const userRecipeRating = `SELECT rating, recipe_id FROM recipe_rating WHERE recipe_id = $1 AND user_id = $2`
+
+    const recipe = (await client.queryObject(userRecipeRating, recipeId, currentUser.id)).rows
+
+    console.log( recipe )
+
+    if(recipe.length === 0){
+      server.json({ rating:  0, recipe_id: recipeId})
+    }else{
+      server.json(recipe)
+    }
+  })
+
 
   //--------------------------- Post Rating ------------------------//
 
@@ -173,22 +194,24 @@ app
 
     const { rating, recipeId } = await server.body
 
+    console.log(rating)
+
     //Is sequential id numbering a security risk
     const user = await getCurrentUser(server.cookies.sessionId)
-
-    // Todo: Make user only able to vote once, when rating has been complete. 
-    const deleteOldPostNewRating = `
+    //Delete instances with same recipe id and user.id
+    const deleteOldRating = `
       DELETE FROM recipe_rating
-        WHERE user_id = $3 AND recipe_id = $2;
+        WHERE user_id = $1 AND recipe_id = $2;`
 
-      INSERT INTO recipe_rating 
+    const insertNewRating = `INSERT INTO recipe_rating 
         (rating, created_at, updated_at, recipe_id, user_id)
       VALUES 
         ($1, NOW(), NOW(), $2, $3)
-        RETURNING rating;
-        `
+        RETURNING rating;`
 
-      const [ ratingResponse ] = (await client.queryObject(deleteOldPostNewRating, rating, recipeId, user.id)).rows
+      await client.queryObject(deleteOldRating, user.id, recipeId)
+      
+      const [ ratingResponse ] = (await client.queryObject(insertNewRating, rating, recipeId, user.id)).rows
 
     server.json({ rating: ratingResponse.rating })
 
