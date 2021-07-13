@@ -1,8 +1,6 @@
 import React from 'react'
+import { Router, Link } from 'react-router-dom'
 import '../css/input-comments.css'
-import Comments from './Comments'
-
-// If user is logged in then run Comments, if not then run CommentsLogin
 
 
 class InputComments extends React.Component {
@@ -35,19 +33,19 @@ class InputComments extends React.Component {
         const { comment } = this.state
         if (!!loggedInUser) {
             return (
-                <div>
-                    <div className="comments">
-                        <p>Username</p>
-                        <form onSubmit={(e) => this.handleSubmit(e)}>
-                        <textarea name="comment" value={comment} placeholder="Add a comment..." className="commentText" onChange={(e) => this.setState({comment: e.target.value})}></textarea>
+                <div className="comment-box">
+                    <h3>Hi, {loggedInUser.username}! Leave a comment here!</h3>
+                    <form onSubmit={(e) => this.handleSubmit(e)}>
+                    <textarea name="comment" value={comment} className="commentText" onChange={(e) => this.setState({comment: e.target.value})}/>
+                    <div className="comment-buttons">
                         <button type="submit" name="post" value="Post">Submit</button>
                         <button type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })}>Cancel</button>
-                        </form>
                     </div>
+                    </form>
                 </div>
             )
         } else {
-            return <p>Log in to comment!</p>
+            return <p>Log in <Link className="login-link" to="/login">here</Link> to add a comment!</p>
         }
         
     }

@@ -117,7 +117,7 @@ class App extends React.Component {
             </Route>
 
             <Route path='/comments'>
-              <InputComments recipeId={1} />
+              <InputComments loggedInUser={loggedInUser} recipeId={1} />
             </Route>
 
             {/* Recipe results */}
