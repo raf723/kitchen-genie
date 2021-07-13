@@ -121,24 +121,24 @@ class Recipe extends Component {
     }
 
     renderIngredients() {
-        return this.state.ingredients.map(ingredient => <li key={ingredient.id}>{ingredient.name}</li>)
+        return this.state.ingredients.map((ingredient, i) => <li key={i}>{ingredient.name}</li>)
     }
 
 
     renderInstructions(instructionsArr) {
-        return instructionsArr.map(instruction => <li key={instruction.id}>{instruction.step}</li>)
+        return instructionsArr.map((instruction, i) => <li key={i}>{instruction.step}</li>)
     }
 
     removeHtmlTagsFromString(string) {
         return string === '' ? 'No description' : string.replace(/(<([^>]+)>)/gi, "")
     }
 
-    componentDidMount() {
-        this.getAverageStarRatings()
-        this.getPersonalStarRating()
-        this.fetchRecipeInfomation()
-        this.summariseRecipe()
-        this.fetchRecipeIntructions()
+    async componentDidMount() {
+        await this.getAverageStarRatings()
+        await this.getPersonalStarRating()
+        await this.fetchRecipeInfomation()
+        await this.summariseRecipe()
+        await this.fetchRecipeIntructions()
     }
 
 

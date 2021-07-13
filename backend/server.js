@@ -194,8 +194,6 @@ app
 
     const { rating, recipeId } = await server.body
 
-    console.log(rating)
-
     //Is sequential id numbering a security risk
     const user = await getCurrentUser(server.cookies.sessionId)
     //Delete instances with same recipe id and user.id
