@@ -1,47 +1,9 @@
 #results-container {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   height: 100%;
-}
-
-#checkbox-adjacent-container {
-  flex-grow: 1;
-  margin-left: 16%;
-}
-
-
-
-/* ==================== Checkbox ==================== */
-#checkbox-container {
-  flex-grow: 1;
-  position: fixed !important;
-  height: 90vh;
-  overflow-y: scroll;
-  width: 16%;
-  color: rgb(60, 60, 60);
-}
-
-#checkbox-container .subgroup-container {
-  background-color: rgba(116,166,127,0.1);
-  border-radius: 4px;
-  padding: 12px;
-  margin: 0px 20px
-}
-
-#checkbox-container .subgroup-container:not(:first-child) {
-  margin-top: 20px;
-}
-
-#checkbox-container .subgroup-container h2 {
-  font-size: 14px;
-  font-weight: 600;
-  margin-top: 2px;
-  margin-bottom: 8px;
-  margin-left: 2px;
-}
-
-#checkbox-container .subgroup-container span {
-  font-size: 12px;
-  padding-bottom: 10px;
+  margin: 12px 10%;
 }
 
 
@@ -49,7 +11,7 @@
 /* ==================== Searchbar and search button ==================== */
 #results-container #autosuggest-container {
   display: flex;
-  width: 79%;
+  width: 70%;
   margin-left: 1%;
 }
 
@@ -78,8 +40,9 @@
 
 /* ==================== Add/remove ingredients container ==================== */
 #results-container #ingredients-container {
+  width: 70%;
   margin-top: 8px;
-  margin-left: 2%;
+  margin-left: 3%;
 }
 
 #results-container #ingredients-container button {

@@ -14,7 +14,7 @@
 
 .recipe-image {
   height: 160px;
-  display: inline-block;
+  width: 100%;
   object-fit: cover;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
@@ -30,6 +30,7 @@ h5 {
   flex-direction: column;
   box-sizing: border-box;
   padding: 12px;
+  padding-top: 0px;
 }
 
 .recipe-card-bottom > * {
