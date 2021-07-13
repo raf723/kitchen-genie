@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import '../css/comment-input.css'
+import Comments from './Comments'
 
 
 class InputComments extends React.Component {
@@ -33,10 +34,10 @@ class InputComments extends React.Component {
         const { comment } = this.state
         if (!!loggedInUser) {
             return (
-                <div className="comment-box">
-                    <h3>Hi, {loggedInUser.username}! Leave a comment here!</h3>
+                <div className="comment-input-container">
+                    <h3 className="user-prompt">Hi, {loggedInUser.username}! Leave a comment here!</h3>
                     <form onSubmit={(e) => this.handleSubmit(e)}>
-                    <textarea name="comment" value={comment} className="commentText" onChange={(e) => this.setState({comment: e.target.value})}/>
+                    <textarea name="comment" value={comment} className="comment-box" onChange={(e) => this.setState({comment: e.target.value})}/>
                     <div className="comment-buttons">
                         <button type="submit" name="post" value="Post">Submit</button>
                         <button type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })}>Cancel</button>
@@ -45,7 +46,7 @@ class InputComments extends React.Component {
                 </div>
             )
         } else {
-            return <p>Log in <Link className="login-link" to="/login">here</Link> to add a comment!</p>
+            return <h3 className="user-prompt">Log in <Link className="login-link" to="/login">here</Link> to add a comment!</h3>
         }
     }
 
