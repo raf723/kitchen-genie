@@ -25,9 +25,11 @@ class Home extends React.Component {
 
   // If user hits Enter, add to state's ingredients array and clear input
   onKeyPress = () => {
+    const { value, ingredients } = this.state
+
     // Push input value to this.state's array of ingredients
-    const updatedIngredients = this.state.ingredients
-    if (this.state.value !== '') updatedIngredients.push(this.state.value.trim())
+    const updatedIngredients = ingredients
+    if (value !== '' && !ingredients.includes(value)) updatedIngredients.push(value.trim())
     this.setState({ ingredients: updatedIngredients })
 
     // Clear input
@@ -39,22 +41,20 @@ class Home extends React.Component {
 
   // Search for recipes via ingredients
   searchHandler = async() => {
+    if (this.state.ingredients.length !== 0) {
+      // Get recipes from Spoonacular
+      const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${this.state.ingredients}&number=12&ranking=2&apiKey=d45bc24e8cc84723b6786271e498854f`)
+      const recipes = await spoonacular.json()
 
-    // Convert this.state's ingredients to comma separated string
-    const ingredients = this.state.ingredients.join(',')
-
-    // Get recipes from Spoonacular
-    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=12&ranking=2&apiKey=d45bc24e8cc84723b6786271e498854f`)
-    const recipes = await spoonacular.json()
-
-    // Pass data another parent component (page)
-    this.props.history.push({
-      pathname: '/results',
-      state: { 
-        results: recipes,
-        ingredients: this.state.ingredients
-      }
-    })
+      // Pass data another parent component (page)
+      this.props.history.push({
+        pathname: '/results',
+        state: { 
+          results: recipes,
+          ingredients: this.state.ingredients
+        }
+      })
+    }
   }
 
   render() {
@@ -63,8 +63,11 @@ class Home extends React.Component {
         <h1>Supercook</h1>
 
         <div id="search-container">
-          <Search value={ this.state.value } onChange={ this.onChange } onKeyPress={ this.onKeyPress }/>
-          <button onClick={ () => this.searchHandler() }>GO</button>
+          <span id="title-span">{ this.state.value !== '' && `Hit 'Enter' to add an ingredient!` }</span>
+          <div id="autosuggest-container">
+            <Search value={ this.state.value } onChange={ this.onChange } onKeyPress={ this.onKeyPress }/>
+            <button onClick={ () => this.searchHandler() }>GO</button>
+          </div>
         </div>
 
         {/* Ingredients buttons */}

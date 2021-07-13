@@ -9,40 +9,27 @@
 
 
 /* ==================== Searchbar and search button ==================== */
-#results-container #autosuggest-container {
-  display: flex;
-  width: 70%;
-  margin-left: 1%;
+#results-container #search-container {
+  width: 60%;
 }
 
 .react-autosuggest__container {
-  width: 84%;
+  width: 100%;
 }
 
-#results-container #autosuggest-container button {
-  height: 44px;
-  width: 8%;
-  color: rgb(116,166,127);
-  background-color: white;
-  border: solid 2px rgb(116,166,127);
-  border-radius: 22px;
-  margin-left: 32px;
-  transition: background .5s ease;
-}
-
-#results-container #autosuggest-container button:hover {
-  color: white;
-  background-color: rgb(116,166,127);
-  transition: background .5s ease;
+#results-container #title-span {
+  color: rgb(50, 50, 50);
+  font-size: 12px;
+  margin-left: 12px;
 }
 
 
 
 /* ==================== Add/remove ingredients container ==================== */
 #results-container #ingredients-container {
-  width: 70%;
+  width: 60%;
   margin-top: 8px;
-  margin-left: 3%;
+  margin-left: 2%;
 }
 
 #results-container #ingredients-container button {
@@ -72,4 +59,11 @@
 #results-container .card-container {
   width: 22%;
   margin: 12px 12px;
+}
+
+#results-container #no-results-span {
+  color: rgb(116,166,127);
+  font-size: 32px;
+  font-weight: 600;
+  margin-top: 5%;
 }

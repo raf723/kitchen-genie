@@ -47,9 +47,11 @@ class Results extends React.Component {
 
   // If user hits Enter, add to state's ingredients array and clear input
   onKeyPress = async() => {
+    const { value, ingredients } = this.state
+
     // Push input value to this.state's array of ingredients
-    const updatedIngredients = this.state.ingredients
-    if (this.state.value !== '') updatedIngredients.push(this.state.value.trim())
+    const updatedIngredients = ingredients
+    if (value !== '' & !ingredients.includes(value)) updatedIngredients.push(value.trim())
     this.setState({ ingredients: updatedIngredients })
     this.getRecipes()
 
@@ -96,9 +98,11 @@ class Results extends React.Component {
 
     return (
       <div id="results-container">
-        <div id="autosuggest-container">
-          <Search value={ this.state.value } onChange={ this.onChange } onKeyPress={ this.onKeyPress }/>
-          <button onClick={ () => this.searchHandler() }>GO</button>
+        <div id="search-container">
+          <span id="title-span">{ this.state.value !== '' && `Hit 'Enter' to add an ingredient!` }</span>
+          <div id="autosuggest-container">
+            <Search value={ this.state.value } onChange={ this.onChange } onKeyPress={ this.onKeyPress }/>
+          </div>
         </div>
 
         <div id="ingredients-container">
@@ -109,7 +113,7 @@ class Results extends React.Component {
           )}
         </div>
 
-        <div id="grid-container">
+        { this.state.results.length > 0 && <div id="grid-container">
           { results.map(recipe => <div className="card-container" key={ recipe.id }>
             { 
               displaySaveFeature 
@@ -118,7 +122,9 @@ class Results extends React.Component {
             }
             <RecipeCard recipe={ recipe } forPage="results" />
           </div>) }
-        </div>
+        </div> }
+
+        { this.state.results.length === 0 && <span id="no-results-span">Oh no! We couldn't find any recipes!</span> }
       </div>
     )
   }
