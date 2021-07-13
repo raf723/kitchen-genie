@@ -4,7 +4,7 @@ import { getCookie } from '../function-assets/helpers'
 
 class Recipe extends Component {
 
-    state = {
+    initialState = {
         recipeId: this.props.location.state.id,
         title: '',
         description: '',
@@ -13,6 +13,8 @@ class Recipe extends Component {
         averageRating: undefined,
         personalRating: undefined,
     }
+
+    state = this.initialState
 
 
 
@@ -72,23 +74,19 @@ class Recipe extends Component {
     }
 
     async getPersonalStarRating() {
-
-        console.log('I am being called')
-
         const { recipeId } = this.state
-
         const currentSession = getCookie('sessionId') ?? null
 
-        console.log(currentSession)
-
         if (currentSession) {
-            
             const apiResponse= await fetch(`${process.env.REACT_APP_URL}/recipe/personalrating/${recipeId}/${currentSession}`)
-
-            const recipe = await apiResponse.json()
-
-            this.setState({ personalRating: recipe.rating })
-
+            const { response, recipe } = await apiResponse.json()
+            if (response === 'success') {
+                this.setState({ personalRating: recipe.rating })
+            } else if (response === 'unauthorized') {
+                //do nothing
+            } else {
+                window.location.replace('/error')
+            }
         }
     }
 
@@ -139,9 +137,9 @@ class Recipe extends Component {
         
         await this.getAverageStarRatings()
         await this.getPersonalStarRating()
-        await this.fetchRecipeInfomation()
-        await this.summariseRecipe()
-        await this.fetchRecipeIntructions()
+        // await this.fetchRecipeInfomation()
+        // await this.summariseRecipe()
+        // await this.fetchRecipeIntructions()
     }
 
 
