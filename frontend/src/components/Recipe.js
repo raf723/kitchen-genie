@@ -1,11 +1,13 @@
 import { Component } from 'react'
 import StarsRatings from 'react-star-ratings'
+import SaveButton from './SaveButton'
 import { getCookie } from '../function-assets/helpers'
 
 class Recipe extends Component {
 
     initialState = {
         recipeId: this.props.location.state.id,
+        isCurrentlySaved: false,
         title: '',
         description: '',
         instructions: [],
@@ -131,15 +133,37 @@ class Recipe extends Component {
         return string === '' ? 'No description' : string.replace(/(<([^>]+)>)/gi, "")
     }
 
-    async componentDidMount() {
+    async checkSavedRecipe(){
+        const apiResponse = await fetch(`${process.env.REACT_APP_URL}/myrecipes/id-only`, {
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+          })
+            const { response, savedRecipeIds } = await apiResponse.json()
+            if (response === 'success') { 
+              this.setState({ isCurrentlySaved: savedRecipeIds.includes(this.state.recipeId)})
+            } else if (response === 'unauthorized') {
+              //do nothing
+            } else {
+              window.location.replace('/error')
+            }
 
+    }
+
+    async componentDidMount() {
         //Todo: Return values and update stage once.
-        
         await this.getAverageStarRatings()
         await this.getPersonalStarRating()
-        // await this.fetchRecipeInfomation()
-        // await this.summariseRecipe()
-        // await this.fetchRecipeIntructions()
+        await this.checkSavedRecipe()
+        await this.fetchRecipeInfomation()
+        await this.summariseRecipe()
+        await this.fetchRecipeIntructions()
+    }
+
+
+    async handleSaveRecipe() {
+        const { isCurrentlySaved, recipeId } = this.state
+        const newSaveState = await this.props.onSaveRecipe(recipeId, !isCurrentlySaved)
+        this.setState({ isCurrentlySaved: newSaveState })
     }
 
 
@@ -150,8 +174,6 @@ class Recipe extends Component {
         const { image, numIngredients, numMissingIngredients } = this.props.location.state
 
         const { userAuthenticated } = this.props
-
-        console.log(userAuthenticated)
 
         return (
             <div>
@@ -168,6 +190,7 @@ class Recipe extends Component {
                         {averageRating === 0 && <p>(No rating yet)</p>}
                         {userAuthenticated && <h3>{`Your personal rating is ${personalRating}`}</h3>}
                     </div>
+                
 
                     {userAuthenticated && <StarsRatings
                         className="star-rating"
@@ -177,6 +200,8 @@ class Recipe extends Component {
                         starSpacing="3px"
                         changeRating={(newRating) => { this.handleChangeRating(newRating) }} />
                     }
+
+                    { userAuthenticated && <SaveButton onSave={() => this.handleSaveRecipe()} isCurrentlySaved={this.state.isCurrentlySaved} />}
 
                 </section>
                 <section className="recipe-container">

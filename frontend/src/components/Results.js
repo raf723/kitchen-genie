@@ -27,7 +27,7 @@ class Results extends React.Component {
   state = this.initialState
 
  async componentDidMount(){
-  const apiResponse = await fetch(`http://localhost:8080/myrecipes/id-only`, {
+  const apiResponse = await fetch(`${process.env.REACT_APP_URL}/myrecipes/id-only`, {
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
   })
