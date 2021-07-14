@@ -328,6 +328,8 @@ app
     const { recipeId } = server.params
     const { comment } = await server.body
 
+    console.log(recipeId)
+
     if (currentUser) {
       const outCome =  (await client.queryArray(`INSERT INTO 
         recipe_comments(comment, recipe_id, user_id, created_at, updated_at)

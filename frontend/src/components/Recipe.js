@@ -3,6 +3,7 @@ import StarsRatings from 'react-star-ratings'
 import SaveButton from './SaveButton'
 import { getCookie } from '../function-assets/helpers'
 import '../css/recipe.css'
+import Comments from './Comments'
 
 class Recipe extends Component {
     //Think about pulling instructions from Recipe Card
@@ -152,9 +153,9 @@ class Recipe extends Component {
         await this.getAverageStarRatings()
         await this.getPersonalStarRating()
         await this.checkSavedRecipe()
-        await this.fetchRecipeInfomation()
-        await this.summariseRecipe() //! May not need this as it is passed from recipeCard.sj
-        await this.fetchRecipeIntructions() //! May not need this as this is also passed from recipeCard
+        // await this.fetchRecipeInfomation()
+        // await this.summariseRecipe() //! May not need this as it is passed from recipeCard.sj
+        // await this.fetchRecipeIntructions() //! May not need this as this is also passed from recipeCard
     }
 
 
@@ -167,13 +168,14 @@ class Recipe extends Component {
 
     render() {
 
-        const { title, description, instructions, personalRating, averageRating } = this.state
+        const { title, description, instructions, personalRating, averageRating, recipeId } = this.state
 
         const { image, numIngredients, numMissingIngredients } = this.props.location.state
 
         const { userAuthenticated } = this.props
 
         return (
+            <div>
                 <div className="recipe-page-root">
                     <section className="recipe-header-container">
                             <img src={image} className="recipe-page-image" alt="food" />
@@ -225,6 +227,12 @@ class Recipe extends Component {
                             starSpacing="5px"
                             changeRating={(newRating) => { this.handleChangeRating(newRating) }} />
                         }
+                    </section>
+
+
+                </div>
+                    <section>
+                        <Comments userAuthenticated={userAuthenticated} recipeId={recipeId} />
                     </section>
                 </div>
         )

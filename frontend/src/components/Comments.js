@@ -1,6 +1,7 @@
 import React from 'react'
 import { format } from 'date-fns'
 import '../css/comments.css'
+import CommentInput from './CommentInput'
 
 class Comments extends React.Component {
     initialState = { 
@@ -60,6 +61,7 @@ class Comments extends React.Component {
             <div>
                 <div className="comments-container">
                     <h2>Comments ({comments.length})</h2>
+                    <CommentInput userAuthenticated={this.props.userAuthenticated} />
                     <p className="comments-status">{componentStatus}</p>
                     <ul className="comments-list">
                         { comments.map((comment) => this.renderComment(comment))}

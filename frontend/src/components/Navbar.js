@@ -15,8 +15,6 @@ function Navbar( {userAuthenticated, onLogout} ) {
           <NavLink className="nav-link" activeClassName="active" to='/about'>About Us</NavLink>
         </div>
         {userAuthenticated && <NavLink className="signout-nav-link" to='/' onClick={() => onLogout()}>Sign Out</NavLink>}
-        {/* V Remove V */}
-        <NavLink className="nav-link" activeClassName="active" to='/comments'>Comments</NavLink>
       </nav>
     </div>
   )

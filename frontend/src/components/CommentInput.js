@@ -8,6 +8,7 @@ class InputComments extends React.Component {
         
     async handleSubmit(e) {
         e.preventDefault()
+        console.log(this.props.recipeId)
         const { comment } = this.state
         const apiResponse = await fetch(`http://localhost:8080/comment/${this.props.recipeId}`, {
             method: 'POST',
@@ -28,12 +29,12 @@ class InputComments extends React.Component {
         }
     }
 
-    renderCommentBox(loggedInUser){
+    renderCommentBox(userAuthenticated){
         const { comment } = this.state
-        if (!!loggedInUser) {
+        if (!!userAuthenticated) {
             return (
                 <div className="comment-input-container">
-                    <h3 className="user-prompt">Hi, {loggedInUser.username}! Leave a comment here!</h3>
+                    <h3 className="user-prompt">Hi, {userAuthenticated.username}! Leave a comment here!</h3>
                     <form onSubmit={(e) => this.handleSubmit(e)}>
                     <textarea name="comment" value={comment} className="comment-box" onChange={(e) => this.setState({comment: e.target.value})}/>
                     <div className="comment-buttons">
@@ -49,9 +50,9 @@ class InputComments extends React.Component {
     }
 
     render() {
-        const { loggedInUser } = this.props
+        const { userAuthenticated } = this.props
         return (
-            this.renderCommentBox(loggedInUser)
+            this.renderCommentBox(userAuthenticated)
         )
     }
 }
