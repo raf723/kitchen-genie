@@ -16,6 +16,11 @@ class Recipe extends Component {
         ingredients: [],
         averageRating: undefined,
         personalRating: undefined,
+        preperationTime: '',
+        serving: '',
+        pricePerServing: '',
+        diets: [],
+
     }
 
     state = this.initialState
@@ -30,9 +35,19 @@ class Recipe extends Component {
 
         const spoonacularData = await spoonacularRes.json()
 
+        console.log(spoonacularData)
+
         const { extendedIngredients } = spoonacularData
 
-        this.setState({ title: spoonacularData.title, imageSrc: spoonacularData.image, ingredients: extendedIngredients })
+        this.setState({ 
+            title: spoonacularData.title, 
+            imageSrc: spoonacularData.image, 
+            ingredients: extendedIngredients,
+            pricePerServing: spoonacularData.pricePerServing,
+            preperationTime: spoonacularData.readyInMinutes,
+            serving: spoonacularData.serving,
+            diets: spoonacularData.diets,
+         })
 
     }
 
@@ -67,7 +82,6 @@ class Recipe extends Component {
 
         const { recipeId } = this.state
 
-        //Endpoint for getting rating by recipe by id
         const fetchAverageRating = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/${recipeId}`)
 
         const averageRating = await fetchAverageRating.json()
@@ -149,13 +163,13 @@ class Recipe extends Component {
     }
 
     async componentDidMount() {
-        //Todo: Return values and update stage once.
         await this.getAverageStarRatings()
         await this.getPersonalStarRating()
         await this.checkSavedRecipe()
-        // await this.fetchRecipeInfomation()
-        // await this.summariseRecipe() //! May not need this as it is passed from recipeCard.sj
-        // await this.fetchRecipeIntructions() //! May not need this as this is also passed from recipeCard
+
+        await this.fetchRecipeInfomation()
+        await this.summariseRecipe() //! May not need this as it is passed from recipeCard.sj
+        await this.fetchRecipeIntructions() //! May not need this as this is also passed from recipeCard
     }
 
 
@@ -166,9 +180,11 @@ class Recipe extends Component {
     }
 
 
+
+
     render() {
 
-        const { title, description, instructions, personalRating, averageRating, recipeId } = this.state
+        const { title, description, instructions, personalRating, averageRating, recipeId, preperationTime, pricePerServing, diets, serving } = this.state
 
         const { image, numIngredients, numMissingIngredients } = this.props.location.state
 
@@ -178,30 +194,38 @@ class Recipe extends Component {
             <div>
                 <div className="recipe-page-root">
                     <section className="recipe-header-container">
-                            <img src={image} className="recipe-page-image" alt="food" />
                             <h1>{title}</h1>
                                 <div className="rating-fav-container flex row">
                                     <StarsRatings
                                         className="star-rating"
                                         rating={averageRating}
                                         starRatedColor="gold"
-                                        starDimension="15px"
-                                        starSpacing="5px" 
+                                        starDimension="30px"
+                                        starSpacing="5px"
                                         />
-                                    {userAuthenticated && ( 
-                                        <div className="flex row"> 
-                                        <span>Save to Favourites</span>
-                                         <SaveButton onSave={() => this.handleSaveRecipe()} isCurrentlySaved={this.state.isCurrentlySaved} />
+                                {userAuthenticated && ( 
+                                    <div className="favourites"> 
+                                        <p>Save to Favourites</p>
+                                        <SaveButton onSave={() => this.handleSaveRecipe()} isCurrentlySaved={this.state.isCurrentlySaved} />    
                                     </div>
                                     )}    
                                 </div>
-                       
+                            <div className="flex row">
+                                <img src={image} className="recipe-page-image" alt="food" />
+                                <article className="key-info flex column m-10">
+                                    { preperationTime && <p>Preperation time: {preperationTime} minutes</p> }
+                                    { pricePerServing && <p>Price Per Serving: £ {(pricePerServing / 100).toFixed(2)} per person</p> }
+                                    { serving && <b><p>Serving: {preperationTime} people </p></b> }
+                                    { diets && <p>Diets: { diets.join(', ') }</p> }
+                                    { numIngredients && <p>Number of Ingredients: {numIngredients}</p> }
+                                    { numMissingIngredients && <p className="missing">Number of Missing Ingredients: {numMissingIngredients}</p>}    
+                                </article>
+                            </div>
                     </section>
                     <section className="recipe-section recipe-body flex row">
                          <article className="ingredients">
                             <h4>Ingredients</h4>
-                            <p>Number of Ingredients: {numIngredients}</p>
-                            <p>Missing Ingredients: {numMissingIngredients}</p>
+
                             <ul>
                                 {this.renderIngredients()}
                             </ul>
@@ -223,18 +247,18 @@ class Recipe extends Component {
                             className="star-rating"
                             rating={personalRating}
                             starRatedColor="gold"
-                            starDimension="15px"
+                            starDimension="30px"
                             starSpacing="5px"
                             changeRating={(newRating) => { this.handleChangeRating(newRating) }} />
                         }
                     </section>
-
-
                 </div>
                     <section>
                         <Comments userAuthenticated={userAuthenticated} recipeId={recipeId} />
                     </section>
                 </div>
+
+                                 
         )
     }
 }

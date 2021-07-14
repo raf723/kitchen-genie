@@ -17,7 +17,8 @@
 .rating-fav-container{
     background: turquoise;
     justify-content: space-between;
-    width: 90%;
+    width: 100%;
+    height: 50px;
 }
 
 .recipe-page-image{
@@ -34,12 +35,22 @@
     width: 70%;
 }
 
+.favourites{
+    display: flex;
+    width: 300px;
+    background:coral;
+}
+
 .ingredients{
     width: 30%;
 }
 
 .recipe-list-items{
     margin: 5px 0;
+}
+
+.key-info{
+    padding: 10px 10px
 }
 
 
@@ -51,4 +62,16 @@
 
 .row{
     flex-direction: row;
+}
+
+.column{
+    flex-direction: column;
+}
+
+.missing{
+    color: red;
+}
+
+m-10{
+    margin: 10;
 }
