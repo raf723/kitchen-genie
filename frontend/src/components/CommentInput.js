@@ -1,8 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import '../css/comment-input.css'
-import Comments from './Comments'
-
 
 class InputComments extends React.Component {
     initialState = { comment: ""}

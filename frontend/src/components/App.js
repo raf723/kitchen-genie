@@ -15,6 +15,7 @@ import About from './About'
 import Recipe from './Recipe'
 // V Remove V
 import CommentInput from './CommentInput'
+import Comments from './Comments'
 import SavedRecipes from './SavedRecipes'
 
 class App extends React.Component {
@@ -116,7 +117,8 @@ class App extends React.Component {
             </Route>
 
             <Route path='/comments'>
-              <CommentInput loggedInUser={loggedInUser} recipeId={1} />
+              <Comments loggedInUser={loggedInUser} recipeId={1} />
+              {/* <CommentInput loggedInUser={loggedInUser} recipeId={1} /> */}
             </Route>
 
             {/* Recipe results */}

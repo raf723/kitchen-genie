@@ -34,16 +34,22 @@ class Comments extends React.Component {
 
     renderComment(comment) {
         return (
-            <li className="comment" key={comment.id}>
-                <p className="comment-header"><strong><span className="highlight">{comment.username}</span></strong> said:</p>
-                <div className="separator"><hr/></div>
-                <p className="comment-body">
-                    {comment.comment}
-                </p>
-                <hr/>
+            <li key={comment.id}>
+                <div className="comment-box2">
+                    <p className="comment-header"><strong>{comment.username}</strong></p>
+                    <p className="comment-body">
+                        {comment.comment}
+                    </p>
+                    {/* <hr/> */}
+                </div>
+
+
+
                 <p className="comment-footer">
-                    <strong>Comment Ref: </strong>{comment.id} | <strong>Date: </strong><span className="highlight">{format(new Date(comment.created_at), 'MM/dd/yyyy h:mmbbb ')}</span>
+                    {/* <strong>Comment Ref: </strong>{comment.id} | <strong>Date: </strong> */}
+                    {format(new Date(comment.created_at), 'PPPp')}
                 </p>
+
             </li>
         )
     }
@@ -51,12 +57,14 @@ class Comments extends React.Component {
     render() {
         const { comments, componentStatus } = this.state
         return(
-            <div className="comments-container">
-                <h2>Comments ({comments.length})</h2>
-                <p className="comments-status">{componentStatus}</p>
-                <ul className="comments-list">
-                    { comments.map((comment) => this.renderComment(comment))}
-                </ul>
+            <div>
+                <div className="comments-container">
+                    <h2>Comments ({comments.length})</h2>
+                    <p className="comments-status">{componentStatus}</p>
+                    <ul className="comments-list">
+                        { comments.map((comment) => this.renderComment(comment))}
+                    </ul>
+                </div>
             </div>
         )
     }
