@@ -68,6 +68,7 @@ class Comments extends React.Component {
     
         return(
             <div>
+                <br />
                 <hr />
                 <div className="comments-container">
                     <h2>Comments ({comments.length})</h2>
