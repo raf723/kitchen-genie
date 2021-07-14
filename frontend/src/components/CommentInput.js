@@ -4,6 +4,7 @@ import '../css/comment-input.css'
 
 class InputComments extends React.Component {
     initialState = { comment: ""}
+    
     state = {...this.initialState}
         
     async handleSubmit(e) {
@@ -25,7 +26,7 @@ class InputComments extends React.Component {
             alert('You must be logged in to comment!')
             window.location.replace('/login')
         } else {
-            // window.location.replace('/error')
+            window.location.replace('/error')
         }
     }
 

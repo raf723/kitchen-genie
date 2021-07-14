@@ -330,7 +330,6 @@ app
     const { recipeId } = server.params
     const { comment } = await server.body
 
-    console.log(recipeId)
 
     if (currentUser) {
       const outCome =  (await client.queryArray(`INSERT INTO 

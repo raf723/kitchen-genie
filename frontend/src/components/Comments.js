@@ -13,9 +13,8 @@ class Comments extends React.Component {
     state = this.initialState
 
     async componentWillMount() {
-        const { recipeId } = this.props
 
-        console.log(recipeId)
+        const { recipeId } = this.props
 
         const apiResponse = await fetch(`${process.env.REACT_APP_URL}/comments/${recipeId}`, {
             method: 'GET',
@@ -24,9 +23,6 @@ class Comments extends React.Component {
         })
 
         const { response, comments }= await apiResponse.json()
-
-        console.log('comments bellow')
-        console.log(comments)
 
         if (response === 'success') {
             if ( comments.length === 0) {
