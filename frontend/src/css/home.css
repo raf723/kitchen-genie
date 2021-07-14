@@ -18,6 +18,7 @@
 #home-container h1 {
   height: fit-content;
   font-size: 72px;
+  color: rgb(116, 166, 127);
   margin-top: 2%;
 }
 
@@ -52,31 +53,28 @@
   -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
-#home-container #autosuggest-container #grey-button {
+#home-container .search-button {
   height: 44px;
   width: 12%;
   color: rgb(150, 150, 150);
   background-color: white;
+  border-radius: 22px;
+  margin-left: 32px;
+  transition: background .5s ease;
+}
+
+#home-container #grey-button {
   border: solid 2px rgb(150, 150, 150);
-  border-radius: 22px;
-  margin-left: 32px;
-  transition: background .5s ease;
+  pointer-events: none;
 }
 
-#home-container #autosuggest-container #green-button {
-  height: 44px;
-  width: 12%;
-  color: rgb(116,166,127);
-  background-color: white;
-  border: solid 2px rgb(116,166,127);
-  border-radius: 22px;
-  margin-left: 32px;
-  transition: background .5s ease;
+#home-container #green-button {
+  border: solid 2px rgb(116, 166, 127);
 }
 
-#home-container #autosuggest-container #green-button:hover {
+#home-container #green-button:hover {
   color: white;
-  background-color: rgb(116,166,127);
+  background-color: rgb(116, 166, 127);
   transition: background .5s ease;
 }
 
@@ -94,7 +92,7 @@
 
 #home-container #ingredients-container button {
   color: white;
-  background-color: rgb(116,166,127);
+  background-color: rgb(116, 166, 127);
   border: none;
   border-radius: 20px;
   padding: 4px 8px;
@@ -119,7 +117,7 @@
 /* ==================== Random recipe generator ==================== */
 #random-recipe-button {
   font-size: 16px;
-  color: rgb(116,166,127);
+  color: rgb(116, 166, 127);
   background-color: transparent;
   border: none;
   margin-top: 16px;

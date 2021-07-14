@@ -26,7 +26,6 @@ class App extends React.Component {
 
   state = { ...this.initialState }
 
-  //==================== Global methods ====================//
   // Authenticate current user using cookies
   async componentDidMount(){
     const currentSession = getCookie('sessionId') ?? null
@@ -37,7 +36,6 @@ class App extends React.Component {
     }
   }
 
-  // Login handler
   loginHandler = async ({ email, password, remember }) => {
     const apiResponse = await fetch(`http://localhost:8080/login`, {
       method: 'POST',
@@ -48,7 +46,7 @@ class App extends React.Component {
     
     const { response, currentUser } = await apiResponse.json()
     
-    if (response === 'success') {
+    if (response) {
       this.setState({ loggedInUser: currentUser })
       window.location.replace('/')
     } else {
@@ -56,13 +54,11 @@ class App extends React.Component {
     }
   }
   
-  // Logout handler
   handleLogout() {
     setCookie('sessionId', null, 0)
     window.location.replace('/')
   }
 
-  // Save recipe handler
   handleSaveRecipe = async (recipeId, toSave=true) => {
     const apiResponse = await fetch(`http://localhost:8080/save/${recipeId}/${ toSave ? 'save' : 'unsave'}`, {
       method: 'POST',
@@ -84,7 +80,6 @@ class App extends React.Component {
 
 
 
-  //==================== Sitemap ====================//
   render() {
     const { loggedInUser } = this.state
 
@@ -96,41 +91,33 @@ class App extends React.Component {
         <div id="app-container">
           <Switch>
 
-            {/* Homepage */}
             <Route exact path='/'>
               <Home />
             </Route>
 
-            {/* Register */}
             <Route path='/register'>
               <Register />
             </Route>
 
-            {/* Login */}
             <Route path='/login'>
               <Login onLogin={ this.loginHandler }/>
             </Route>
 
-            {/* About us */}
             <Route path='/about'>
               <About />
             </Route>
 
-            {/* FAQ */}
             <Route path='/faq'>
               <h1>FAQ</h1>
             </Route>
 
-            {/* Saved recipes */}
             <Route path='/favourites'>
               <SavedRecipes onSaveRecipe={ this.handleSaveRecipe }/>
             </Route>
 
-            {/* Recipe results */}
             <Route path='/results' component={ Results }>
             </Route>
 
-            {/* Single recipe */}
             <Route path='/recipe' component={ Recipe }>
             </Route>
 

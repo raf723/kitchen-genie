@@ -1,9 +1,10 @@
 .page-container * {
   font-family: 'Poppins', sans-serif;
+  color: rgb(50, 50, 50);
 }
 
 .page-container {
-  height: 100vh;
+  height: 100%;
   display: flex;
   overflow-x: hidden;
 }

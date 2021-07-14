@@ -43,20 +43,18 @@ class Home extends React.Component {
 
   // Search for recipes via ingredients
   searchHandler = async() => {
-    if (this.state.ingredients.length !== 0) {
-      // Get recipes from Spoonacular
-      const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${this.state.ingredients}&number=12&ranking=2&apiKey=d45bc24e8cc84723b6786271e498854f`)
-      const recipes = await spoonacular.json()
+    // Get recipes from Spoonacular
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${this.state.ingredients}&number=12&ranking=2&apiKey=d45bc24e8cc84723b6786271e498854f`)
+    const recipes = await spoonacular.json()
 
-      // Pass data another parent component (page)
-      this.props.history.push({
-        pathname: '/results',
-        state: { 
-          results: recipes,
-          ingredients: this.state.ingredients
-        }
-      })
-    }
+    // Pass data another parent component (page)
+    this.props.history.push({
+      pathname: '/results',
+      state: { 
+        results: recipes,
+        ingredients: this.state.ingredients
+      }
+    })
   }
 
   // Get random recipe from API and navigate to recipe page
@@ -78,7 +76,12 @@ class Home extends React.Component {
             <Search value={ this.state.value } onChange={ this.onChange } onKeyPress={ this.onKeyPress }/>
 
             {/* Disbale the search button if ingredients array is empty */}
-            <button id={ this.state.ingredients.length !== 0 ? "green-button" : "grey-button" }  onClick={ () => this.searchHandler() }>GO</button>
+            <button
+              id={ this.state.ingredients.length !== 0 ? "green-button" : "grey-button" }
+              className="search-button"
+              onClick={ () => this.searchHandler() }>
+                GO
+            </button>
           </div>
         </div>
 

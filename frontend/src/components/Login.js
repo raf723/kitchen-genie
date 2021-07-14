@@ -42,12 +42,12 @@ class Login extends React.Component {
     const { email, password, remember } = this.state
     
     return (
-      <div className="page-container">
+      <div id="login-container">
         { /* Splash background */ }
         <img id="splash-img" src={ splash } alt="splash"/>
 
-        <div id="login-container">
-          <div id="form-container">
+        <div id="form-container-parent">
+          <div id="form-container-child">
             <h1>Login</h1>
 
             { /* Email */ }
@@ -60,14 +60,19 @@ class Login extends React.Component {
             <label><input className="checkbox" name="remember" type="checkbox" onChange={ (e) => this.setState({ remember: e.target.checked }) }/> Remember me?</label>
 
             { /* Login button */ }
-            <button id="login-button" onClick={ () => this.props.onLogin({ email, password, remember }) }>Login</button>
+            <button
+              id={ this.state.email === '' || this.state.password === '' ? "grey-button" : "green-button" }
+              className="login-button"
+              onClick={ () => this.props.onLogin({ email, password, remember }) }>
+                Login
+            </button>
 
             { /* Register option */ }
             <span>Don't have an account? Register <NavLink id="register-button" exact to="/register">here</NavLink></span>
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
