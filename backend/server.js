@@ -209,12 +209,10 @@ app
 
   //-------------------------- Get List of Recipes -------------------//
   .get('/myrecipes/id-only', async (server) => {
-    await server.json({ response: 'unauthorized' })
     const sessionId = server.cookies.sessionId
     const currentUser = await getCurrentUser(sessionId)
 
     if (currentUser) {
-
       const queryResults = (await client.queryArray(`
         SELECT recipe_id FROM saved_recipes 
         WHERE user_id = $1 AND active = 't';`, currentUser.id)).rows
@@ -230,6 +228,44 @@ app
   })
 
 
+  //-------------------------- Get List of Comments -------------------//
+  .get('/comments/:recipeId', async (server) => {
+    const { recipeId } = server.params
+    const queryResults = (await client.queryObject(`
+            SELECT comment, recipe_comments.id, recipe_id, user_id, recipe_comments.created_at, username 
+            FROM recipe_comments 
+            JOIN users ON recipe_comments.user_id = users.id
+            WHERE recipe_id = $1
+            ORDER BY created_at DESC;`, recipeId))
+    await server.json({response: 'success', comments: queryResults.rows })
+  })
+
+  //-------------------------- Post a Comment -------------------//
+  .post('/comment/:recipeId', async (server) => {
+    const sessionId = server.cookies.sessionId
+    const currentUser = await getCurrentUser(sessionId)
+    const { recipeId } = server.params
+    const { comment } = await server.body
+
+    if (currentUser) {
+      const outCome =  (await client.queryArray(`INSERT INTO 
+        recipe_comments(comment, recipe_id, user_id, created_at, updated_at)
+        VALUES ($1, $2, $3, NOW(), NOW())
+        RETURNING 't';`, comment, recipeId, currentUser.id)).rows[0][0]
+     if (outCome === 't')  {
+       //All good
+      await server.json({ response: 'success' })
+     } else {
+       //Something when wrong processing the query
+      await server.json({ response: 'failure' })
+     }
+
+    } else {
+      //Bad Credentials
+      await server.json({ response: 'unauthorized' })
+    }
+
+  })
   //------------------------- Start server -------------------------//
   .start({ port: PORT })
 console.log(`Server running on http://localhost:${PORT}`)

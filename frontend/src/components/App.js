@@ -13,6 +13,9 @@ import Login from './Login'
 import Results from './Results'
 import About from './About'
 import Recipe from './Recipe'
+// V Remove V
+import CommentInput from './CommentInput'
+import Comments from './Comments'
 import SavedRecipes from './SavedRecipes'
 
 class App extends React.Component {
@@ -111,6 +114,11 @@ class App extends React.Component {
             {/* Saved recipes */}
             <Route path='/favourites'>
               <SavedRecipes onSaveRecipe={this.handleSaveRecipe}/>
+            </Route>
+
+            <Route path='/comments'>
+              <Comments loggedInUser={loggedInUser} recipeId={1} />
+              {/* <CommentInput loggedInUser={loggedInUser} recipeId={1} /> */}
             </Route>
 
             {/* Recipe results */}
