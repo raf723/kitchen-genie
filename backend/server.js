@@ -118,10 +118,12 @@ app
     const sessionId = server.cookies.sessionId
     const currentUser = await getCurrentUser(sessionId)
     if (currentUser) {
-      const recipes = (await client.queryArray(`
+      const stringifiedRecipes = (await client.queryArray(`
         SELECT recipe FROM saved_recipes 
         WHERE user_id = $1 AND active = 't'
         ORDER BY created_at DESC;`, currentUser.id)).rows 
+
+      const recipes = stringifiedRecipes.map((stringifiedRecipe) => JSON.parse(stringifiedRecipe))
 
       //All good: Return a list of saved recipes if any
       await server.json({ response: 'success', recipes, loggedInUser: { username: currentUser.username, id: currentUser.id } })

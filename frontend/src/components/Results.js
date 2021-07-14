@@ -33,7 +33,7 @@ class Results extends React.Component {
   })
 
     const { response, recipes } = await apiResponse.json()
-    const savedRecipeIds = recipes.map((stringifiedRecipe) => JSON.parse(stringifiedRecipe).id)
+    const savedRecipeIds = recipes.map((recipe) => recipe.id)
 
     if (response === 'success') { 
       this.setState({savedRecipeIds, displaySaveFeature: true})

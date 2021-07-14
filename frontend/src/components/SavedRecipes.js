@@ -6,7 +6,7 @@ import '../css/saved-recipes.css'
 export class SavedRecipes extends Component {
     initialState = {
         loggedInUser: {},
-        savedRecipes: [],
+        recipes: [],
         isCurrentlySaved: {},
         pageState: ["Loading...", "Calling our chefs...", "Searching the recipe books...", "It's worth the wait...", "Licking lips in anticipation..."][Math.floor(Math.random() * 5)],
     }
@@ -20,23 +20,17 @@ export class SavedRecipes extends Component {
         })
         const { response, recipes, loggedInUser } = await apiResponse.json()
         if (response === 'success') { 
-            //Parse the stringified recipes from the backend
-            const savedRecipes = recipes.map((stringifiedRecipe) => JSON.parse(stringifiedRecipe))
-
             const isCurrentlySaved =  {}
-            savedRecipes.forEach((recipe) => isCurrentlySaved[recipe.id] = true)
-            let pageState 
+            recipes.forEach((recipe) => isCurrentlySaved[recipe.id] = true)
 
-            if (savedRecipes.length === 0) {pageState = 'No favourite recipes yet!'} else {pageState = ''} 
+            const pageState = recipes.length === 0 ? 'No favourite recipes yet!' : ''
+
             //Upadte state
-            this.setState({savedRecipes, isCurrentlySaved, loggedInUser, pageState})
+            this.setState({recipes, isCurrentlySaved, loggedInUser, pageState})
         } else if (response === 'unauthorized') {
-            //do nothing
+            //Notify user that thaey are unauthorised
             this.setState({loggedInUser, pageState: 'Please log in to save and access favourite recipes!'})
-        } else if (response === 'service down') { 
-            //notify the user (e.g. when access limit reached )
-            this.setState({loggedInUser, pageState: 'Service is currently down. Please try again later!'})
-        }else {
+        } else {
             window.location.replace('/error')
         }
     }
@@ -62,13 +56,13 @@ export class SavedRecipes extends Component {
     }
 
     render() {
-        const { savedRecipes, loggedInUser, pageState } = this.state
+        const { recipes, loggedInUser, pageState } = this.state
         return (
             <div className="saved-recipes-page-container">
                 <h1> Hi {loggedInUser.username}! <br/> Serving Up Your Faves 🍽</h1>
                 <p>{pageState}</p>
                 <div className="card-display-container">
-                    { savedRecipes.map((recipe) => this.renderCard(recipe)) }
+                    { recipes.map((recipe) => this.renderCard(recipe)) }
                 </div>
             </div>
         )
