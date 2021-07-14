@@ -1,4 +1,6 @@
 import React from 'react'
+
+// Styling imports
 import '../css/home.css'
 
 // Routing ingredients
@@ -57,20 +59,30 @@ class Home extends React.Component {
     }
   }
 
+  // Get random recipe from API and navigate to recipe page
+  serveRecipe = async() => {
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/random?number=1&apiKey=d45bc24e8cc84723b6786271e498854f`)
+    const randomRecipe = await spoonacular.json()
+    console.log(randomRecipe.recipes)
+  }
+
   render() {
     return (
       <div id="home-container">
         <h1>Supercook</h1>
 
+        {/* Placeholder, input and search button */}
         <div id="search-container">
           <span id="title-span">{ this.state.value !== '' && `Hit 'Enter' to add an ingredient!` }</span>
           <div id="autosuggest-container">
             <Search value={ this.state.value } onChange={ this.onChange } onKeyPress={ this.onKeyPress }/>
-            <button onClick={ () => this.searchHandler() }>GO</button>
+
+            {/* Disbale the search button if ingredients array is empty */}
+            <button id={ this.state.ingredients.length !== 0 ? "green-button" : "grey-button" }  onClick={ () => this.searchHandler() }>GO</button>
           </div>
         </div>
 
-        {/* Ingredients buttons */}
+        {/* Buttons for when ingredients are added */}
         <div id="ingredients-container">
           { this.state.ingredients.map(ingredient => 
             <button className="ingredient-button" key={ ingredient } onClick={ () => this.removeIngredient(ingredient) }>
@@ -79,7 +91,8 @@ class Home extends React.Component {
           )}
         </div>
 
-        <button id="random-recipe-button">Serve me up!</button>
+        {/* Random recipe button */}
+        <button id="random-recipe-button" onClick={ () => this.serveRecipe() }>Serve me up!</button>
       </div>
     )
   }

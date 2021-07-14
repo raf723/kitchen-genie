@@ -1,9 +1,13 @@
 import React from 'react'
+
+// Styling imports
 import '../css/app.css'
+
+// Function imports
 import { setCookie, getCookie } from '../function-assets/helpers'
 
 // Routing imports
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 // Component imports
 import Navbar from './Navbar'
@@ -20,8 +24,10 @@ class App extends React.Component {
     loggedInUser: null,
   }
 
-  state = {...this.initialState}
+  state = { ...this.initialState }
 
+  //==================== Global methods ====================//
+  // Authenticate current user using cookies
   async componentDidMount(){
     const currentSession = getCookie('sessionId') ?? null
     if (currentSession) {
@@ -31,7 +37,8 @@ class App extends React.Component {
     }
   }
 
- loginHandler = async ({ email, password, remember }) => {
+  // Login handler
+  loginHandler = async ({ email, password, remember }) => {
     const apiResponse = await fetch(`http://localhost:8080/login`, {
       method: 'POST',
       credentials: 'include',
@@ -49,11 +56,13 @@ class App extends React.Component {
     }
   }
   
+  // Logout handler
   handleLogout() {
     setCookie('sessionId', null, 0)
     window.location.replace('/')
   }
 
+  // Save recipe handler
   handleSaveRecipe = async (recipeId, toSave=true) => {
     const apiResponse = await fetch(`http://localhost:8080/save/${recipeId}/${ toSave ? 'save' : 'unsave'}`, {
       method: 'POST',
@@ -73,12 +82,16 @@ class App extends React.Component {
     }
   }
 
+
+
+  //==================== Sitemap ====================//
   render() {
     const { loggedInUser } = this.state
+
     return(
       <Router>
-        {/* Pass authentication result as a prop to toggle navigation bar buttons */}
-        <Navbar userAuthenticated={ !!loggedInUser } onLogout={() => this.handleLogout()}/>
+        { /* Pass authentication result as a prop to toggle navigation bar buttons */ }
+        <Navbar userAuthenticated={ !!loggedInUser } onLogout={ () => this.handleLogout() }/>
 
         <div id="app-container">
           <Switch>
@@ -95,7 +108,7 @@ class App extends React.Component {
 
             {/* Login */}
             <Route path='/login'>
-              <Login onLogin={this.loginHandler}/>
+              <Login onLogin={ this.loginHandler }/>
             </Route>
 
             {/* About us */}
@@ -110,7 +123,7 @@ class App extends React.Component {
 
             {/* Saved recipes */}
             <Route path='/favourites'>
-              <SavedRecipes onSaveRecipe={this.handleSaveRecipe}/>
+              <SavedRecipes onSaveRecipe={ this.handleSaveRecipe }/>
             </Route>
 
             {/* Recipe results */}

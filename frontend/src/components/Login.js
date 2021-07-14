@@ -1,5 +1,9 @@
 import React from 'react'
+
+// Styling imports
 import '../css/login.css'
+
+// Asset imports
 import splash from '../splash.jpeg';
 
 // Routing imports
@@ -7,8 +11,6 @@ import { NavLink } from 'react-router-dom'
 
 // Component imports
 import Input from './reusable/Input'
-
-// Function imports
 
 class Login extends React.Component {
   // Declare initialState object where all values are empty
@@ -31,13 +33,14 @@ class Login extends React.Component {
 
   // When input focus is removed
   onBlur = (field) => {
-    const touchedField = {...this.state.touched}
+    const touchedField = { ...this.state.touched }
     touchedField[field] = true
     this.setState({ touched: touchedField })
   }
 
   render() {
-    const {email, password, remember} = this.state
+    const { email, password, remember } = this.state
+    
     return (
       <div className="page-container">
         { /* Splash background */ }
@@ -54,12 +57,10 @@ class Login extends React.Component {
             <Input type="password" onChange={ this.onChange } onBlur={ this.onBlur } error={ false }></Input>
 
             { /* Remember me checkbox */ }
-            <label>
-              <input className="checkbox" name="remember" type="checkbox" onChange={ (e) => this.setState({ remember: e.target.checked }) }/> Remember me?
-            </label>
+            <label><input className="checkbox" name="remember" type="checkbox" onChange={ (e) => this.setState({ remember: e.target.checked }) }/> Remember me?</label>
 
             { /* Login button */ }
-            <button id="login-button" onClick={ () => this.props.onLogin({email, password, remember}) }>Login</button>
+            <button id="login-button" onClick={ () => this.props.onLogin({ email, password, remember }) }>Login</button>
 
             { /* Register option */ }
             <span>Don't have an account? Register <NavLink id="register-button" exact to="/register">here</NavLink></span>

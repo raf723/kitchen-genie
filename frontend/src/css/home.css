@@ -52,8 +52,18 @@
   -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
-/* Search button */
-#home-container #autosuggest-container button {
+#home-container #autosuggest-container #grey-button {
+  height: 44px;
+  width: 12%;
+  color: rgb(150, 150, 150);
+  background-color: white;
+  border: solid 2px rgb(150, 150, 150);
+  border-radius: 22px;
+  margin-left: 32px;
+  transition: background .5s ease;
+}
+
+#home-container #autosuggest-container #green-button {
   height: 44px;
   width: 12%;
   color: rgb(116,166,127);
@@ -64,12 +74,15 @@
   transition: background .5s ease;
 }
 
-#home-container #autosuggest-container button:hover {
+#home-container #autosuggest-container #green-button:hover {
   color: white;
   background-color: rgb(116,166,127);
   transition: background .5s ease;
 }
 
+
+
+/* ==================== Ingredients container ==================== */
 #home-container #ingredients-container {
   position: relative;
   width: 44%;

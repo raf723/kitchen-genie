@@ -1,4 +1,6 @@
 import React from 'react'
+
+// Styling imports
 import '../css/results.css'
 import '../css/save-button.css'
 
@@ -23,6 +25,7 @@ class Results extends React.Component {
   // Set state to initialState
   state = this.initialState
 
+  // Fetch current user's saved recipes from database
   async componentDidMount() {
     const myRecipes = await fetch(`http://localhost:8080/myrecipes/id-only`, {
       credentials: 'include',
@@ -67,6 +70,7 @@ class Results extends React.Component {
     })
   }
 
+  // Save recipe button
   handleSaveRecipe = async (recipeId, toSave=true) => {
     const apiResponse = await fetch(`http://localhost:8080/save/${recipeId}/${ toSave ? 'save' : 'unsave'}`, {
       method: 'POST',
@@ -78,26 +82,22 @@ class Results extends React.Component {
 
     if (response === 'success') {
       let { savedRecipeIds } = this.state
-      if (toSave) {
-        this.setState({ savedRecipeIds: savedRecipeIds.concat(recipeId) })
-      } else {
-        this.setState({ savedRecipeIds: savedRecipeIds.filter((id) => id !== recipeId) })
-      }
+      if (toSave) this.setState({ savedRecipeIds: savedRecipeIds.concat(recipeId) })
+      else this.setState({ savedRecipeIds: savedRecipeIds.filter((id) => id !== recipeId) })
       this.setState(savedRecipeIds)
     } else if (response === 'unauthorized') {
         alert("Unauthorized access!\nYou must log in to access saved recipes!")
         window.location.replace('/login')
-    } else {
-        window.location.replace('/error')
-    }
+    } else window.location.replace('/error')
   }
 
   render() {
     const results = this.state.results
-    const {savedRecipeIds, displaySaveFeature} = this.state
+    const { savedRecipeIds, displaySaveFeature } = this.state
 
     return (
       <div id="results-container">
+        {/* Placeholder and input */}
         <div id="search-container">
           <span id="title-span">{ this.state.value !== '' && `Hit 'Enter' to add an ingredient!` }</span>
           <div id="autosuggest-container">
@@ -105,6 +105,7 @@ class Results extends React.Component {
           </div>
         </div>
 
+        {/* Buttons for when ingredients are added */}
         <div id="ingredients-container">
           { this.state.ingredients.map(ingredient => 
             <button className="ingredient-button" key={ ingredient } onClick={ () => this.removeIngredient(ingredient) }>
@@ -113,17 +114,20 @@ class Results extends React.Component {
           )}
         </div>
 
+        {/* Grid of cards (recipes) */}
         { this.state.results.length > 0 && <div id="grid-container">
+          {/* For each recipe, render a recipe card and save button (only if user is authenticated i.e. displaySaveFeature is true) */}
           { results.map(recipe => <div className="card-container" key={ recipe.id }>
-            { 
-              displaySaveFeature 
-              && <SaveButton onSave={() => this.handleSaveRecipe(recipe.id, !savedRecipeIds.includes(recipe.id))} 
-              isCurrentlySaved={savedRecipeIds.includes(recipe.id)}/>
+            { displaySaveFeature &&
+              <SaveButton
+                onSave={ () => this.handleSaveRecipe(recipe.id, !savedRecipeIds.includes(recipe.id)) } 
+                isCurrentlySaved={ savedRecipeIds.includes(recipe.id) } />
             }
             <RecipeCard recipe={ recipe } forPage="results" />
           </div>) }
         </div> }
 
+        {/* If number of recipes is 0, show a no results message */}
         { this.state.results.length === 0 && <span id="no-results-span">Oh no! We couldn't find any recipes!</span> }
       </div>
     )
