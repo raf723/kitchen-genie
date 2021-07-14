@@ -85,7 +85,6 @@ class App extends React.Component {
 
         <div id="app-container">
           <Switch>
-
             {/* Homepage */}
             <Route exact path='/'>
               <Home />
@@ -125,8 +124,18 @@ class App extends React.Component {
             <Route path='/results' component={ Results }>
             </Route>
 
+            <Route path='/error'>
+              <h1>An error happend.</h1>
+            </Route>
+
+            
+
             {/* Single recipe */}
-            <Route path='/recipe' component={ Recipe }>
+            <Route path='/recipe' render={(props) => ( <Recipe {...props} 
+            userAuthenticated={this.state.loggedInUser} 
+            onSaveRecipe={this.handleSaveRecipe}
+
+            /> )}>
             </Route>
 
           </Switch>

@@ -144,6 +144,87 @@ app
     }
   })
 
+  //------------------------- Get Recipe Rating ---------------------//
+
+  .get('/recipe/averagerating/:id', async (server) => {
+
+    const { id } = server.params
+
+    const averageRatingQuery = `SELECT ROUND(AVG(rating), 2)::float AS value FROM recipe_rating WHERE recipe_id = $1;`
+
+    const [ averageRating ] = (await client.queryObject(averageRatingQuery, id)).rows
+
+    if(Number.isNaN(Number.parseFloat(averageRating.value))){
+      averageRating.value = 0
+    }
+
+    server.json(averageRating)
+  
+  })
+
+  //------------------------- Get Personal Recipe Rating ---------------------//
+
+  .get('/recipe/personalrating/:recipeId/:sessionId', async(server) => {
+
+    const { sessionId, recipeId } = server.params
+
+    const currentUser = await getCurrentUser(sessionId)
+
+    const userRecipeRating = `SELECT rating, recipe_id FROM recipe_rating WHERE recipe_id = $1 AND user_id = $2`
+
+    const [recipe] = (await client.queryObject(userRecipeRating, recipeId, currentUser.id)).rows
+
+    if (currentUser) {
+      if(recipe && recipe.rating) {
+        //All good: recipe rated
+        server.json({ response:'success', recipe })
+      } else {
+        //All good: recipe not rated
+        server.json({response:'success', recipe: { rating:  0, recipe_id: recipeId }})
+      }
+    } else {
+      //Bad Credentials
+      await server.json({ response: 'unauthorized', recipe: {} })
+    }
+
+  })
+
+
+  //--------------------------- Post Rating ------------------------//
+
+  .post('/recipe/rating', async (server) => {
+    const { sessionId } = server.cookies
+    const currentUser = await getCurrentUser(sessionId)
+
+    if (currentUser) {
+      const { rating, recipeId } = await server.body
+
+      //Is sequential id numbering a security risk
+      const user = await getCurrentUser(server.cookies.sessionId)
+      //Delete instances with same recipe id and user.id
+      const deleteOldRating = `
+        DELETE FROM recipe_rating
+          WHERE user_id = $1 AND recipe_id = $2;`
+
+      const insertNewRating = `INSERT INTO recipe_rating 
+          (rating, created_at, updated_at, recipe_id, user_id)
+        VALUES 
+          ($1, NOW(), NOW(), $2, $3)
+          RETURNING rating;`
+
+        await client.queryObject(deleteOldRating, user.id, recipeId)
+        
+        const [ ratingResponse ] = (await client.queryObject(insertNewRating, rating, recipeId, user.id)).rows
+
+      //All good: return user's rating
+      server.json({ rating: ratingResponse.rating })
+    } else {
+      //User is unauthrized to rate
+      server.json({message: 'You need to be a registered user to rate.'})
+    }
+
+  })
+
   //------------------------- Get Saved Recipes -------------------------//
   .get('/myrecipes', async (server) => {
     const sessionId = server.cookies.sessionId
@@ -158,7 +239,7 @@ app
       if (savedRecipeIds.length !== 0) {
         const recipeString = savedRecipeIds.reduce((accumulator, [recipe], i) => accumulator + recipe + (i === savedRecipeIds.length - 1 ? "" : ","), "") 
         //******************INSERT YOUR API KEY ********************************/
-        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeString}&apiKey=109411015c2f4df5942a3143fb7b3c36`
+        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeString}&apiKey=${Deno.env.get('SPOONACULAR_API_KEY')}`
         const spoonacularApiResponse = await fetch(spoonacularEndpoint)
         const recipes = await spoonacularApiResponse.json()
         if (recipes.status === "failure") {
