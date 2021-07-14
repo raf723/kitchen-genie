@@ -66,7 +66,7 @@ class RecipeCard extends React.Component {
       <article  key={recipe.id} id={ recipe.id } className="recipe-card" onClick={ () => this.recipeHandler(recipe) }>
         <div className="recipe-card-top">
         {/* Card image */}
-          <img className="recipe-image" src={ recipe.image } alt="prepared recipe" height="100%" width="100%"/>
+          <img className="recipe-image" src={ recipe.image } alt="prepared recipe"/>
         </div>
         {/* Card meta */}
         <div className="recipe-card-bottom">
