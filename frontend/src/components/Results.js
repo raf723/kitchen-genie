@@ -20,7 +20,8 @@ class Results extends React.Component {
   initialState = {
     ingredients: this.props.location.state.ingredients,
     savedRecipeIds: [],
-    displaySaveFeature: false
+    displaySaveFeature: false,
+    pageState: ["Loading...", "Calling our chefs...", "Searching the recipe books...", "It's worth the wait..."][Math.floor(Math.random() * 4)],
   }
 
   // Set state to initialState
@@ -36,9 +37,9 @@ class Results extends React.Component {
     const savedRecipeIds = recipes.map((recipe) => recipe.id)
 
     if (response === 'success') { 
-      this.setState({savedRecipeIds, displaySaveFeature: true})
+      this.setState({savedRecipeIds, displaySaveFeature: true, pageState: ''})
     } else if (response === 'unauthorized') {
-      //do nothing
+      this.setState({pageState: ''})
     } else {
       window.location.replace('/error')
     }
@@ -77,6 +78,7 @@ class Results extends React.Component {
 
     return (
       <div id="results-container">
+        <p>{this.state.pageState}</p>
         <div id="checkbox-container">
           <div className="subgroup-container">
             <h2>Meal type</h2>
