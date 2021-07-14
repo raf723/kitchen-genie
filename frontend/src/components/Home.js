@@ -42,10 +42,11 @@ class Home extends React.Component {
   // Search for recipes via ingredients
   searchHandler = async() => {
     // Convert this.state's ingredients to comma separated string
-    const ingredients = this.state.ingredients.join(',')
+    const ingredientsArray = this.state.ingredients.join(',')
 
     // Get recipes from Spoonacular
-    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=160&ranking=2&apiKey=d45bc24e8cc84723b6786271e498854f`)
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientsArray}&number=30&ranking=1&ignorePantry=true&apiKey=${process.env.REACT_APP_API_KEY}`)
+
     const recipes = await spoonacular.json()
 
     // Pass data another parent component (page)

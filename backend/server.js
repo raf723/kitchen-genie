@@ -113,7 +113,88 @@ app
     }
   })
 
-//------------------------- Get Saved Recipes -------------------------//
+  //------------------------- Get Recipe Rating ---------------------//
+
+  .get('/recipe/averagerating/:id', async (server) => {
+
+    const { id } = server.params
+
+    const averageRatingQuery = `SELECT ROUND(AVG(rating), 2)::float AS value FROM recipe_rating WHERE recipe_id = $1;`
+
+    const [ averageRating ] = (await client.queryObject(averageRatingQuery, id)).rows
+
+    if(Number.isNaN(Number.parseFloat(averageRating.value))){
+      averageRating.value = 0
+    }
+
+    server.json(averageRating)
+  
+  })
+
+  //------------------------- Get Personal Recipe Rating ---------------------//
+
+  .get('/recipe/personalrating/:recipeId/:sessionId', async(server) => {
+
+    const { sessionId, recipeId } = server.params
+
+    const currentUser = await getCurrentUser(sessionId)
+
+    const userRecipeRating = `SELECT rating, recipe_id FROM recipe_rating WHERE recipe_id = $1 AND user_id = $2`
+
+    const [recipe] = (await client.queryObject(userRecipeRating, recipeId, currentUser.id)).rows
+
+    if (currentUser) {
+      if(recipe && recipe.rating) {
+        //All good: recipe rated
+        server.json({ response:'success', recipe })
+      } else {
+        //All good: recipe not rated
+        server.json({response:'success', recipe: { rating:  0, recipe_id: recipeId }})
+      }
+    } else {
+      //Bad Credentials
+      await server.json({ response: 'unauthorized', recipe: {} })
+    }
+
+  })
+
+
+  //--------------------------- Post Rating ------------------------//
+
+  .post('/recipe/rating', async (server) => {
+    const { sessionId } = server.cookies
+    const currentUser = await getCurrentUser(sessionId)
+
+    if (currentUser) {
+      const { rating, recipeId } = await server.body
+
+      //Is sequential id numbering a security risk
+      const user = await getCurrentUser(server.cookies.sessionId)
+      //Delete instances with same recipe id and user.id
+      const deleteOldRating = `
+        DELETE FROM recipe_rating
+          WHERE user_id = $1 AND recipe_id = $2;`
+
+      const insertNewRating = `INSERT INTO recipe_rating 
+          (rating, created_at, updated_at, recipe_id, user_id)
+        VALUES 
+          ($1, NOW(), NOW(), $2, $3)
+          RETURNING rating;`
+
+        await client.queryObject(deleteOldRating, user.id, recipeId)
+        
+        const [ ratingResponse ] = (await client.queryObject(insertNewRating, rating, recipeId, user.id)).rows
+
+      //All good: return user's rating
+      server.json({ rating: ratingResponse.rating })
+    } else {
+      //User is unauthrized to rate
+      server.json({message: 'You need to be a registered user to rate.'})
+    }
+
+  })
+
+  //------------------------- Get Saved Recipes -------------------------//
   .get('/myrecipes', async (server) => {
     const sessionId = server.cookies.sessionId
     const currentUser = await getCurrentUser(sessionId)
@@ -163,7 +244,45 @@ app
       await server.json({ response: 'unauthorized' })
     }
   })
-  
-//------------------------- Start server -------------------------//
+
+//-------------------------- Get List of Comments -------------------//
+  .get('/comments/:recipeId', async (server) => {
+    const { recipeId } = server.params
+    const queryResults = (await client.queryObject(`
+            SELECT comment, recipe_comments.id, recipe_id, user_id, recipe_comments.created_at, username 
+            FROM recipe_comments 
+            JOIN users ON recipe_comments.user_id = users.id
+            WHERE recipe_id = $1
+            ORDER BY created_at DESC;`, recipeId))
+    await server.json({response: 'success', comments: queryResults.rows })
+  })
+
+  //-------------------------- Post a Comment -------------------//
+  .post('/comment/:recipeId', async (server) => {
+    const sessionId = server.cookies.sessionId
+    const currentUser = await getCurrentUser(sessionId)
+    const { recipeId } = server.params
+    const { comment } = await server.body
+
+    if (currentUser) {
+      const outCome =  (await client.queryArray(`INSERT INTO 
+        recipe_comments(comment, recipe_id, user_id, created_at, updated_at)
+        VALUES ($1, $2, $3, NOW(), NOW())
+        RETURNING 't';`, comment, recipeId, currentUser.id)).rows[0][0]
+     if (outCome === 't')  {
+       //All good
+      await server.json({ response: 'success' })
+     } else {
+       //Something when wrong processing the query
+      await server.json({ response: 'failure' })
+     }
+
+    } else {
+      //Bad Credentials
+      await server.json({ response: 'unauthorized' })
+    }
+
+  })
+  //------------------------- Start server -------------------------//
   .start({ port: PORT })
 console.log(`Server running on http://localhost:${PORT}`)
