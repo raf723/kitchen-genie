@@ -27,7 +27,7 @@ class App extends React.Component {
   state = { ...this.initialState }
 
   // Authenticate current user using cookies
-  async componentDidMount(){
+  async componentWillMount(){
     const currentSession = getCookie('sessionId') ?? null
     if (currentSession) {
       const apiResponse = await fetch(`http://localhost:8080/sessions/${currentSession}`)
@@ -77,6 +77,7 @@ class App extends React.Component {
         window.location.replace('/error')
     }
   }
+  
 
 
 
@@ -90,13 +91,12 @@ class App extends React.Component {
 
         <div id="app-container">
           <Switch>
-
             <Route exact path='/'>
-              <Home />
+              <Home/>
             </Route>
 
             <Route path='/register'>
-              <Register />
+              <Register/>
             </Route>
 
             <Route path='/login'>
@@ -104,7 +104,7 @@ class App extends React.Component {
             </Route>
 
             <Route path='/about'>
-              <About />
+              <About/>
             </Route>
 
             <Route path='/faq'>
@@ -121,6 +121,17 @@ class App extends React.Component {
             <Route path='/recipe' component={ Recipe }>
             </Route>
 
+            <Route path='/error'>
+              <h1>Oops! Looks like something went wrong.</h1>
+            </Route>
+
+            <Route path='/recipe'
+              render={ (props) => (
+                <Recipe { ...props } 
+                  userAuthenticated={this.state.loggedInUser} 
+                  onSaveRecipe={this.handleSaveRecipe}
+                /> )}>
+            </Route>
           </Switch>
         </div>
       </Router>

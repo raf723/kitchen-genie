@@ -26,7 +26,7 @@ h5 {
 }
 
 .recipe-card-bottom {
-  display: flex;
+  display: flex; 
   flex-direction: column;
   box-sizing: border-box;
   padding: 12px;
@@ -45,6 +45,7 @@ h5 {
 
 .star-rating {
   display: inline-block;
+  cursor: pointer;
 }
 
 .some-missing {

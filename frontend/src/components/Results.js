@@ -27,12 +27,12 @@ class Results extends React.Component {
 
   // Fetch current user's saved recipes from database
   async componentDidMount() {
-    const myRecipes = await fetch(`http://localhost:8080/myrecipes/id-only`, {
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/myrecipes/id-only`, {
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
     })
 
-    const { response, savedRecipeIds } = await myRecipes.json()
+    const { response, savedRecipeIds } = await apiResponse.json()
 
     if (response === 'success') this.setState({ savedRecipeIds, displaySaveFeature: true })
     else if (response !== 'unauthorized') window.location.replace('/error')

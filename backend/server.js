@@ -37,8 +37,6 @@ const headersWhiteList = [
 app
   .use(cors({ allowHeaders: headersWhiteList, allowCredentials: true, allowOrigins: [Deno.env.get("ALLOWED_ORIGINS")] }))
 
-
-
   //------------------------- Login handler -------------------------//
   .post('/login', async (server) => {
     let { email, password, remember } = await server.body
@@ -82,7 +80,7 @@ app
         username = username.trim()
         email = email.trim()
         if (await getUser({ email })) {
-            // Error:Already a user
+            // Error: Already a user
             server.json({ response:`already registered` })
         } else {
             // All good
@@ -119,6 +117,88 @@ app
 
 
 
+  //------------------------- Get recipe rating ---------------------//
+  .get('/recipe/averagerating/:id', async (server) => {
+
+    const { id } = server.params
+
+    const averageRatingQuery = `SELECT ROUND(AVG(rating), 2)::float AS value FROM recipe_rating WHERE recipe_id = $1;`
+
+    const [ averageRating ] = (await client.queryObject(averageRatingQuery, id)).rows
+
+    if(Number.isNaN(Number.parseFloat(averageRating.value))){
+      averageRating.value = 0
+    }
+
+    server.json(averageRating)
+  
+  })
+
+
+
+  //------------------------- Get personal recipe rating ---------------------//
+  .get('/recipe/personalrating/:recipeId/:sessionId', async(server) => {
+
+    const { sessionId, recipeId } = server.params
+
+    const currentUser = await getCurrentUser(sessionId)
+
+    const userRecipeRating = `SELECT rating, recipe_id FROM recipe_rating WHERE recipe_id = $1 AND user_id = $2`
+
+    const [recipe] = (await client.queryObject(userRecipeRating, recipeId, currentUser.id)).rows
+
+    if (currentUser) {
+      if(recipe && recipe.rating) {
+        // All good: recipe rated
+        server.json({ response:'success', recipe })
+      } else {
+        // All good: recipe not rated
+        server.json({response:'success', recipe: { rating:  0, recipe_id: recipeId }})
+      }
+    } else {
+      // Bad Credentials
+      await server.json({ response: 'unauthorized', recipe: {} })
+    }
+
+  })
+
+
+  //--------------------------- Insert rating ------------------------//
+  .post('/recipe/rating', async (server) => {
+    const { sessionId } = server.cookies
+    const currentUser = await getCurrentUser(sessionId)
+
+    if (currentUser) {
+      const { rating, recipeId } = await server.body
+
+      // Is sequential id numbering a security risk
+      const user = await getCurrentUser(server.cookies.sessionId)
+      // Delete instances with same recipe id and user.id
+      const deleteOldRating = `
+        DELETE FROM recipe_rating
+          WHERE user_id = $1 AND recipe_id = $2;`
+
+      const insertNewRating = `INSERT INTO recipe_rating 
+          (rating, created_at, updated_at, recipe_id, user_id)
+        VALUES 
+          ($1, NOW(), NOW(), $2, $3)
+          RETURNING rating;`
+
+        await client.queryObject(deleteOldRating, user.id, recipeId)
+        
+        const [ ratingResponse ] = (await client.queryObject(insertNewRating, rating, recipeId, user.id)).rows
+
+      // All good: return user's rating
+      server.json({ rating: ratingResponse.rating })
+    } else {
+      // User is unauthorized to rate
+      server.json({message: 'You need to be a registered user to rate.'})
+    }
+
+  })
+
+
+
   //------------------------- Get saved recipes -------------------------//
   .get('/myrecipes', async (server) => {
     const sessionId = server.cookies.sessionId
@@ -133,7 +213,7 @@ app
       if (savedRecipeIds.length !== 0) {
         const recipeString = savedRecipeIds.reduce((accumulator, [recipe], i) => accumulator + recipe + (i === savedRecipeIds.length - 1 ? "" : ","), "") 
         //****************** INSERT YOUR API KEY ********************************/
-        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeString}&apiKey=109411015c2f4df5942a3143fb7b3c36`
+        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeString}&apiKey=${Deno.env.get('SPOONACULAR_API_KEY')}`
         const spoonacularApiResponse = await fetch(spoonacularEndpoint)
         const recipes = await spoonacularApiResponse.json()
         if (recipes.status === "failure") {
@@ -188,12 +268,10 @@ app
 
   //-------------------------- Get list of recipes -------------------//
   .get('/myrecipes/id-only', async (server) => {
-    await server.json({ response: 'unauthorized' })
     const sessionId = server.cookies.sessionId
     const currentUser = await getCurrentUser(sessionId)
 
     if (currentUser) {
-
       const queryResults = (await client.queryArray(`
         SELECT recipe_id FROM saved_recipes 
         WHERE user_id = $1 AND active = 't';`, currentUser.id)).rows
@@ -209,6 +287,50 @@ app
   })
 
 
+
+  //-------------------------- Get list of comments -------------------//
+  .get('/comments/:recipeId', async (server) => {
+    const { recipeId } = await server.params
+
+    const queryResults = (await client.queryObject(`
+            SELECT comment, recipe_comments.id, recipe_id, user_id, recipe_comments.created_at, username 
+            FROM recipe_comments 
+            JOIN users ON recipe_comments.user_id = users.id
+            WHERE recipe_id = $1
+            ORDER BY created_at DESC;`, recipeId))
+
+    await server.json({response: 'success', comments: queryResults.rows })
+  })
+
+
+
+  //-------------------------- Post a comment -------------------//
+  .post('/comment/:recipeId', async (server) => {
+    const sessionId = server.cookies.sessionId
+    const currentUser = await getCurrentUser(sessionId)
+    const { recipeId } = server.params
+    const { comment } = await server.body
+
+
+    if (currentUser) {
+      const [ outCome ] =  (await client.queryObject(`INSERT INTO 
+        recipe_comments(comment, recipe_id, user_id, created_at, updated_at)
+        VALUES ($1, $2, $3, NOW(), NOW())
+        RETURNING created_at, comment;`, comment, recipeId, currentUser.id)).rows
+     if (outCome)  {
+       // All good
+      await server.json({ response: 'success', newComment: outCome.comment, createdAt: outCome.created_at })
+     } else {
+       // Something when wrong processing the query
+      await server.json({ response: 'failure' })
+     }
+
+    } else {
+      // Bad Credentials
+      await server.json({ response: 'unauthorized' })
+    }
+
+  })
 
   //------------------------- Start server -------------------------//
   .start({ port: PORT })

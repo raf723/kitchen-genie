@@ -44,7 +44,8 @@ class Home extends React.Component {
   // Search for recipes via ingredients
   searchHandler = async() => {
     // Get recipes from Spoonacular
-    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${this.state.ingredients}&number=12&ranking=2&apiKey=d45bc24e8cc84723b6786271e498854f`)
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${this.state.ingredients}&number=30&ranking=1&ignorePantry=true&apiKey=${process.env.REACT_APP_API_KEY}`)
+
     const recipes = await spoonacular.json()
 
     // Pass data another parent component (page)
