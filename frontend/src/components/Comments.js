@@ -14,13 +14,19 @@ class Comments extends React.Component {
 
     async componentWillMount() {
         const { recipeId } = this.props
-        const apiResponse = await fetch(`http://localhost:8080/comments/${recipeId}`, {
+
+        console.log(recipeId)
+
+        const apiResponse = await fetch(`${process.env.REACT_APP_URL}/comments/${recipeId}`, {
             method: 'GET',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' }
         })
 
         const { response, comments }= await apiResponse.json()
+
+        console.log('comments bellow')
+        console.log(comments)
 
         if (response === 'success') {
             if ( comments.length === 0) {
@@ -57,11 +63,12 @@ class Comments extends React.Component {
 
     render() {
         const { comments, componentStatus } = this.state
+    
         return(
             <div>
                 <div className="comments-container">
                     <h2>Comments ({comments.length})</h2>
-                    <CommentInput userAuthenticated={this.props.userAuthenticated} />
+                    <CommentInput userAuthenticated={this.props.userAuthenticated} recipeId={this.props.recipeId} />
                     <p className="comments-status">{componentStatus}</p>
                     <ul className="comments-list">
                         { comments.map((comment) => this.renderComment(comment))}

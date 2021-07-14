@@ -22,7 +22,7 @@ class App extends React.Component {
 
   state = {...this.initialState}
 
-  async componentDidMount(){
+  async componentWillMount(){
     const currentSession = getCookie('sessionId') ?? null
     if (currentSession) {
       const apiResponse = await fetch(`http://localhost:8080/sessions/${currentSession}`)
@@ -72,6 +72,7 @@ class App extends React.Component {
         window.location.replace('/error')
     }
   }
+  
 
   render() {
     const { loggedInUser } = this.state

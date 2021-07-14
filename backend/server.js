@@ -311,13 +311,15 @@ app
 
   //-------------------------- Get List of Comments -------------------//
   .get('/comments/:recipeId', async (server) => {
-    const { recipeId } = server.params
+    const { recipeId } = await server.params
+
     const queryResults = (await client.queryObject(`
             SELECT comment, recipe_comments.id, recipe_id, user_id, recipe_comments.created_at, username 
             FROM recipe_comments 
             JOIN users ON recipe_comments.user_id = users.id
             WHERE recipe_id = $1
             ORDER BY created_at DESC;`, recipeId))
+
     await server.json({response: 'success', comments: queryResults.rows })
   })
 

@@ -10,7 +10,7 @@ class InputComments extends React.Component {
         e.preventDefault()
         console.log(this.props.recipeId)
         const { comment } = this.state
-        const apiResponse = await fetch(`http://localhost:8080/comment/${this.props.recipeId}`, {
+        const apiResponse = await fetch(`${process.env.REACT_APP_URL}/comment/${this.props.recipeId}`, {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
@@ -25,7 +25,7 @@ class InputComments extends React.Component {
             alert('You must be logged in to comment!')
             window.location.replace('/login')
         } else {
-            window.location.replace('/error')
+            // window.location.replace('/error')
         }
     }
 
