@@ -330,16 +330,15 @@ app
     const { recipeId } = server.params
     const { comment } = await server.body
 
-    console.log(recipeId)
 
     if (currentUser) {
-      const outCome =  (await client.queryArray(`INSERT INTO 
+      const [ outCome ] =  (await client.queryObject(`INSERT INTO 
         recipe_comments(comment, recipe_id, user_id, created_at, updated_at)
         VALUES ($1, $2, $3, NOW(), NOW())
-        RETURNING 't';`, comment, recipeId, currentUser.id)).rows[0][0]
-     if (outCome === 't')  {
+        RETURNING created_at, comment;`, comment, recipeId, currentUser.id)).rows
+     if (outCome)  {
        //All good
-      await server.json({ response: 'success' })
+      await server.json({ response: 'success', newComment: outCome.comment, createdAt: outCome.created_at })
      } else {
        //Something when wrong processing the query
       await server.json({ response: 'failure' })

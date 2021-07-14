@@ -1,5 +1,6 @@
 .comment-box {
-    align-self: center;
+    /* align-self: center; */
+    align-items: center;
     height: min-content;
     width: 40%;
     height: 100px;
@@ -23,4 +24,6 @@
 .comment-box {
     display: flex;
     flex-direction: column;
+    height: auto;
+    width: 600px;
 }

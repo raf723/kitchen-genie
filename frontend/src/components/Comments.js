@@ -13,9 +13,8 @@ class Comments extends React.Component {
     state = this.initialState
 
     async componentWillMount() {
-        const { recipeId } = this.props
 
-        console.log(recipeId)
+        const { recipeId } = this.props
 
         const apiResponse = await fetch(`${process.env.REACT_APP_URL}/comments/${recipeId}`, {
             method: 'GET',
@@ -24,9 +23,6 @@ class Comments extends React.Component {
         })
 
         const { response, comments }= await apiResponse.json()
-
-        console.log('comments bellow')
-        console.log(comments)
 
         if (response === 'success') {
             if ( comments.length === 0) {
@@ -61,14 +57,22 @@ class Comments extends React.Component {
         )
     }
 
+    handleNewComment = (commentObject) => {
+        const newCommentsArray = this.state.comments
+        newCommentsArray.unshift({ comment: commentObject.newComment, created_at: commentObject.createdAt, username: this.props.userAuthenticated.username })
+        this.setState({ comment: newCommentsArray })
+    }
+
     render() {
         const { comments, componentStatus } = this.state
     
         return(
             <div>
+                <br />
+                <hr />
                 <div className="comments-container">
                     <h2>Comments ({comments.length})</h2>
-                    <CommentInput userAuthenticated={this.props.userAuthenticated} recipeId={this.props.recipeId} />
+                    <CommentInput userAuthenticated={this.props.userAuthenticated} recipeId={this.props.recipeId} handleNewComment={this.handleNewComment} />
                     <p className="comments-status">{componentStatus}</p>
                     <ul className="comments-list">
                         { comments.map((comment) => this.renderComment(comment))}
