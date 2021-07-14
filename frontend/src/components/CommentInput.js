@@ -9,7 +9,6 @@ class InputComments extends React.Component {
         
     async handleSubmit(e) {
         e.preventDefault()
-        console.log(this.props.recipeId)
         const { comment } = this.state
         const apiResponse = await fetch(`${process.env.REACT_APP_URL}/comment/${this.props.recipeId}`, {
             method: 'POST',
@@ -18,11 +17,12 @@ class InputComments extends React.Component {
             body: JSON.stringify({ comment })
         })
 
-        const { response }= await apiResponse.json()
+        const { response, newComment, createdAt }= await apiResponse.json()
 
         if (response === 'success') {
+            this.props.handleNewComment({ newComment, createdAt })
             this.setState(this.initialState)
-        } else if ( response === 'unauthorized') {
+        } else if (response === 'unauthorized') {
             alert('You must be logged in to comment!')
             window.location.replace('/login')
         } else {

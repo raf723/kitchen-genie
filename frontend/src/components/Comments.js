@@ -57,14 +57,21 @@ class Comments extends React.Component {
         )
     }
 
+    handleNewComment = (commentObject) => {
+        const newCommentsArray = this.state.comments
+        newCommentsArray.unshift({ comment: commentObject.newComment, created_at: commentObject.createdAt, username: this.props.userAuthenticated.username })
+        this.setState({ comment: newCommentsArray })
+    }
+
     render() {
         const { comments, componentStatus } = this.state
     
         return(
             <div>
+                <hr />
                 <div className="comments-container">
                     <h2>Comments ({comments.length})</h2>
-                    <CommentInput userAuthenticated={this.props.userAuthenticated} recipeId={this.props.recipeId} />
+                    <CommentInput userAuthenticated={this.props.userAuthenticated} recipeId={this.props.recipeId} handleNewComment={this.handleNewComment} />
                     <p className="comments-status">{componentStatus}</p>
                     <ul className="comments-list">
                         { comments.map((comment) => this.renderComment(comment))}
