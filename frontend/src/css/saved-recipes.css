@@ -24,3 +24,7 @@
     max-width: 1500px;
     flex-wrap: wrap;
 }
+
+.user-message {
+    font-size: larger;
+}

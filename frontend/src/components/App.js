@@ -14,6 +14,7 @@ import Results from './Results'
 import About from './About'
 import Recipe from './Recipe'
 import SavedRecipes from './SavedRecipes'
+import Error from './Error'
 
 class App extends React.Component {
   initialState = {
@@ -116,9 +117,10 @@ class App extends React.Component {
             {/* Recipe results */}
             <Route path='/results' component={ Results }>
             </Route>
-
+            
+            {/* Error page */}
             <Route path='/error'>
-              <h1>An error happend.</h1>
+              <Error />
             </Route>
 
             {/* Single recipe */}

@@ -20,26 +20,31 @@ class Results extends React.Component {
   initialState = {
     ingredients: this.props.location.state.ingredients,
     savedRecipeIds: [],
-    displaySaveFeature: false
+    displaySaveFeature: false,
+    pageStatus: '',
   }
 
   // Set state to initialState
   state = this.initialState
 
- async componentDidMount(){
-  const apiResponse = await fetch(`${process.env.REACT_APP_URL}/myrecipes/id-only`, {
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-  })
-    const { response, savedRecipeIds } = await apiResponse.json()
+  async componentDidMount() { 
+    /*Routine to Identify which of the recipies displayed in the results were previously saved by the user */
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/myrecipes/id-only`, {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      const { response, savedRecipeIds } = await apiResponse.json()
 
-    if (response === 'success') { 
-      this.setState({savedRecipeIds, displaySaveFeature: true})
-    } else if (response === 'unauthorized') {
-      //do nothing
-    } else {
-      // window.location.replace('/error')
-    }
+      if (response === 'success') { 
+        this.setState({savedRecipeIds, displaySaveFeature: true})
+      } else if (response === 'unauthorized') {
+        //do nothing
+      } else {
+        window.location.replace('/error')
+      }
+    /*Routine to check and notify user if there is some external problem with the website (e.g. site has exceeded the maximum number of calls to spoonacular)*/
+    const { results } = this.props.location.state
+    if (!Array.isArray(results)) this.setState({pageStatus: 'The service is temporarily down! Please try again later.'})
   }
 
   handleSaveRecipe = async (recipeId, toSave=true) => {
@@ -70,7 +75,7 @@ class Results extends React.Component {
 
   render() {
     const { results } = this.props.location.state
-    const {savedRecipeIds, displaySaveFeature} = this.state
+    const {savedRecipeIds, displaySaveFeature, pageStatus} = this.state
 
     return (
       <div id="results-container">
@@ -111,7 +116,8 @@ class Results extends React.Component {
           </div>
 
           <div id="grid-container">
-            { results.map(recipe => <div className="card-container" key={ recipe.id }>
+            <p id="user-message">{pageStatus}</p>
+            { Array.isArray(results) && results.map(recipe => <div className="card-container" key={ recipe.id }>
               { 
                 displaySaveFeature 
                 && <SaveButton onSave={() => this.handleSaveRecipe(recipe.id, !savedRecipeIds.includes(recipe.id))} 
