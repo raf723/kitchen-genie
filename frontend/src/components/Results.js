@@ -131,14 +131,14 @@ class Results extends React.Component {
 
         {/* Buttons for when ingredients are added */}
         <div id="ingredients-container">
-          <p>{pageStatus}</p>
           { this.state.ingredients.map(ingredient => 
             <button className="ingredient-button" key={ ingredient } onClick={ () => this.removeIngredient(ingredient) }>
               { ingredient }<img className="delete-icon" alt="delete-ingredient" src={ DeleteIcon }/>
             </button>
           )}
         </div>
-
+        {/*Notify user if the site cannot be used (e.g. if the site runs out of api points)*/}
+          <p>{pageStatus}</p>
         {/* Grid of cards (recipes) */}
         { this.state.results.length > 0 && <div id="grid-container">
           {/* For each recipe, render a recipe card and save button (only if user is authenticated i.e. displaySaveFeature is true) */}
