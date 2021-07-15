@@ -122,6 +122,8 @@ class Recipe extends Component {
 
         const recipe = await postRatingRes.json()
 
+        await this.getAverageStarRatings()
+
         this.setState({ personalRating: recipe.rating })
     }
 
@@ -167,9 +169,9 @@ class Recipe extends Component {
         await this.getPersonalStarRating()
         await this.checkSavedRecipe()
 
-        await this.fetchRecipeInfomation()
-        await this.summariseRecipe() //! May not need this as it is passed from recipeCard.sj
-        await this.fetchRecipeIntructions() //! May not need this as this is also passed from recipeCard
+      await this.fetchRecipeInfomation()
+      await this.summariseRecipe() //! May not need this as it is passed from recipeCard.sj
+      await this.fetchRecipeIntructions() //! May not need this as this is also passed from recipeCard
     }
 
 
@@ -178,8 +180,6 @@ class Recipe extends Component {
         const newSaveState = await this.props.onSaveRecipe(recipeId, !isCurrentlySaved)
         this.setState({ isCurrentlySaved: newSaveState })
     }
-
-
 
 
     render() {
@@ -195,63 +195,66 @@ class Recipe extends Component {
                 <div className="recipe-page-root">
                     <section className="recipe-header-container">
                             <h1>{title}</h1>
+                            <div id="average-rating">
                                 <div className="rating-fav-container flex row">
                                     <StarsRatings
                                         className="star-rating"
                                         rating={averageRating}
                                         starRatedColor="gold"
-                                        starDimension="30px"
+                                        starDimension="25px"
                                         starSpacing="5px"
                                         />
+                                        <span>(Average Rating)</span>
+                                </div>
                                 {userAuthenticated && ( 
-                                    <div className="favourites"> 
-                                        <p>Save to Favourites</p>
-                                        <SaveButton onSave={() => this.handleSaveRecipe()} isCurrentlySaved={this.state.isCurrentlySaved} />    
+                                    <div className="favourite-box"> 
+                                        <p>Save Recipe</p>
+                                        <SaveButton id="recipe-favourite" onSave={() => this.handleSaveRecipe()} isCurrentlySaved={this.state.isCurrentlySaved} size={30} />    
                                     </div>
                                     )}    
                                 </div>
-                            <div className="flex row">
+                            <div className="flex row image-info-box">
                                 <img src={image} className="recipe-page-image" alt="food" />
-                                <article className="key-info flex column m-10">
-                                    { preperationTime && <p>Preperation time: {preperationTime} minutes</p> }
-                                    { pricePerServing && <p>Price Per Serving: £ {(pricePerServing / 100).toFixed(2)} per person</p> }
-                                    { serving && <b><p>Serving: {preperationTime} people </p></b> }
-                                    { diets && <p>Diets: { diets.join(', ') }</p> }
-                                    { numIngredients && <p>Number of Ingredients: {numIngredients}</p> }
-                                    { numMissingIngredients && <p className="missing">Number of Missing Ingredients: {numMissingIngredients}</p>}    
+                                <article className="key-info flex column">
+                                    { preperationTime && <span>Preperation time: {preperationTime} minutes</span> }
+                                    { pricePerServing && <span>Price Per Serving: £ {(pricePerServing / 100).toFixed(2)} per person</span> }
+                                    { serving && <span>Serving: {preperationTime} people </span> }
+                                    { diets && <span>Diets: { diets.join(', ') }</span> }
+                                    { numIngredients && <span>Number of Ingredients: {numIngredients}</span> }
+                                    { numMissingIngredients && <span className="missing">Number of Missing Ingredients: {numMissingIngredients}</span>}    
+                                    <span className="recipe-subheading">Description</span>
+                                    <p className='recipe-description'>{description}</p>
                                 </article>
                             </div>
                     </section>
+                    <div>
                     <section className="recipe-section recipe-body flex row">
                          <article className="ingredients">
-                            <h4>Ingredients</h4>
-
+                            <span className="recipe-subheading">Ingredients</span>
                             <ul>
                                 {this.renderIngredients()}
                             </ul>
                         </article>
                         <article className="instructions">
-                            <h4>Description</h4>
-                            <p className='recipe-description'>{description}</p>
-                            <h4>Instructions</h4>
+                           
+                            <span className="recipe-subheading">Instructions</span>
                             <ol>
                                 {this.renderInstructions(instructions)}
                             </ol>
                         </article>
-
-                       
                     </section>
                     <section className="recipe-section personal-rating">
-                        {userAuthenticated && <h3>{`Your personal rating is ${personalRating}`}</h3>}
+                        {userAuthenticated && <span>{`Your personal rating is ${personalRating}`}</span>}
                         {userAuthenticated && <StarsRatings
                             className="star-rating"
                             rating={personalRating}
                             starRatedColor="gold"
-                            starDimension="30px"
+                            starDimension="25px"
                             starSpacing="5px"
                             changeRating={(newRating) => { this.handleChangeRating(newRating) }} />
                         }
                     </section>
+                    </div>
                 </div>
                     <section>
                         <Comments userAuthenticated={userAuthenticated} recipeId={recipeId} />

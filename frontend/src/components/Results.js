@@ -43,7 +43,7 @@ class Results extends React.Component {
   }
 
   handleSaveRecipe = async (recipeId, toSave=true) => {
-    const apiResponse = await fetch(`http://localhost:8080/save/${recipeId}/${ toSave ? 'save' : 'unsave'}`, {
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/save/${recipeId}/${ toSave ? 'save' : 'unsave'}`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
