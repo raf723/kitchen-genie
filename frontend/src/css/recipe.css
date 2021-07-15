@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     margin: 0 auto;
-    width: 90%;
+    width: 80%;
     color: rgba(50, 50, 50, 1);    
 }
 
@@ -80,6 +80,12 @@
 
 .ingredients{
     width: 100%;
+    border: 1 solid;
+
+}
+
+.recipe-list-items{
+    text-transform: capitalize;
 }
 
 /* Personal Reating */
@@ -93,6 +99,7 @@
 .recipe-subheading{
     font-weight: 600;
     font-size: 1.2rem;
+    margin-top: 10px
 }
 
 .flex{

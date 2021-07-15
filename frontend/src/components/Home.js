@@ -59,6 +59,21 @@ class Home extends React.Component {
     })
   }
 
+  // Get random recipe from API and navigate to recipe page
+  serveRecipe = async() => {
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/random?number=1&apiKey=${process.env.REACT_APP_API_KEY}`)
+    const responseObject = await spoonacular.json()
+    const randomRecipe = responseObject.recipes[0]
+    // Navigate to recipe page and pass recipe data
+    this.props.history.push({
+      pathname: '/recipe',
+      state: {
+        id: randomRecipe.id,
+        image: randomRecipe.image
+      }
+    })
+  }
+
   render() {
     return (
       <div id="home-container">
@@ -77,8 +92,7 @@ class Home extends React.Component {
             </button>
           )}
         </div>
-
-        <button id="random-recipe-button">Serve me up!</button>
+        <button id="random-recipe-button" onClick={this.serveRecipe}>Serve me up!</button>
       </div>
     )
   }

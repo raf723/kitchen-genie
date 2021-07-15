@@ -229,8 +229,8 @@ class Recipe extends Component {
                         {/* Preptime and instructions */}
                         <section className="info-desc-instruct-column flex column">
                             <article className="key-info flex column">
-                                { preperationTime && <span>Preperation time{preperationTime} minutes</span> }
-                                { pricePerServing && <span>Price Per Serving: £ {(pricePerServing / 100).toFixed(2)} per person</span> }
+                                { preperationTime && <span>Preperation time: {preperationTime} minutes</span> }
+                                { pricePerServing && <span>Price Per Serving: $ {(pricePerServing / 100).toFixed(2)} per person</span> }
                                 { serving && <span>Serving: {preperationTime} people </span> }
                                 { diets.length !== 0 && <span>Diets: { diets.join(', ') }</span> }
                                 { !Number.isNaN(numIngredients) && <span>Number of Ingredients: {numIngredients}</span> }
