@@ -153,9 +153,9 @@ class Recipe extends Component {
         await this.getAverageStarRatings()
         await this.getPersonalStarRating()
         await this.checkSavedRecipe()
-        // await this.fetchRecipeInfomation()
-        // await this.summariseRecipe() //! May not need this as it is passed from recipeCard.sj
-        // await this.fetchRecipeIntructions() //! May not need this as this is also passed from recipeCard
+        await this.fetchRecipeInfomation()
+        await this.summariseRecipe() //! May not need this as it is passed from recipeCard.sj
+        await this.fetchRecipeIntructions() //! May not need this as this is also passed from recipeCard
     }
 
 

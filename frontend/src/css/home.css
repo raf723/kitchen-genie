@@ -6,7 +6,7 @@
 
 #home-container {
   height: 100%;
-  background-image: url(../splash.jpeg);
+  background-image: url(../assets/splash.jpeg);
   background-position: top;
   background-repeat: no-repeat;
   background-size: cover;
@@ -50,6 +50,7 @@
 
 /* Input after autocomplete */
 #home-container input:-webkit-autofill {
+  box-shadow: none;
   -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
@@ -86,7 +87,7 @@
   position: relative;
   width: 44%;
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   margin-top: 8px;
 }
