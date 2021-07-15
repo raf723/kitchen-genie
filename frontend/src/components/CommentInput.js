@@ -29,9 +29,15 @@ class InputComments extends React.Component {
       window.location.replace('/error')
     }
   }
+  
+  autoGrow(element) {
+    element.target.style.height = "5px";
+    element.target.style.height = (element.target.scrollHeight)+"px";
+  }
 
-  renderCommentBox(userAuthenticated){
+  renderCommentBox(userAuthenticated) {
     const { comment } = this.state
+    
     if (!!userAuthenticated) {
       return (
         <div className="comment-input-container">
@@ -51,7 +57,18 @@ class InputComments extends React.Component {
         </div>
       )
     } else {
-      return <h3 className="user-prompt">Log in <Link className="login-link" to="/login">here</Link> to add a comment!</h3>
+      return (
+        <div className="comment-input-container">
+          <h3>Please leave a comment below!</h3>
+          <div className="comment-and-buttons">
+            <textarea className="comment-box3" value={comment} name="comment" placeholder="You must be logged in to leave a comment." disabled/>
+            <div>
+              <button className="sign-up-button" type="button" name="sign-up-butto" onClick={() =>  window.location.href='/register'}>Sign Up</button>
+              <button className="log-in-button" type="button" name="log-in-button" onClick={() =>  window.location.href='/login'}>Log In</button>
+            </div>                        
+          </div>
+        </div>
+      )
     }
   }
 
