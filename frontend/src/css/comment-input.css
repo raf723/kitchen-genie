@@ -1,18 +1,26 @@
 .comment-box {
-    /* align-self: center; */
     align-items: center;
     height: min-content;
-    width: 40%;
-    height: 100px;
-    padding: 10px;
-    background-color: #d0e2bc;
+    display: flex;
+    flex-direction: column;
+    width: 420px;
+    padding: 10px 10px 0 10px;
     font-size: 15px;
-    background-color: #d0e2bc;
-    color: #095484;
+    color: rgb(57, 87, 64, 0.7);
+    border: none;
+    border-bottom: 1px solid rgb(116,166,127);
+    background-color: transparent;
+    resize: none;
+    overflow: hidden;
+    min-height: 10px;
+    max-height: 200px;
 }
 
 .comment-box:focus {
-    color: brown; /**/
+    outline-offset: 0px;
+    outline: none;
+    color: rgb(57, 87, 64);
+    border-bottom: 2px solid rgb(71, 116, 81);
 }
 
 .comments {
@@ -21,9 +29,105 @@
     align-items: center;
 }
 
-.comment-box {
+.user-prompt {
+    color: rgb(57, 87, 64);
+    font-size: 18.72px;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+.comment-input-container > h3 {
+    color: rgb(116,166,127);
+}
+
+.cancel-button, .post-button, .sign-up-button, .log-in-button {
+    float: right;
+    width: 80px;
+    height: 40px;
+    border-radius: 20px;
+    margin: 0px 5px;
+    border: 2px solid rgb(116,166,127);
+    font-size: 15px;
+    font-weight: 550;
+    cursor: pointer;
+}
+
+.cancel-button, .sign-up-button {
+    background-color: rgb(116,166,127);
+    color: rgb(255, 255, 255);
+    transition: 0.1s;
+}
+
+.post-button, .log-in-button {
+    background-color: rgb(255, 255, 255);
+    color: rgb(71, 116, 81, 0.8);
+    transition: 0.1s;
+}
+
+.cancel-button:hover, .sign-up-button:hover {
+    border: 2px solid rgb(71, 116, 81);
+    color: rgb(71, 116, 81, 1);
+    background-color: rgb(255, 255, 255);
+}
+
+.post-button:hover, .log-in-button:hover {
+    border: 2px solid rgb(71, 116, 81);
+    color: rgb(255, 255, 255);
+    background-color: rgb(71, 116, 81, 1);
+}
+
+.comment-and-buttons {
+    display: flex;
+    width: 620px;
+}
+
+.comment-box3 {
+    align-items: center;
+    height: min-content;
     display: flex;
     flex-direction: column;
-    height: auto;
-    width: 600px;
+    width: 420px;
+    padding: 10px 10px 0 10px;
+    font-size: 15px;
+    color: rgb(57, 87, 64, 0.7);
+    border: none;
+    border-bottom: 2px solid lightgrey;
+    background-color: transparent;
+    resize: none;
+    overflow: hidden;
+    min-height: 10px;
+    max-height: 200px;
+}
+
+.comment-box3::-webkit-input-placeholder {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+}
+
+.comment-box3:-moz-placeholder {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+}
+
+.comment-box3::-moz-placeholder {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+}
+
+.comment-box3:-ms-input-placeholder {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+}
+
+.comment-box3::placeholder {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
 }

@@ -3,19 +3,26 @@ import '../css/about.css'
 
 function AboutKitchenGenie() {
     return (
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel lorem mi. Etiam eu nibh faucibus, accumsan tellus ut, mollis sem. Maecenas in lacus iaculis, gravida orci sit amet, efficitur neque. In quis dolor non lacus interdum condimentum. Integer finibus condimentum felis id faucibus. Nam quis interdum eros. Maecenas tincidunt euismod nisl nec egestas. Proin eget imperdiet purus. Sed pulvinar ac enim sed imperdiet. Cras odio leo, rhoncus in nisi quis, interdum accumsan purus. Pellentesque urna sapien, sollicitudin non lorem sed, elementum commodo tellus. Phasellus lacinia vel tellus id viverra. Praesent vitae urna at turpis tincidunt pellentesque. Proin mollis ligula libero, a dignissim arcu convallis vitae. Proin ac commodo ligula, at blandit purus. Fusce tortor nunc, sagittis eget viverra non, accumsan vitae nisl.</p>
+        <p>KitchenGenie processes a database of recipes based on the ingredients you want to use. It also tells you the ingredients you are missing, step by step instructions on how to make the food, supported by the community to share, comment, and rate recipes and save your favourite recipes.</p>
     )
 }
 
 function Inspiration() {
     return (
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget ipsum sagittis erat consectetur mollis in sed mi. Donec pellentesque, est non condimentum rhoncus, nunc est pharetra est, volutpat rhoncus neque massa nec velit. Sed id turpis nec nisl elementum eleifend. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris sagittis tortor sem, ac dictum metus consequat eu. Phasellus in vehicula ipsum. Praesent at dolor vestibulum, posuere orci vel, suscipit mi. Vestibulum pellentesque fringilla risus pellentesque placerat. Aenean at efficitur libero. Praesent in turpis sit amet ante condimentum placerat at et odio. Nulla facilisi. Quisque molestie vestibulum convallis. Donec hendrerit vel dui non luctus.</p>
+        <p>
+            Eating is a necessity but cooking is an art. As i got older, I started falling more in love with different foods, dishes, and recipes from all over the world. What was once a simple meal to fill me up is now filled with the intrigue of discovering whole new world, new pallet of flavours, aromas, herbs and spices. Trying new foods is easy, but cooking them can be tricky, so we came up with this wonderful website to make it easier for everyone to make all kinds of foods just from the ingredients in their kitchen (or whatever food pallet they prefer). We take pleasure in providing the world with the knowledge and art of cooking. A recipe has no soul, you as the cook must bring the dish to life. No one is born a great cook, one learns by doing.
+        </p>
     )
 }
 
 function MeetTheTeam() {
     return (
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet suscipit purus, non aliquet nibh. Sed diam dui, bibendum ac tempus vel, rhoncus ac nisi. Phasellus ut vulputate ex. Mauris a tristique magna. Fusce vehicula tellus vitae ornare efficitur. Sed commodo tempor tempor. Sed maximus tincidunt sapien, ac elementum felis aliquam sed. Mauris a condimentum justo. Pellentesque sodales consequat sapien ut lacinia.</p>
+        <div>
+            <p>Tawab Rahmani</p>
+            <p>Keano Robinson</p>
+            <p>Rafiul Ansari</p>
+            <p>Cengiz Ziyaeddin</p>
+        </div>
     )
 }
 
