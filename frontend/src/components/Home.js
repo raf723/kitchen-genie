@@ -1,4 +1,6 @@
 import React from 'react'
+
+// Styling imports
 import '../css/home.css'
 
 // Routing ingredients
@@ -9,8 +11,6 @@ import Search from './reusable/Search'
 
 // Asset imports
 import DeleteIcon from '../delete.png'
-
-
 
 class Home extends React.Component {
   // Declare initialState object where all values are empty
@@ -27,9 +27,11 @@ class Home extends React.Component {
 
   // If user hits Enter, add to state's ingredients array and clear input
   onKeyPress = () => {
+    const { value, ingredients } = this.state
+
     // Push input value to this.state's array of ingredients
-    const updatedIngredients = this.state.ingredients
-    if (this.state.value !== '') updatedIngredients.push(this.state.value.trim())
+    const updatedIngredients = ingredients
+    if (value !== '' && !ingredients.includes(value)) updatedIngredients.push(value.trim())
     this.setState({ ingredients: updatedIngredients })
 
     // Clear input
@@ -41,11 +43,8 @@ class Home extends React.Component {
 
   // Search for recipes via ingredients
   searchHandler = async() => {
-    // Convert this.state's ingredients to comma separated string
-    const ingredientsArray = this.state.ingredients.join(',')
-
     // Get recipes from Spoonacular
-    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientsArray}&number=30&ranking=1&ignorePantry=true&apiKey=${process.env.REACT_APP_API_KEY}`)
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${this.state.ingredients}&number=30&ranking=1&ignorePantry=true&apiKey=${process.env.REACT_APP_API_KEY}`)
 
     const recipes = await spoonacular.json()
 
@@ -59,17 +58,35 @@ class Home extends React.Component {
     })
   }
 
+  // Get random recipe from API and navigate to recipe page
+  serveRecipe = async() => {
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/random?number=1&apiKey=d45bc24e8cc84723b6786271e498854f`)
+    const randomRecipe = await spoonacular.json()
+    console.log(randomRecipe.recipes)
+  }
+
   render() {
     return (
       <div id="home-container">
         <h1>Supercook</h1>
 
+        {/* Placeholder, input and search button */}
         <div id="search-container">
-          <Search value={ this.state.value } onChange={ this.onChange } onKeyPress={ this.onKeyPress }/>
-          <button onClick={ () => this.searchHandler() }>GO</button>
+          <span id="title-span">{ this.state.value !== '' && `Hit 'Enter' to add an ingredient!` }</span>
+          <div id="autosuggest-container">
+            <Search value={ this.state.value } onChange={ this.onChange } onKeyPress={ this.onKeyPress }/>
+
+            {/* Disbale the search button if ingredients array is empty */}
+            <button
+              id={ this.state.ingredients.length !== 0 ? "green-button" : "grey-button" }
+              className="search-button"
+              onClick={ () => this.searchHandler() }>
+                GO
+            </button>
+          </div>
         </div>
 
-        {/* Ingredients buttons */}
+        {/* Buttons for when ingredients are added */}
         <div id="ingredients-container">
           { this.state.ingredients.map(ingredient => 
             <button className="ingredient-button" key={ ingredient } onClick={ () => this.removeIngredient(ingredient) }>
@@ -78,7 +95,8 @@ class Home extends React.Component {
           )}
         </div>
 
-        <button id="random-recipe-button">Serve me up!</button>
+        {/* Random recipe button */}
+        <button id="random-recipe-button" onClick={ () => this.serveRecipe() }>Serve me up!</button>
       </div>
     )
   }

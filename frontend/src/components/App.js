@@ -1,9 +1,13 @@
 import React from 'react'
+
+// Styling imports
 import '../css/app.css'
+
+// Function imports
 import { setCookie, getCookie } from '../function-assets/helpers'
 
 // Routing imports
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 // Component imports
 import Navbar from './Navbar'
@@ -21,8 +25,9 @@ class App extends React.Component {
     loggedInUser: null,
   }
 
-  state = {...this.initialState}
+  state = { ...this.initialState }
 
+  // Authenticate current user using cookies
   async componentWillMount(){
     const currentSession = getCookie('sessionId') ?? null
     if (currentSession) {
@@ -32,7 +37,7 @@ class App extends React.Component {
     }
   }
 
- loginHandler = async ({ email, password, remember }) => {
+  loginHandler = async ({ email, password, remember }) => {
     const apiResponse = await fetch(`http://localhost:8080/login`, {
       method: 'POST',
       credentials: 'include',
@@ -42,7 +47,7 @@ class App extends React.Component {
     
     const { response, currentUser } = await apiResponse.json()
     
-    if (response === 'success') {
+    if (response) {
       this.setState({ loggedInUser: currentUser })
       window.location.replace('/')
     } else {
@@ -75,62 +80,59 @@ class App extends React.Component {
   }
   
 
+
+
   render() {
     const { loggedInUser } = this.state
+
     return(
       <Router>
-        {/* Pass authentication result as a prop to toggle navigation bar buttons */}
-        <Navbar userAuthenticated={ !!loggedInUser } onLogout={() => this.handleLogout()}/>
+        { /* Pass authentication result as a prop to toggle navigation bar buttons */ }
+        <Navbar userAuthenticated={ !!loggedInUser } onLogout={ () => this.handleLogout() }/>
 
         <div id="app-container">
           <Switch>
-            {/* Homepage */}
             <Route exact path='/'>
-              <Home />
+              <Home/>
             </Route>
 
-            {/* Register */}
             <Route path='/register'>
-              <Register />
+              <Register/>
             </Route>
 
-            {/* Login */}
             <Route path='/login'>
-              <Login onLogin={this.loginHandler}/>
+              <Login onLogin={ this.loginHandler }/>
             </Route>
 
-            {/* About us */}
             <Route path='/about'>
-              <About />
+              <About/>
             </Route>
 
-            {/* FAQ */}
             <Route path='/faq'>
               <h1>FAQ</h1>
             </Route>
 
-            {/* Saved recipes */}
             <Route path='/favourites'>
-              <SavedRecipes onSaveRecipe={this.handleSaveRecipe}/>
+              <SavedRecipes onSaveRecipe={ this.handleSaveRecipe }/>
             </Route>
 
-            {/* Recipe results */}
             <Route path='/results' component={ Results }>
             </Route>
-            
-            {/* Error page */}
+
+            <Route path='/recipe' component={ Recipe }>
+            </Route>
+
             <Route path='/error'>
               <Error />
             </Route>
 
-            {/* Single recipe */}
-            <Route path='/recipe' render={(props) => ( <Recipe {...props} 
-            userAuthenticated={this.state.loggedInUser} 
-            onSaveRecipe={this.handleSaveRecipe}
-
-            /> )}>
+            <Route path='/recipe'
+              render={ (props) => (
+                <Recipe { ...props } 
+                  userAuthenticated={this.state.loggedInUser} 
+                  onSaveRecipe={this.handleSaveRecipe}
+                /> )}>
             </Route>
-
           </Switch>
         </div>
       </Router>
