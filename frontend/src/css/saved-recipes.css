@@ -5,8 +5,16 @@
     margin: 50px;
 }
 
+.saved-recipes-page-container * {
+  font-family: 'Poppins', sans-serif;
+}
+
 .saved-recipes-page-container h1 {
     text-align: center;
+    height: fit-content;
+    font-size: 50px;
+    color: rgb(116, 166, 127);
+    margin-top: 2%;
 }
 
 .favourite-recipe {
@@ -24,3 +32,9 @@
     max-width: 1500px;
     flex-wrap: wrap;
 }
+
+.user-message {
+    font-size: larger;
+}
+
+

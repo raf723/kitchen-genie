@@ -19,14 +19,15 @@ class Results extends React.Component {
     ingredients: this.props.location.state.ingredients,
     results: this.props.location.state.results,
     savedRecipeIds: [],
-    displaySaveFeature: false
+    displaySaveFeature: false,
+    pageStatus: '',
   }
 
   // Set state to initialState
   state = this.initialState
 
-  // Fetch current user's saved recipes from database
-  async componentDidMount() {
+  async componentDidMount() { 
+    /*Routine to Identify which of the recipies displayed in the results were previously saved by the user */
     const apiResponse = await fetch(`${process.env.REACT_APP_URL}/myrecipes/id-only`, {
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -36,6 +37,10 @@ class Results extends React.Component {
 
     if (response === 'success') this.setState({ savedRecipeIds, displaySaveFeature: true })
     else if (response !== 'unauthorized') window.location.replace('/error')
+
+    /*Routine to check and notify user if there is some external problem with the website (e.g. site has exceeded the maximum number of calls to spoonacular)*/
+    const { results } = this.props.location.state
+    if (!Array.isArray(results)) this.setState({pageStatus: 'The service is temporarily down! Please try again later.'})
   }
 
   // Get recipes from Spoonacular
@@ -92,8 +97,7 @@ class Results extends React.Component {
   }
 
   render() {
-    const results = this.state.results
-    const { savedRecipeIds, displaySaveFeature } = this.state
+    const { savedRecipeIds, displaySaveFeature, pageStatus, results } = this.state
 
     return (
       <div id="results-container">
@@ -107,6 +111,7 @@ class Results extends React.Component {
 
         {/* Buttons for when ingredients are added */}
         <div id="ingredients-container">
+          <p>{pageStatus}</p>
           { this.state.ingredients.map(ingredient => 
             <button className="ingredient-button" key={ ingredient } onClick={ () => this.removeIngredient(ingredient) }>
               { ingredient }<img className="delete-icon" alt="delete-ingredient" src={ DeleteIcon }/>
@@ -117,7 +122,7 @@ class Results extends React.Component {
         {/* Grid of cards (recipes) */}
         { this.state.results.length > 0 && <div id="grid-container">
           {/* For each recipe, render a recipe card and save button (only if user is authenticated i.e. displaySaveFeature is true) */}
-          { results.map(recipe => <div className="card-container" key={ recipe.id }>
+          { Array.isArray(results) && results.map(recipe => <div className="card-container" key={ recipe.id }>
             { displaySaveFeature &&
               <SaveButton
                 onSave={ () => this.handleSaveRecipe(recipe.id, !savedRecipeIds.includes(recipe.id)) } 
