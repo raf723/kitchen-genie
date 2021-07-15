@@ -38,7 +38,7 @@ class Comments extends React.Component {
     renderComment(comment) {
         return (
             <li key={comment.id}>
-                <div className="comment-box2">
+                <div className="comment-box">
                     <p className="comment-header"><strong>{comment.username}</strong></p>
                     <p className="comment-body">
                         {comment.comment}
@@ -67,7 +67,7 @@ class Comments extends React.Component {
         const { comments, componentStatus } = this.state
     
         return(
-            <div>
+            <div id="comments-container">
                 <br />
                 <hr />
                 <div className="comments-container">

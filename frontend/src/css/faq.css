@@ -1,0 +1,65 @@
+#faq-container .collapsible, #faq-container .collapsible-top, #faq-container .collapsible-bottom {
+    background-color: rgb(71, 116, 81, 0.98);
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 17px;
+    width: 100%;
+  }
+  
+  #faq-container .active, #faq-container .collapsible:hover, #faq-container .collapsible-top:hover, #faq-container .collapsible-bottom:hover {
+    background-color: rgb(57, 87, 64, 1);
+  }
+  
+  #faq-container .collapsible:after, #faq-container .collapsible-top:after, #faq-container .collapsible-bottom:after {
+    content: '\002B';
+    color: white;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+  }
+  
+  #faq-container .active:after {
+    content: "\2212";
+  }
+  
+  #faq-container .content {
+    padding: 0 18px 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
+  #faq-container {
+      width: 100%;
+  }
+
+  #faq-container .collapse {
+      width: 50%;
+      margin: auto;
+  }
+
+  #faq-container .collapsible-top {
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+  }
+  #faq-container .collapsible-bottom {
+      border-bottom-left-radius: 10px !important;
+      border-bottom-right-radius: 10px !important;
+  }
+
+  #faq-container h1 {
+      text-align: center;
+      color: rgb(116,166,127);
+  }
+
+  #faq-container .faq-info {
+      text-align: center;
+      color: rgb(57, 87, 64, 0.8);
+  }

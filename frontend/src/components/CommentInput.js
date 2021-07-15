@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import '../css/comment-input.css'
 
 class InputComments extends React.Component {
@@ -42,33 +41,35 @@ class InputComments extends React.Component {
 
         if (!!userAuthenticated) {
             return (
-                <div className="comment-input-container">
-                    <h3>Hi, <span className="user-prompt">{userAuthenticated.username}!</span> Leave a comment below!</h3>
-                    <form onSubmit={(e) => this.handleSubmit(e)}>
-                        <div className="comment-and-buttons">
-                            <textarea name="comment" placeholder="Please enter a comment..." value={comment} className="comment-box" onInput={this.autoGrow} onChange={(e) => this.setState({comment: e.target.value})}/>
-                            <div>
-                                <button className="cancel-button" type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })}>Cancel</button>
-                                <button className="post-button" type="submit" name="post" value="Post">Post</button>
-                            </div>                        
-                        </div>
-                    </form>
+                <div id="comment-input-container">
+                    <div className="comment-input-container">
+                        <h3>Hi, <span className="user-prompt">{userAuthenticated.username}!</span> Leave a comment below!</h3>
+                        <form onSubmit={(e) => this.handleSubmit(e)}>
+                            <div className="comment-and-buttons">
+                                <textarea name="comment" placeholder="Please enter a comment..." value={comment} className="comment-box-valid" onInput={this.autoGrow} onChange={(e) => this.setState({comment: e.target.value})}/>
+                                <div>
+                                    <button className="cancel-button" type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })}>Cancel</button>
+                                    <button className="post-button" type="submit" name="post" value="Post">Post</button>
+                                </div>                        
+                            </div>
+                        </form>
+                    </div>
                 </div>
             )
         } else {
             return (
-                <div className="comment-input-container">
-                    <h3>Please leave a comment below!</h3>
+                <div id="comment-input-container">
+                    <div className="comment-input-container">
+                        <h3>Please leave a comment below!</h3>
                         <div className="comment-and-buttons">
-                            <textarea className="comment-box3" value={comment} name="comment" placeholder="You must be logged in to leave a comment." disabled/>
+                            <textarea className="comment-box-invalid" value={comment} name="comment" placeholder="You must be logged in to leave a comment." disabled/>
                             <div>
                                 <button className="sign-up-button" type="button" name="sign-up-butto" onClick={() =>  window.location.href='/register'}>Sign Up</button>
                                 <button className="log-in-button" type="button" name="log-in-button" onClick={() =>  window.location.href='/login'}>Log In</button>
                             </div>                        
                         </div>
+                    </div>
                 </div>
-                // {/* <button onclick="location.href = 'www.yoursite.com';" id="myButton" class="float-left submit-button" >Home</button> */}
-            // {/* <h3 className="user-prompt">Log in <Link className="login-link" to="/login">here</Link> to add a comment!</h3> */}
             )
         }
     }
