@@ -135,6 +135,25 @@ app
   })
 
 
+  //------------------------- Get multiple ratings ---------------------//
+  .get('/recipe/averagerating/bulk/:recipeIdsString', async (server) => {
+
+    const  { recipeIdsString } = await server.params
+    const recipeIds = recipeIdsString.split(',') || ['_'] //make an array from the string of comma-delimited ids (e.g. '11645,78981,3394' --> [11645,78981,3394])
+
+    const queryTemplate = recipeIds.reduce((accumulator, _recipeId, i) =>  accumulator + `$${i + 1}, `, "" ).slice(0, -2) // e.g. [11645,78981,3394] --> "$1, $2, $3"
+
+    const averageRatingQuery = `SELECT recipe_id, ROUND(AVG(rating), 2)::float AS value FROM recipe_rating 
+      WHERE recipe_id IN (${queryTemplate})
+      GROUP BY recipe_id;`
+    
+    const averageRatingsArray = (await client.queryObject(averageRatingQuery, ...recipeIds)).rows
+    const averageRatings = averageRatingsArray.reduce((accumulator, rating) => { 
+      accumulator[rating.recipe_id] = !rating.value ? 0 : Number.parseFloat(rating.value)
+      return accumulator }, {}) //make an object with recipe_id as keys and ratings as values for efficency and convenience
+
+    server.json({ response: "success", averageRatings }) 
+  })
 
   //------------------------- Get personal recipe rating ---------------------//
   .get('/recipe/personalrating/:recipeId/:sessionId', async(server) => {
@@ -216,6 +235,7 @@ app
         const spoonacularEndpoint = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeString}&apiKey=${Deno.env.get('SPOONACULAR_API_KEY')}`
         const spoonacularApiResponse = await fetch(spoonacularEndpoint)
         const recipes = await spoonacularApiResponse.json()
+
         if (recipes.status === "failure") {
           // Problem with spoonacular
           await server.json({ response: 'service down', recipes: [], loggedInUser: { username: currentUser.username, id: currentUser.id } })

@@ -28,7 +28,7 @@ class App extends React.Component {
   state = { ...this.initialState }
 
   // Authenticate current user using cookies
-  async componentWillMount(){
+  async componentDidMount(){
     const currentSession = getCookie('sessionId') ?? null
     if (currentSession) {
       const apiResponse = await fetch(`http://localhost:8080/sessions/${currentSession}`)
