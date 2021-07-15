@@ -29,7 +29,7 @@ class App extends React.Component {
   state = { ...this.initialState }
 
   // Authenticate current user using cookies
-  async componentWillMount(){
+  async componentDidMount(){
     const currentSession = getCookie('sessionId') ?? null
     if (currentSession) {
       const apiResponse = await fetch(`http://localhost:8080/sessions/${currentSession}`)
@@ -80,8 +80,7 @@ class App extends React.Component {
     }
   }
   
-
-
+  
 
   render() {
     const { loggedInUser } = this.state
@@ -124,12 +123,7 @@ class App extends React.Component {
               <Error />
             </Route>
 
-            <Route path='/recipe'
-              render={ (props) => (
-                <Recipe { ...props } 
-                  userAuthenticated={this.state.loggedInUser} 
-                  onSaveRecipe={this.handleSaveRecipe}
-                /> )}>
+            <Route path='/recipe' render={(props) => <Recipe {...props} userAuthenticated={this.state.loggedInUser} onSaveRecipe={this.handleSaveRecipe}/> }>
             </Route>
           </Switch>
         </div>
