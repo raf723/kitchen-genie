@@ -9,7 +9,7 @@
 
 .recipe-header-container{
     margin: 30px 0;
-    width: 90%;
+    width: 100%;
 }
 
 .rating-fav-container{
@@ -29,26 +29,6 @@
     padding-bottom: 3px;
 }
 
-.recipe-page-image{
-    border-radius: 10px;
-    width: 40%;
-    height: fit-content;
-    display: block;
-}
-
-.image-info-box{
-    margin-top: 25px;
-
-}
-
-.recipe-section{
-    width: 90%;
-}
-
-.instructions{
-    width: 70%;
-}
-
 .favourite-box{
     display: flex;
     justify-content: space-around;
@@ -65,19 +45,48 @@
     padding-bottom: 3px;
 }
 
-.ingredients{
+
+/* Recipe page body */
+
+.recipe-page-body{
+    width: 100%;
+}
+
+.image-instruction-column{
     width: 30%;
+}
+
+.info-desc-instruct-column{
+    margin-left: 20px;
+    width: 70%;
 }
 
 .recipe-list-items{
     margin: 5px 0;
 }
 
-.key-info{
-    padding: 10px 10px;
-    margin-left: 16px;
+/* Image and ingredients column */
+
+.recipe-page-image{
+    border-radius: 10px;
+    width: 100%;
+    height: fit-content;
+    display: block;
 }
 
+.instructions{
+    width: 70%;
+}
+
+.ingredients{
+    width: 100%;
+}
+
+/* Personal Reating */
+
+.personal-rating{
+    width: 100%;
+}
 
 
 /* Utilities */
