@@ -1,0 +1,79 @@
+#about-us-container {
+  margin: 0 5%;
+}
+
+#about-us-container div {
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+}
+
+#about-us-container .p-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#about-us-container span {
+  font-size: 32px;
+  font-weight: 600;
+  color: rgb(116, 166, 127);
+}
+
+#about-us-container p {
+  font-size: 18px;
+  font-weight: 300;
+  text-align: center;
+  line-height: 1.7em;
+  padding: 0 12%
+}
+
+#about-us-container .side-img {
+  width: 40%;
+  border-radius: 2px;
+}
+
+#about-us-container .member-img {
+  height: 120px;
+  width: 120px;
+  object-fit: cover;
+  border-radius: 80px;
+}
+
+#about-us-container #meet-the-team-container {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 80px;
+}
+
+#about-us-container .member-div {
+  display: flex;
+  flex-direction: column;
+}
+
+#about-us-container .member-div span {
+  color: rgb(70, 70, 70);
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+#about-us-container .member-div p {
+  color: rgb(70, 70, 70);
+  font-size: 14px;
+  font-weight: 400;
+  margin: 2px 0;
+}
+
+#about-us-container #contact-us-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 5%;
+  margin: 80px 0;
+}
+
+#about-us-container #contact-us-container p {
+  font-size: 16px;
+  text-align: start;
+  padding: 0;
+  margin: 0;
+}
