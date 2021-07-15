@@ -61,7 +61,6 @@ class RecipeCard extends React.Component {
   render() {
     const { recipe, forPage, rating } = this.props
 
-    // console.log(recipe.extendedIngredients.map((ingredient) => ingredient.name ))
     return (
       <article  key={recipe.id} id={ recipe.id } className="recipe-card" onClick={ () => this.recipeHandler(recipe) }>
         <div className="recipe-card-top">

@@ -135,6 +135,23 @@ app
   })
 
 
+  //------------------------- Get multiple ratings ---------------------//
+  .get('/recipe/averagerating/bulk/:recipeIdsString', async (server) => {
+
+    const  { recipeIdsString } = await server.params
+    const recipeIds = recipeIdsString.split(',') || '_' //make an array from the string of comma-delimited ids (e.g. '11645,78981,3394' --> [11645,78981,3394])
+
+    const queryTemplate = recipeIds.reduce((accumulator, _recipeId, i) =>  accumulator + `$${i + 1}, `, "" ).slice(0, -2)
+
+    const averageRatingQuery = `SELECT recipe_id, ROUND(AVG(rating), 2)::float AS value FROM recipe_rating 
+      WHERE recipe_id IN (${queryTemplate})
+      GROUP BY recipe_id;`
+    
+    const averageRatingsArray = (await client.queryObject(averageRatingQuery, ...recipeIds)).rows
+    const averageRatings = averageRatingsArray.reduce((accumulator, rating) => accumulator[rating.recipe_id] = rating.value, {}) //make an object with recipe_id as keys and ratings as values for efficency and convenience
+
+    server.json({ response: "success", averageRatings }) 
+  })
 
   //------------------------- Get personal recipe rating ---------------------//
   .get('/recipe/personalrating/:recipeId/:sessionId', async(server) => {

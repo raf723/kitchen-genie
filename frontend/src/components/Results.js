@@ -19,6 +19,7 @@ class Results extends React.Component {
     ingredients: this.props.location.state.ingredients,
     results: this.props.location.state.results,
     savedRecipeIds: [],
+    averageRatings: {},
     displaySaveFeature: false,
     pageStatus: '',
   }
@@ -27,7 +28,16 @@ class Results extends React.Component {
   state = this.initialState
 
   async componentDidMount() { 
-    /*Routine to Identify which of the recipies displayed in the results were previously saved by the user */
+    await this.getSavedRecipeIds()
+    await this.getAverageRatings()
+
+    /*Routine to check and notify user if there is some external problem with the website (e.g. site has exceeded the maximum number of calls to spoonacular)*/
+    const { results } = this.props.location.state
+    if (!Array.isArray(results)) this.setState({pageStatus: 'The service is temporarily down! Please try again later.'})
+  }
+
+  /*Routine to Identify which of the recipies displayed in the results were previously saved by the user */
+  async getSavedRecipeIds() {
     const apiResponse = await fetch(`${process.env.REACT_APP_URL}/myrecipes/id-only`, {
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -37,10 +47,20 @@ class Results extends React.Component {
 
     if (response === 'success') this.setState({ savedRecipeIds, displaySaveFeature: true })
     else if (response !== 'unauthorized') window.location.replace('/error')
+  }
 
-    /*Routine to check and notify user if there is some external problem with the website (e.g. site has exceeded the maximum number of calls to spoonacular)*/
+  /*Routine to get the average rating of each recipe on page, to be displayed on RecipeCard via its rating prop*/
+  async getAverageRatings() {
     const { results } = this.props.location.state
-    if (!Array.isArray(results)) this.setState({pageStatus: 'The service is temporarily down! Please try again later.'})
+
+    const recipeIds = Array.isArray(results) && results.map((recipe) => recipe.id).join(',')
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/bulk/${recipeIds}`, {
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    const  { averageRatings } = await apiResponse.json()
+
+    this.setState({averageRatings})
   }
 
   // Get recipes from Spoonacular
@@ -97,7 +117,7 @@ class Results extends React.Component {
   }
 
   render() {
-    const { savedRecipeIds, displaySaveFeature, pageStatus, results } = this.state
+    const { savedRecipeIds, displaySaveFeature, pageStatus, results, averageRatings } = this.state
 
     return (
       <div id="results-container">
@@ -128,7 +148,7 @@ class Results extends React.Component {
                 onSave={ () => this.handleSaveRecipe(recipe.id, !savedRecipeIds.includes(recipe.id)) } 
                 isCurrentlySaved={ savedRecipeIds.includes(recipe.id) } />
             }
-            <RecipeCard recipe={ recipe } forPage="results" />
+            <RecipeCard recipe={ recipe } forPage="results" rating={averageRatings[recipe.id]} />
           </div>) }
         </div> }
 
