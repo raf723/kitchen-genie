@@ -152,8 +152,6 @@ app
       accumulator[rating.recipe_id] = !rating.value ? 0 : Number.parseFloat(rating.value)
       return accumulator }, {}) //make an object with recipe_id as keys and ratings as values for efficency and convenience
 
-    console.log(averageRatings)
-
     server.json({ response: "success", averageRatings }) 
   })
 

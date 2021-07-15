@@ -24,7 +24,8 @@ class Comments extends React.Component {
     const { response, comments }= await apiResponse.json()
 
     // Set state of componentStatus depending on whether the current recipe has any comments stored in the database
-    if (response === 'success') comments.length === 0 ? this.setState({ componentStatus: 'No comments yet!' }) : this.setState({ componentStatus: '' })
+    if (response === 'success') comments.length === 0 ? 
+    this.setState({ componentStatus: 'No comments yet!' }) : this.setState({ componentStatus: '', comments: comments})
     else window.location.replace('/error')
   }
 
