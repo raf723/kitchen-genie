@@ -67,7 +67,7 @@ class Home extends React.Component {
   render() {
     return (
       <div id="home-container">
-        <h1>Supercook</h1>
+        <h1>Kitchen Genie</h1>
 
         {/* Placeholder, input and search button */}
         <div id="search-container">
