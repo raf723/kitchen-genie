@@ -40,7 +40,7 @@ class Results extends React.Component {
 
   // Get recipes from Spoonacular
   getRecipes = async(ingredients = this.state.ingredients) => {
-    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=12&ranking=2&apiKey=d45bc24e8cc84723b6786271e498854f`)
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=12&ranking=2&apiKey=${process.env.REACT_APP_API_KEY}`)
     const recipes = await spoonacular.json()
     this.setState({ results: recipes })
   }
