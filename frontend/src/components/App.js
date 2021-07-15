@@ -78,8 +78,7 @@ class App extends React.Component {
     }
   }
   
-
-
+  
 
   render() {
     const { loggedInUser } = this.state

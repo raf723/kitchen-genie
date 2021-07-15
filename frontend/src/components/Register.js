@@ -5,7 +5,7 @@ import PasswordInput from './form-components/PasswordInput'
 import UsernameInput from './form-components/UsernameInput'
 import PasswordConfirmation from './form-components/PasswordConfirmation'
 import validate from '../function-assets/validate'
-import splash from '../splash.jpeg';
+import splash from '../assets/splash.jpeg';
 
 class Register extends React.Component {
   // Declare initialState object where all values are empty
@@ -107,7 +107,7 @@ class Register extends React.Component {
               <button id="register-button"
                   type='submit' 
                   disabled={!this.areAllFieldsValid() || isEmailTaken || isUsernameTaken} 
-                  className={this.areAllFieldsValid() && !isEmailTaken && !isUsernameTaken ? "acitve-button" : "inactive-button"}>
+                  className={this.areAllFieldsValid() && !isEmailTaken && !isUsernameTaken ? "active-button" : "inactive-button"}>
               Register
               </button>
           </form>

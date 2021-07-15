@@ -23,14 +23,14 @@ export class SavedRecipes extends Component {
             const isCurrentlySaved =  {}
             recipes.forEach((recipe) => isCurrentlySaved[recipe.id] = true)
             let pageState 
-            if (recipes.length === 0) {pageState = 'No favourite recipes yet!'} else {pageState = ''} 
-            //Upadte state
+            if (recipes.length === 0) {pageState = 'No saved recipes!'} else {pageState = ''} 
+            // Update state
             this.setState({savedRecipes: recipes, isCurrentlySaved, loggedInUser, pageState})
         } else if (response === 'unauthorized') {
-            //do nothing
+            // Do nothing
             this.setState({loggedInUser, pageState: 'Please log in to save and access favourite recipes!'})
         } else if (response === 'service down') { 
-            //notify the user (e.g. when access limit reached )
+            // Notify the user (e.g. when access limit reached )
             this.setState({loggedInUser, pageState: 'Service is currently down. Please try again later!'})
         }else {
             window.location.replace('/error')
@@ -61,7 +61,7 @@ export class SavedRecipes extends Component {
         const { savedRecipes, loggedInUser, pageState } = this.state
         return (
             <div className="saved-recipes-page-container">
-                <h1> Hi {loggedInUser.username}! <br/> Serving Up Your Faves 🍽</h1>
+                <h1> Hi {loggedInUser.username}! <br/> Serving up your faves 🍽</h1>
                 <p>{pageState}</p>
                 <div className="card-display-container">
                     { savedRecipes.map((recipe) => this.renderCard(recipe)) }
