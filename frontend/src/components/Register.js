@@ -43,7 +43,7 @@ class Register extends React.Component {
     if(this.areAllFieldsValid()){
       const { email, username, password } = this.state
 
-      const apiResponse = await fetch(`http://localhost:8080/register`, {
+      const apiResponse = await fetch(`${process.env.REACT_APP_URL}/register`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
