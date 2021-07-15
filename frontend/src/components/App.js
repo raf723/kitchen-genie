@@ -19,6 +19,7 @@ import About from './About'
 import Recipe from './Recipe'
 import SavedRecipes from './SavedRecipes'
 import Error from './Error'
+import FAQ from './FAQ'
 
 class App extends React.Component {
   initialState = {
@@ -108,6 +109,7 @@ class App extends React.Component {
             </Route>
 
             <Route path='/faq'>
+              <FAQ />
             </Route>
 
             <Route path='/favourites'>

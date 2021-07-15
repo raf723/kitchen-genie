@@ -61,6 +61,7 @@
   border-radius: 22px;
   margin-left: 32px;
   transition: background .5s ease;
+  cursor: pointer;
 }
 
 #home-container #grey-button {
@@ -123,8 +124,10 @@
   background-color: transparent;
   border: none;
   margin-top: 16px;
+  cursor: pointer;
 }
 
 #random-recipe-button:hover {
   text-decoration: underline;
+  color: rgb(71, 116, 81);
 }
