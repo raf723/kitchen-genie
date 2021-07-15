@@ -15,7 +15,7 @@ import Home from './Home'
 import Register from './Register'
 import Login from './Login'
 import Results from './Results'
-import About from './About'
+import AboutUs from './AboutUs'
 import Recipe from './Recipe'
 import SavedRecipes from './SavedRecipes'
 import Error from './Error'
@@ -105,7 +105,7 @@ class App extends React.Component {
             </Route>
 
             <Route path='/about'>
-              <About/>
+              <AboutUs/>
             </Route>
 
             <Route path='/faq'>

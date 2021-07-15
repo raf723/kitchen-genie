@@ -20,6 +20,13 @@
   font-size: 72px;
   color: rgb(116, 166, 127);
   margin-top: 2%;
+  margin-bottom: 0;
+
+}
+
+#home-container span {
+  color: rgb(70, 70, 70);
+  font-size: 18px;
 }
 
 
