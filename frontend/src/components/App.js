@@ -110,6 +110,44 @@ class App extends React.Component {
 
             <Route path='/faq'>
               <h1>FAQ</h1>
+              <p>How long have you guys worked on this website?</p>
+              <p>2 Weeks.</p>
+              <br />
+              <p>Can we post any suggestions we have?</p>
+              <p>Of course, we are always welcome for new suggestions, user feedback, any glitches or bugs you may want to report etc. Please do so by contacting us on: example@email.com.</p>
+              <br />
+              <p>How do I search / find recipes?</p>
+              <ol>
+                <li>You type in the ingredients you desire and hit enter.</li>
+                <li>After each ingredient you should see the ingredient selected below the search bar.</li>
+                <li>Once satisfied click Go.</li>
+                <li>A list of recipes will show up showing the number of ingredients you have and the number of ingredients you are missing. Hovering over the number of missing ingredients will show exactly which ingredients are actually missing.</li>
+                <li>Once satisfied with a result click on it to open up the page which has step by step instructions on how to make the food.</li>
+                <li>You can also rate the recipes and save them to your favourites if you log in.</li>
+              </ol>
+              <br />
+              <p>What can I search for?</p>
+              <p>At the moment only ingredients, but in the future we plan to allow searching for recipe names directly as well.</p>
+              <br />
+              <p>Can I search for meal types?</p>
+              <p>Once ingredients have been selected, checkboxes for meal types / categories will be available. Just check the ones you desire and enjoy.</p>
+              <br />
+              <p>Do I have to pay for this service?</p>
+              <p>No this service is completely free.</p>
+              <br />
+              <p>Is this website monetised?</p>
+              <p>No, this service is not currently monetised.</p>
+              <br />
+              <p>Are there any ads on this service?</p>
+              <p>No there is currently no ads on this website with no immediate plans to introduce any anytime soon.</p>
+              <br />
+              <p>What happens with my data?</p>
+              <p>We comply with any international and national laws regarding data protection. Your data remains safe and protected, and we do not share this data with any other website or organisation.</p>
+              <br />
+              <p>Who are you?</p>
+              <p>We are a team of 4 people, and as a fun project we decided to create a cooking website. To find out more about the team go to the “about us” section and click on “meet the team”.</p>
+              <br />
+              <p>What is unique about your service?</p>
             </Route>
 
             <Route path='/favourites'>
