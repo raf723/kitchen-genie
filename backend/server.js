@@ -212,13 +212,8 @@ app
 
       if (savedRecipeIds.length !== 0) {
         const recipeString = savedRecipeIds.reduce((accumulator, [recipe], i) => accumulator + recipe + (i === savedRecipeIds.length - 1 ? "" : ","), "") 
-<<<<<<< HEAD
-        //******************INSERT YOUR API KEY ********************************/
-        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeString}&apiKey=b3307e094d1b4e639f85e2d1c9705459`
-=======
         //****************** INSERT YOUR API KEY ********************************/
         const spoonacularEndpoint = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeString}&apiKey=${Deno.env.get('SPOONACULAR_API_KEY')}`
->>>>>>> 1348114cb98fffb5ce83160ed373f88e9939159e
         const spoonacularApiResponse = await fetch(spoonacularEndpoint)
         const recipes = await spoonacularApiResponse.json()
 
