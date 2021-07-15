@@ -103,9 +103,7 @@ class Home extends React.Component {
             </button>
           )}
         </div>
-
-        {/* Random recipe button */}
-        <button id="random-recipe-button" onClick={ () => this.serveRecipe() }>Serve me up!</button>
+        <button id="random-recipe-button" onClick={this.serveRecipe}>Serve me up!</button>
       </div>
     )
   }
