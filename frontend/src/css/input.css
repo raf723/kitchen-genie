@@ -26,7 +26,6 @@
   transition: border .5s ease;
 }
 
-/* Border color? */
 .form-input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 30px white inset !important;
 }

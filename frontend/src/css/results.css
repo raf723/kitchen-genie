@@ -1,23 +1,69 @@
-.results-page-container {
+#results-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
+  margin: 12px 10%;
 }
 
-#results-search-container {
+
+
+/* ==================== Searchbar and search button ==================== */
+#results-container #search-container {
   width: 60%;
+}
+
+.react-autosuggest__container {
+  width: 100%;
+}
+
+#results-container #title-span {
+  color: rgb(50, 50, 50);
+  font-size: 12px;
+  margin-left: 12px;
+}
+
+
+
+/* ==================== Add/remove ingredients container ==================== */
+#results-container #ingredients-container {
+  width: 60%;
+  margin-top: 8px;
+  margin-left: 2%;
+}
+
+#results-container #ingredients-container button {
+  color: white;
+  background-color: rgb(116,166,127);
+  border: none;
+  border-radius: 20px;
+  padding: 4px 8px;
+  margin-right: 4px;
+  transition: background .5s ease;
+}
+
+#results-container #ingredients-container button:hover {
+  background-color: rgb(204, 82, 52, 0.9);
+  transition: background .5s ease;
+}
+
+
+
+/* ==================== Results grid ==================== */
+#results-container #grid-container {
+  display: flex;
+  flex-wrap: wrap;
   margin-top: 12px;
 }
 
-#grid-container {
-  display: flex;
-  flex-wrap: wrap;
-  min-width: 300px;
-  max-width: 1200px;
-  margin: 24px 149px;
+#results-container .card-container {
+  width: 22%;
+  margin: 12px 12px;
 }
 
-.card-container {
-  width: 250px;
-  margin: 16px 12px;
+#results-container #no-results-span {
+  color: rgb(116,166,127);
+  font-size: 32px;
+  font-weight: 600;
+  margin-top: 5%;
 }

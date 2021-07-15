@@ -1,7 +1,5 @@
-
 import { Client } from "https://deno.land/x/postgres@v0.11.3/mod.ts"
 import { config } from "https://deno.land/x/dotenv/mod.ts";
-
 //Set deno environment.
 const DENO_ENV = Deno.env.get('DENO_ENV') ?? 'development'
 //Attain path to env fil.
@@ -29,9 +27,8 @@ CREATE TABLE IF NOT EXISTS users (
     salt TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
-    );`  
- )
-
+    );`
+)
 //Create sessions table/
 await client.queryObject(`
     CREATE TABLE IF NOT EXISTS sessions (
@@ -42,20 +39,19 @@ await client.queryObject(`
         FOREIGN KEY (user_id) REFERENCES users(id)
     );`
 )
-
 //Create rating table. Should the user be allowed to rate 0? 
 await client.queryObject(`
-    CREATE TABLE IF NOT EXISTS rating (
+    CREATE TABLE IF NOT EXISTS recipe_rating (
         id SERIAL PRIMARY KEY,
         rating INT NOT NULL,
         CHECK (rating BETWEEN 1 AND 5),
         created_at TIMESTAMP NOT NULL,
         updated_at TIMESTAMP NOT NULL,
+        recipe_id INTEGER NOT NULL,
         user_id INTEGER,
         FOREIGN KEY(user_id) REFERENCES users(id)
     );`
 )
-
 //Create saved/favourites table
 await client.queryObject(`
     CREATE TABLE IF NOT EXISTS saved_recipes (
@@ -68,7 +64,6 @@ await client.queryObject(`
         FOREIGN KEY(user_id) REFERENCES users(id)
     );`
 )
-
 //Add recipe comments table
 await client.queryObject(`
     CREATE TABLE IF NOT EXISTS recipe_comments (
@@ -76,12 +71,11 @@ await client.queryObject(`
         created_at TIMESTAMP NOT NULL,
         updated_at TIMESTAMP NOT NULL,
         comment TEXT NOT NULL,
- 
+        recipe_id INTEGER NOT NULL,
         user_id INTEGER NOT NULL,
         FOREIGN KEY(user_id) REFERENCES users(id)
     );`
 )
-
 //Add recipe comment votes. Should table name be more descriptive?
 await client.queryObject(`
         CREATE TABLE IF NOT EXISTS recipe_comment_votes (

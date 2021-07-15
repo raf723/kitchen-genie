@@ -8,12 +8,15 @@ import 'tippy.js/dist/tippy.css'
 class RecipeCard extends React.Component {
   // Navigate to recipe page with recipe data
   recipeHandler = (recipe) => {
+    console.log(recipe)
     // Pass data another parent component (page)
     this.props.history.push({
       pathname: '/recipe',
       state: {
         id: recipe.id,
+        title: recipe.title,
         image: recipe.image,
+        summary: recipe.summary,
         numIngredients: recipe.usedIngredientCount + recipe.missedIngredientCount,
         numMissingIngredients: recipe.missedIngredientCount
       }
@@ -58,13 +61,12 @@ class RecipeCard extends React.Component {
   render() {
     const { recipe, forPage, rating } = this.props
 
-
     // console.log(recipe.extendedIngredients.map((ingredient) => ingredient.name ))
     return (
-      <article id={ recipe.id } className="recipe-card" onClick={ () => this.recipeHandler(recipe) }>
+      <article  key={recipe.id} id={ recipe.id } className="recipe-card" onClick={ () => this.recipeHandler(recipe) }>
         <div className="recipe-card-top">
         {/* Card image */}
-          <img className="recipe-image" src={ recipe.image } alt="prepared recipe" height="100%" width="100%"/>
+          <img className="recipe-image" src={ recipe.image } alt="prepared recipe"/>
         </div>
         {/* Card meta */}
         <div className="recipe-card-bottom">
