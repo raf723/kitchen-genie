@@ -6,7 +6,7 @@ class Error extends React.Component {
         return (
             <body>
             <div className="error-header">
-                <h1>An Error Occured</h1>
+                <h1>Oops! Looks like something went wrong.</h1>
             </div>
                 <div class="main"> 
                     <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="470" height="290" viewBox="0 0 470 290">
