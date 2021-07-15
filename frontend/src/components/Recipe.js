@@ -35,8 +35,6 @@ class Recipe extends Component {
 
         const spoonacularData = await spoonacularRes.json()
 
-        console.log(spoonacularData)
-
         const { extendedIngredients } = spoonacularData
 
         this.setState({ 
@@ -164,10 +162,11 @@ class Recipe extends Component {
 
     }
 
+
     async componentDidMount() {
-        await this.getAverageStarRatings()
-        await this.getPersonalStarRating()
-        await this.checkSavedRecipe()
+      await this.getAverageStarRatings()
+      await this.getPersonalStarRating()
+      await this.checkSavedRecipe()
 
       await this.fetchRecipeInfomation()
       await this.summariseRecipe() //! May not need this as it is passed from recipeCard.sj
@@ -189,8 +188,6 @@ class Recipe extends Component {
         const { image, numIngredients, numMissingIngredients } = this.props.location.state
 
         const { userAuthenticated } = this.props
-
-        console.log(numIngredients)
 
         return (
             <div>
@@ -240,9 +237,12 @@ class Recipe extends Component {
                             </article>
                             <article className="instructions">
                                 <span className="recipe-subheading">Instructions</span>
+                                { 
+                                instructions.length === 0 ? <p>No intructions</p> :
                                 <ol>
                                     {this.renderInstructions(instructions)}
                                 </ol>
+                                }
                             </article>
                         </section>
                     </div>

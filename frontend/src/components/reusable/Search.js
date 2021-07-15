@@ -1,4 +1,6 @@
 import React from 'react'
+
+// Styling imports
 import '../../css/search.css'
 
 // Autosuggest ingredients
@@ -71,7 +73,7 @@ class Search extends React.Component {
 
     // Set properties for Autosuggest's input
     const inputProps = {
-      placeholder: "Search for an ingredient and hit 'Enter'!",
+      placeholder: "Try 'milk' or 'eggs'",
       onChange: this.onChange,
       onKeyPress: this.onKeyPress,
       value

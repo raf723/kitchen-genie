@@ -62,7 +62,7 @@ export class SavedRecipes extends Component {
         return (
             <div className="saved-recipes-page-container">
                 <h1> Hi {loggedInUser.username}! <br/> Serving Up Your Faves 🍽</h1>
-                <p>{pageState}</p>
+                <p className="user-message">{pageState}</p>
                 <div className="card-display-container">
                     { savedRecipes.map((recipe) => this.renderCard(recipe)) }
                 </div>
