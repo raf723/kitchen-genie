@@ -141,7 +141,7 @@ app
     const  { recipeIdsString } = await server.params
     const recipeIds = recipeIdsString.split(',') || '_' //make an array from the string of comma-delimited ids (e.g. '11645,78981,3394' --> [11645,78981,3394])
 
-    const queryTemplate = recipeIds.reduce((accumulator, _recipeId, i) =>  accumulator + `$${i + 1}, `, "" ).slice(0, -2)
+    const queryTemplate = recipeIds.reduce((accumulator, _recipeId, i) =>  accumulator + `$${i + 1}, `, "" ).slice(0, -2) // e.g. [11645,78981,3394] --> "$1, $2, $3"
 
     const averageRatingQuery = `SELECT recipe_id, ROUND(AVG(rating), 2)::float AS value FROM recipe_rating 
       WHERE recipe_id IN (${queryTemplate})
