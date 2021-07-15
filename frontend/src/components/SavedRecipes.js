@@ -15,7 +15,7 @@ export class SavedRecipes extends Component {
     state = this.initialState
 
     async componentDidMount() {
-        const apiResponse = await fetch(`http://localhost:8080/myrecipes`, {
+        const apiResponse = await fetch(`${process.env.REACT_APP_URL}/myrecipes`, {
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
         })
