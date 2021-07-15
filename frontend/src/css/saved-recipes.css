@@ -11,10 +11,10 @@
 
 .saved-recipes-page-container h1 {
   height: fit-content;
+  font-size: 40px;
   color: rgb(116, 166, 127);
   text-align: center;
   text-align: center;
-  font-size: 50px;
   margin-top: 2%;
 }
 

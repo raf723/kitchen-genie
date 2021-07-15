@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import '../css/comment-input.css'
 
 class InputComments extends React.Component {
