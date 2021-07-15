@@ -39,10 +39,15 @@
   border-radius: 80px;
 }
 
-#about-us-container #meet-the-team-container {
+#about-us-container #meet-the-team-container-parent {
+  display: flex;
+  flex-direction: column;
+  margin-top: 80px;
+}
+
+#about-us-container #meet-the-team-container-child {
   display: flex;
   justify-content: space-evenly;
-  margin-top: 80px;
 }
 
 #about-us-container .member-div {

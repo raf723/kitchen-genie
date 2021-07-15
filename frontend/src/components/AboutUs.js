@@ -47,14 +47,17 @@ class AboutUs extends React.Component {
           <img className="side-img" src={ inspirationImg } alt="inspiration"/>
         </div>
 
-        <div id="meet-the-team-container">
-          { teamMembers.map(member => 
-            <div className="member-div">
-              <img className="member-img" src={ member.image } alt="team-member"/>
-              <span>{ member.name }</span>
-              <p>This is a brief intro about the team member.</p>
-            </div>
-          )}
+        <div id="meet-the-team-container-parent">
+          <span>Meet the team</span>
+          <div id="meet-the-team-container-child">
+            { teamMembers.map(member => 
+              <div className="member-div">
+                <img className="member-img" src={ member.image } alt="team-member"/>
+                <span>{ member.name }</span>
+                <p>This is a brief intro about the team member.</p>
+              </div>
+            )}
+          </div>
         </div>
 
         <div id="contact-us-container">
