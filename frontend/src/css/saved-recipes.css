@@ -1,8 +1,8 @@
 .saved-recipes-page-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px;
 }
 
 .saved-recipes-page-container * {
@@ -10,31 +10,30 @@
 }
 
 .saved-recipes-page-container h1 {
-    text-align: center;
-    height: fit-content;
-    font-size: 50px;
-    color: rgb(116, 166, 127);
-    margin-top: 2%;
+  height: fit-content;
+  font-size: 40px;
+  color: rgb(116, 166, 127);
+  text-align: center;
+  text-align: center;
+  margin-top: 2%;
 }
 
 .favourite-recipe {
-    width: 300px;
-    height: 300px;
-    margin: 10px;
+  width: 300px;
+  height: 300px;
+  margin: 10px;
 }
 
 .card-display-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 350px;
-    min-height: 350px;
-    max-width: 1500px;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 350px;
+  min-height: 350px;
+  max-width: 1500px;
+  flex-wrap: wrap;
 }
 
 .user-message {
-    font-size: larger;
+  font-size: larger;
 }
-
-

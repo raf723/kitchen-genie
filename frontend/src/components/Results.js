@@ -10,7 +10,7 @@ import RecipeCard from './RecipeCard'
 import SaveButton from './SaveButton'
 
 // Asset imports
-import DeleteIcon from '../delete.png'
+import DeleteIcon from '../assets/delete.png'
 
 class Results extends React.Component {
   // Declare initialState object where all values are empty

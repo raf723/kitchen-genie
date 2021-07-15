@@ -8,7 +8,6 @@ import 'tippy.js/dist/tippy.css'
 class RecipeCard extends React.Component {
   // Navigate to recipe page with recipe data
   recipeHandler = (recipe) => {
-    console.log(recipe)
     // Pass data another parent component (page)
     this.props.history.push({
       pathname: '/recipe',
