@@ -11,6 +11,15 @@
   font-family: 'Poppins', sans-serif;
 }
 
+#nav-container .logo-link svg {
+  stroke:rgb(116,166,127);
+}
+
+#nav-container .logo-link svg:hover {
+  stroke:rgb(71, 116, 81);
+  transition: 0.3s;
+}
+
 #nav-container .nav-link:after, #nav-container .signout-nav-link::after {
   content: "";
   display: block;
