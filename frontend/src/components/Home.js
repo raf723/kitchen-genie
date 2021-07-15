@@ -44,8 +44,7 @@ class Home extends React.Component {
   // Search for recipes via ingredients
   searchHandler = async() => {
     // Get recipes from Spoonacular
-    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${this.state.ingredients}&number=30&ranking=1&ignorePantry=true&apiKey=${process.env.REACT_APP_API_KEY}`)
-
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${this.state.ingredients}&number=12&ranking=1&ignorePantry=true&apiKey=${process.env.REACT_APP_API_KEY}`)
     const recipes = await spoonacular.json()
 
     // Pass data another parent component (page)
@@ -60,7 +59,7 @@ class Home extends React.Component {
 
   // Get random recipe from API and navigate to recipe page
   serveRecipe = async() => {
-    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/random?number=1&apiKey=d45bc24e8cc84723b6786271e498854f`)
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/random?number=1&apiKey=${process.env.REACT_APP_API_KEY}`)
     const randomRecipe = await spoonacular.json()
     console.log(randomRecipe.recipes)
   }

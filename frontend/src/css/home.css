@@ -56,7 +56,6 @@
 #home-container .search-button {
   height: 44px;
   width: 12%;
-  color: rgb(150, 150, 150);
   background-color: white;
   border-radius: 22px;
   margin-left: 32px;
@@ -64,11 +63,13 @@
 }
 
 #home-container #grey-button {
+  color: rgb(150, 150, 150);
   border: solid 2px rgb(150, 150, 150);
   pointer-events: none;
 }
 
 #home-container #green-button {
+  color: rgb(116, 166, 127);
   border: solid 2px rgb(116, 166, 127);
 }
 
