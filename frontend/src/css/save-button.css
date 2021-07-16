@@ -13,6 +13,7 @@
     left: 80%;
     filter: brightness(0.17) sepia(0.7) hue-rotate(-70deg) saturate(5) drop-shadow(1.95px 1.95px 2.6px);
 }
+
 .active-save-button:hover, .inactive-save-button:hover {
     transform: scale(1);
 	animation: beat 2s infinite;

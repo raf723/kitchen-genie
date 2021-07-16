@@ -13,13 +13,17 @@ const inspiration = 'As we got older, we started falling more in love with diffe
 const process = 'Kitchen Genie processes a database of recipes based on the ingredients you want to use. It also tells you the ingredients you are missing, step by step instructions on how to make the food, supported by the community to share, comment, and rate recipes and save your favourite recipes.'
 const teamMembers = [
   { name: 'Cengiz Ziyaeddin',
-    image: cengiz },
+    image: cengiz,
+    desc: 'Chemical Engineer turned Software! Coding or non-coding, I love making things.' },
   { name: 'Keano Robinson',
-    image: keano },
+    image: keano,
+    desc: 'Chemical Engineer turned Software! Coding or non-coding, I love making things.' },
   { name: 'Rafiul Ansari',
-    image: rafiul },
+    image: rafiul,
+    desc: 'Chemical Engineer turned Software! Coding or non-coding, I just love making things.' },
   { name: 'Tawab Rahmani',
-    image: tawab }
+    image: tawab,
+    desc: 'Chemical Engineer turned Software! Coding or non-coding, I love making things.' }
 ]
 
 class AboutUs extends React.Component {
@@ -54,7 +58,7 @@ class AboutUs extends React.Component {
               <div className="member-div">
                 <img className="member-img" src={ member.image } alt="team-member"/>
                 <span>{ member.name }</span>
-                <p>This is a brief intro about the team member.</p>
+                <p>{ member.desc }</p>
               </div>
             )}
           </div>
