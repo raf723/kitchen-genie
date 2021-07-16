@@ -1,17 +1,27 @@
 import React from 'react';
 import '../css/faq.css'
 
-
-
 class FAQ extends React.Component {
 
     collapse(e) {
         e.target.classList.toggle("active");
         var content = e.target.nextElementSibling;
+        // var hasVScroll = document.body.scrollHeight > document.body.clientHeight;
         if (content.style.maxHeight){
             content.style.maxHeight = null;
+            e.target.scrollIntoView({ behavior: 'smooth', block: 'center'})
         } else {
             content.style.maxHeight = content.scrollHeight + "px";
+            e.target.scrollIntoView({ behavior: 'smooth', block: 'center'})
+        }
+    }
+
+    collapseBottom(e) {
+        this.collapse(e)
+        if (e.target.className === "collapsible collapsible-bottom active") {
+            document.getElementById("collapsible-bottom").className = "collapsible active";
+        } else {
+            document.getElementById("collapsible-bottom").className = "collapsible collapsible-bottom"
         }
     }
 
@@ -80,8 +90,9 @@ class FAQ extends React.Component {
                         <p>We are a team of 4 people, and as a fun project we decided to create a cooking website. To find out more about the team go to the “about us” section and click on “meet the team”.</p>
                     </div>
 
-                    <button className="collapsible collapsible-bottom" onClick={(e) => this.collapse(e)}>What is unique about your service?</button>
-                    <div className="content">
+                    <button className="collapsible collapsible-bottom" id="collapsible-bottom" onClick={(e) => this.collapseBottom(e)}>What are some of the limitations of this website?</button>
+                    <div className="content content-bottom">
+                    <p>This website relies on an API called "Spoonacular" and because this service is not monetised at the moment, the base tier of the API is limited to 150 API calls per day. So if you see the error message "The system is temporarily down! Please try again later!" it is mosy likely due to the API calls running out. You can try carrying out your search the following day.</p>
                     </div>
                 </div>
             </div>
