@@ -24,11 +24,11 @@
 
 #comments-container .comment-box {
     width: 600px;
-    margin: 30px 30px 5px 30px;
-    transition: box-shadow .3s;
+    margin: 20px 30px 5px 30px;
+    transition: box-shadow .2s;
     height: auto;
     border-radius: 10px;
-    padding: 10px 10px 0px 10px;
+    padding: 10px 10px 10px 10px;
     border: 1px solid rgb(116,166,127);
 }
 
@@ -53,6 +53,8 @@
 
 #comments-container .comment-body {
     margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 0;
     font-size: 16px;
     color: rgb(57, 87, 64);
 }
