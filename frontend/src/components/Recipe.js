@@ -15,6 +15,7 @@ class Recipe extends Component {
         instructions: [],
         ingredients: [],
         averageRating: undefined,
+        totalRatings: undefined,
         personalRating: undefined,
         preperationTime: '',
         serving: '',
@@ -68,10 +69,12 @@ class Recipe extends Component {
 
         const instructionRes = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?&apiKey=${process.env.REACT_APP_API_KEY}`)
 
-        const [{ steps }] = await instructionRes.json()
+        const [ instructions ] = await instructionRes.json()
+
+        //!Check to make sure the returned object is not empty. 
 
         this.setState({
-            instructions: steps
+            instructions: instructions.steps
         })
     }
 
@@ -81,9 +84,11 @@ class Recipe extends Component {
 
         const fetchAverageRating = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/${recipeId}`)
 
-        const averageRating = await fetchAverageRating.json()
+        const recipe= await fetchAverageRating.json()
 
-        this.setState({ averageRating: parseFloat(averageRating.value) })
+        console.log(recipe)
+
+        this.setState({ averageRating: parseFloat(recipe.value), totalRatings: recipe.total_ratings})
     }
 
     async getPersonalStarRating() {
@@ -121,7 +126,7 @@ class Recipe extends Component {
 
         await this.getAverageStarRatings()
 
-        this.setState({ personalRating: recipe.rating })
+        this.setState({ personalRating: recipe.rating, totalRatings: recipe.total_ratings })
     }
 
     async handleChangeRating(newRating) {
@@ -138,7 +143,7 @@ class Recipe extends Component {
 
 
     renderInstructions(instructionsArr) {
-        return instructionsArr.map((instruction, i) => <li key={i} className="recipe-list-items">{instruction.step}</li>)
+        return instructionsArr.map((instruction, i) => <li key={i} className="recipe-list-item instruction">{instruction.step}</li>)
     }
 
     removeHtmlTagsFromString(string) {
@@ -181,7 +186,7 @@ class Recipe extends Component {
 
     render() {
 
-        const { title, description, instructions, personalRating, averageRating, recipeId, preperationTime, pricePerServing, diets, serving } = this.state
+        const { title, description, instructions, personalRating, averageRating, recipeId, preperationTime, pricePerServing, diets, serving, totalRatings } = this.state
 
         const { image, numIngredients, numMissingIngredients } = this.props.location.state
 
@@ -191,17 +196,19 @@ class Recipe extends Component {
             <div>
                 <div className="recipe-page-root">
                     <section className="recipe-header-container">
-                        <h1>{title}</h1>
+                        <h1 id="recipe-page-title">{title}</h1>
                         <div id="average-rating">
                             <div className="rating-fav-container flex row">
                                 <StarsRatings
                                     className="star-rating"
                                     rating={averageRating}
-                                    starRatedColor="gold"
-                                    starDimension="25px"
-                                    starSpacing="5px"
+                                    starHoverColor="rgb(116, 166, 127, 1)"
+                                    starRatedColor="rgb(253, 193, 76, 1)"
+                                    starDimension="50px"
+                                    svgIconPath="M0,20a10,10 0 1,0 20,0a10,10 0 1,0 -20,0"
+                                    starSpacing="0px"
                                     />
-                                    <span>(Average Rating)</span>
+                                    <span className="recipe-subheading">{totalRatings > 0 ? `Average Rating - ${averageRating} out of 5 (${totalRatings} ratings)` : `No ratings yet`}</span>
                             </div>
                             {userAuthenticated && ( 
                             <div className="favourite-box"> 
@@ -231,7 +238,7 @@ class Recipe extends Component {
                                 { !Number.isNaN(numIngredients) && <span>Number of Ingredients: {numIngredients}</span> }
                                 { numMissingIngredients && <span className="missing">Number of Missing Ingredients: {numMissingIngredients}</span>}    
                                 <span className="recipe-subheading">Description</span>
-                                <p className='recipe-description'>{description}</p>
+                                {<p className='recipe-description'>{description}</p>}
                             </article>
                             <article className="instructions">
                                 <span className="recipe-subheading">Instructions</span>
@@ -247,11 +254,14 @@ class Recipe extends Component {
                     <section className="personal-rating">
                         {userAuthenticated && <StarsRatings
                             className="star-rating"
+                            changeRating={(newRating) => { this.handleChangeRating(newRating) }}
                             rating={personalRating}
-                            starRatedColor="gold"
-                            starDimension="25px"
-                            starSpacing="5px"
-                            changeRating={(newRating) => { this.handleChangeRating(newRating) }} />
+                            starHoverColor="rgb(116, 166, 127, 1)"
+                            starRatedColor="rgb(253, 193, 76, 1)"
+                            starDimension="50px"
+                            svgIconPath="M0,20a10,10 0 1,0 20,0a10,10 0 1,0 -20,0"
+                            starSpacing="0px"
+                            />
                         }
                         {userAuthenticated && personalRating !== 0 && <span>{`Your personal rating is ${personalRating}`}</span>}
                         {userAuthenticated && personalRating === 0 && <span>{`Enjoyed? Rate this meal`}</span>}
@@ -260,9 +270,7 @@ class Recipe extends Component {
                     <section>
                         <Comments userAuthenticated={userAuthenticated} recipeId={recipeId} />
                     </section>
-                </div>
-
-                                 
+                </div>                   
         )
     }
 }
