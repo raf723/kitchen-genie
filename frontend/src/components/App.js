@@ -32,14 +32,14 @@ class App extends React.Component {
   async componentDidMount(){
     const currentSession = getCookie('sessionId') ?? null
     if (currentSession) {
-      const apiResponse = await fetch(`http://localhost:8080/sessions/${currentSession}`)
+      const apiResponse = await fetch(`${process.env.REACT_APP_URL}/sessions/${currentSession}`)
       const loggedInUser = await apiResponse.json()
       this.setState({ loggedInUser })
     }
   }
 
   loginHandler = async ({ email, password, remember }) => {
-    const apiResponse = await fetch(`http://localhost:8080/login`, {
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/login`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -62,7 +62,7 @@ class App extends React.Component {
   }
 
   handleSaveRecipe = async (recipeId, toSave=true) => {
-    const apiResponse = await fetch(`http://localhost:8080/save/${recipeId}/${ toSave ? 'save' : 'unsave'}`, {
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/save/${recipeId}/${ toSave ? 'save' : 'unsave'}`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
