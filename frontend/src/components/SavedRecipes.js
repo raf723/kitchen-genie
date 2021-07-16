@@ -27,13 +27,10 @@ export class SavedRecipes extends Component {
             if (recipes.length === 0) {pageState = 'No saved recipes!'} else {pageState = ''} 
 
             //Update state
-            await this.setState({savedRecipes: recipes, isCurrentlySaved, loggedInUser, pageState})
+            this.setState({savedRecipes: recipes, isCurrentlySaved, loggedInUser, pageState})
 
             //Fetch the average ratings from backend and populate the averageRatings object in state
             await this.getAverageRatings()
-        } else if (response === 'unauthorized') {
-            // Do nothing
-            this.setState({loggedInUser, pageState: 'Please log in to save and access favourite recipes!'})
         } else if (response === 'service down') { 
             // Notify the user (e.g. when access limit reached )
             this.setState({loggedInUser, pageState: 'Service is currently down. Please try again later!'})
