@@ -10,7 +10,7 @@ import RecipeCard from './RecipeCard'
 import SaveButton from './SaveButton'
 
 // Asset imports
-import DeleteIcon from '../delete.png'
+import DeleteIcon from '../assets/delete.png'
 
 class Results extends React.Component {
   // Declare initialState object where all values are empty
@@ -19,14 +19,25 @@ class Results extends React.Component {
     ingredients: this.props.location.state.ingredients,
     results: this.props.location.state.results,
     savedRecipeIds: [],
-    displaySaveFeature: false
+    averageRatings: {},
+    displaySaveFeature: false,
+    pageStatus: '',
   }
 
   // Set state to initialState
   state = this.initialState
 
-  // Fetch current user's saved recipes from database
-  async componentDidMount() {
+  async componentDidMount() { 
+    await this.getSavedRecipeIds()
+    await this.getAverageRatings()
+
+    /*Routine to check and notify user if there is some external problem with the website (e.g. site has exceeded the maximum number of calls to spoonacular)*/
+    const { results } = this.props.location.state
+    if (!Array.isArray(results)) this.setState({pageStatus: 'The service is temporarily down! Please try again later.'})
+  }
+
+  /*Routine to Identify which of the recipies displayed in the results were previously saved by the user */
+  async getSavedRecipeIds() {
     const apiResponse = await fetch(`${process.env.REACT_APP_URL}/myrecipes/id-only`, {
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -36,6 +47,20 @@ class Results extends React.Component {
 
     if (response === 'success') this.setState({ savedRecipeIds, displaySaveFeature: true })
     else if (response !== 'unauthorized') window.location.replace('/error')
+  }
+
+  /*Routine to get the average rating of each recipe on page, to be displayed on RecipeCard via its rating prop*/
+  async getAverageRatings() {
+    const { results } = this.props.location.state
+
+    const recipeIds = Array.isArray(results) && results.map((recipe) => recipe.id).join(',')
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/bulk/${recipeIds}`, {
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    const  { averageRatings } = await apiResponse.json()
+
+    this.setState({averageRatings})
   }
 
   // Get recipes from Spoonacular
@@ -92,8 +117,7 @@ class Results extends React.Component {
   }
 
   render() {
-    const results = this.state.results
-    const { savedRecipeIds, displaySaveFeature } = this.state
+    const { savedRecipeIds, displaySaveFeature, pageStatus, results, averageRatings } = this.state
 
     return (
       <div id="results-container">
@@ -113,17 +137,18 @@ class Results extends React.Component {
             </button>
           )}
         </div>
-
+        {/*Notify user if the site cannot be used (e.g. if the site runs out of api points)*/}
+          <p>{pageStatus}</p>
         {/* Grid of cards (recipes) */}
         { this.state.results.length > 0 && <div id="grid-container">
           {/* For each recipe, render a recipe card and save button (only if user is authenticated i.e. displaySaveFeature is true) */}
-          { results.map(recipe => <div className="card-container" key={ recipe.id }>
+          { Array.isArray(results) && results.map(recipe => <div className="card-container" key={ recipe.id }>
             { displaySaveFeature &&
               <SaveButton
                 onSave={ () => this.handleSaveRecipe(recipe.id, !savedRecipeIds.includes(recipe.id)) } 
                 isCurrentlySaved={ savedRecipeIds.includes(recipe.id) } />
             }
-            <RecipeCard recipe={ recipe } forPage="results" />
+            <RecipeCard recipe={ recipe } forPage="results" rating={averageRatings[recipe.id]} />
           </div>) }
         </div> }
 

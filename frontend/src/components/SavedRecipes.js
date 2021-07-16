@@ -8,6 +8,7 @@ export class SavedRecipes extends Component {
         loggedInUser: {},
         savedRecipes: [],
         isCurrentlySaved: {},
+        averageRatings: {},
         pageState: ["Loading...", "Calling our chefs...", "Searching the recipe books...", "It's worth the wait...", "Licking lips in anticipation..."][Math.floor(Math.random() * 5)],
     }
 
@@ -23,18 +24,36 @@ export class SavedRecipes extends Component {
             const isCurrentlySaved =  {}
             recipes.forEach((recipe) => isCurrentlySaved[recipe.id] = true)
             let pageState 
-            if (recipes.length === 0) {pageState = 'No favourite recipes yet!'} else {pageState = ''} 
-            //Upadte state
-            this.setState({savedRecipes: recipes, isCurrentlySaved, loggedInUser, pageState})
+            if (recipes.length === 0) {pageState = 'No saved recipes!'} else {pageState = ''} 
+
+            //Update state
+            await this.setState({savedRecipes: recipes, isCurrentlySaved, loggedInUser, pageState})
+
+            //Fetch the average ratings from backend and populate the averageRatings object in state
+            await this.getAverageRatings()
         } else if (response === 'unauthorized') {
-            //do nothing
+            // Do nothing
             this.setState({loggedInUser, pageState: 'Please log in to save and access favourite recipes!'})
         } else if (response === 'service down') { 
-            //notify the user (e.g. when access limit reached )
+            // Notify the user (e.g. when access limit reached )
             this.setState({loggedInUser, pageState: 'Service is currently down. Please try again later!'})
         }else {
             window.location.replace('/error')
         }
+    }
+
+    /*Routine to get the average rating of each recipe on page, to be displayed on RecipeCard via its rating prop*/
+    async getAverageRatings() {
+        const { savedRecipes } = this.state
+
+        const recipeIds = savedRecipes.map((recipe) => recipe.id).join(',')
+        const apiResponse = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/bulk/${recipeIds}`, {
+        headers: { 'Content-Type': 'application/json' },
+        })
+
+        const  { averageRatings } = await apiResponse.json()
+
+        this.setState({averageRatings})
     }
 
     async handleSaveRecipe(recipeId) {
@@ -45,14 +64,14 @@ export class SavedRecipes extends Component {
     }
 
     renderCard(recipe){
-        const { isCurrentlySaved } = this.state
+        const { isCurrentlySaved, averageRatings } = this.state
         return (
             <div key={recipe.id} className="favourite-recipe">
                 { 
                     <SaveButton onSave={ async () => await this.handleSaveRecipe(recipe.id)} 
                     isCurrentlySaved={isCurrentlySaved[recipe.id]}/>
                 }
-                <RecipeCard recipe={ recipe } forPage="saved-recipes"/>
+                <RecipeCard recipe={ recipe } forPage="saved-recipes" rating={averageRatings[recipe.id]} />
             </div>
         )
     }
@@ -61,7 +80,7 @@ export class SavedRecipes extends Component {
         const { savedRecipes, loggedInUser, pageState } = this.state
         return (
             <div className="saved-recipes-page-container">
-                <h1> Hi {loggedInUser.username}! <br/> Serving Up Your Faves 🍽</h1>
+                <h1> Hi {loggedInUser.username}! <br/> Serving up your faves 🍽</h1>
                 <p>{pageState}</p>
                 <div className="card-display-container">
                     { savedRecipes.map((recipe) => this.renderCard(recipe)) }

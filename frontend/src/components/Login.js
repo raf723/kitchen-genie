@@ -4,7 +4,7 @@ import React from 'react'
 import '../css/login.css'
 
 // Asset imports
-import splash from '../splash.jpeg';
+import splash from '../assets/splash.jpeg';
 
 // Routing imports
 import { NavLink } from 'react-router-dom'

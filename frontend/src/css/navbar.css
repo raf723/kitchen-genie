@@ -1,4 +1,4 @@
-.nav-link, .logo-link, .signout-nav-link {
+#nav-container .nav-link, #nav-container .logo-link, #nav-container .signout-nav-link {
   margin: 1em;
   color: rgb(116,166,127);
   font-size: 15px;
@@ -11,7 +11,16 @@
   font-family: 'Poppins', sans-serif;
 }
 
-.nav-link:after, .signout-nav-link::after {
+#nav-container .logo-link svg {
+  stroke:rgb(116,166,127);
+}
+
+#nav-container .logo-link svg:hover {
+  stroke:rgb(71, 116, 81);
+  transition: 0.3s;
+}
+
+#nav-container .nav-link:after, #nav-container .signout-nav-link::after {
   content: "";
   display: block;
   margin: 0 auto;
@@ -21,32 +30,32 @@
   transition: .3s;
 }
 
-.nav-link:hover::after, .signout-nav-link:hover::after {
+#nav-container .nav-link:hover::after, #nav-container .signout-nav-link:hover::after {
   width: 100%;
   border-bottom: 1px solid rgb(71, 116, 81);
 }
 
-.nav-link.active::after {
+#nav-container .nav-link.active::after {
   width: 100%;
   border-bottom: 2px solid rgb(71, 116, 81);
   transition: none;
 }
 
-.nav-link:hover, .nav-link.active, .signout-nav-link:hover {
+#nav-container .nav-link:hover, #nav-container .nav-link.active, #nav-container .signout-nav-link:hover {
   color: rgb(71, 116, 81);
 
 }
 
-.nav-link.active {
+#nav-container .nav-link.active {
   font-weight: bold;
 }
 
-.middle-nav {
+#nav-container .middle-nav {
   display: flex;
   justify-content: center;
 }
 
-.page-nav {
+#nav-container .page-nav {
   display: flex;
   justify-content: space-between;
   padding: 0 40px;

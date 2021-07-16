@@ -8,7 +8,6 @@ import 'tippy.js/dist/tippy.css'
 class RecipeCard extends React.Component {
   // Navigate to recipe page with recipe data
   recipeHandler = (recipe) => {
-    console.log(recipe)
     // Pass data another parent component (page)
     this.props.history.push({
       pathname: '/recipe',
@@ -61,7 +60,6 @@ class RecipeCard extends React.Component {
   render() {
     const { recipe, forPage, rating } = this.props
 
-    // console.log(recipe.extendedIngredients.map((ingredient) => ingredient.name ))
     return (
       <article  key={recipe.id} id={ recipe.id } className="recipe-card" onClick={ () => this.recipeHandler(recipe) }>
         <div className="recipe-card-top">

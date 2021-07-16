@@ -15,9 +15,11 @@ import Home from './Home'
 import Register from './Register'
 import Login from './Login'
 import Results from './Results'
-import About from './About'
+import AboutUs from './AboutUs'
 import Recipe from './Recipe'
 import SavedRecipes from './SavedRecipes'
+import Error from './Error'
+import FAQ from './FAQ'
 
 class App extends React.Component {
   initialState = {
@@ -27,7 +29,7 @@ class App extends React.Component {
   state = { ...this.initialState }
 
   // Authenticate current user using cookies
-  async componentWillMount(){
+  async componentDidMount(){
     const currentSession = getCookie('sessionId') ?? null
     if (currentSession) {
       const apiResponse = await fetch(`http://localhost:8080/sessions/${currentSession}`)
@@ -78,8 +80,7 @@ class App extends React.Component {
     }
   }
   
-
-
+  
 
   render() {
     const { loggedInUser } = this.state
@@ -104,11 +105,11 @@ class App extends React.Component {
             </Route>
 
             <Route path='/about'>
-              <About/>
+              <AboutUs/>
             </Route>
 
             <Route path='/faq'>
-              <h1>FAQ</h1>
+              <FAQ />
             </Route>
 
             <Route path='/favourites'>
@@ -118,19 +119,11 @@ class App extends React.Component {
             <Route path='/results' component={ Results }>
             </Route>
 
-            <Route path='/recipe' component={ Recipe }>
-            </Route>
-
             <Route path='/error'>
-              <h1>Oops! Looks like something went wrong.</h1>
+              <Error />
             </Route>
 
-            <Route path='/recipe'
-              render={ (props) => (
-                <Recipe { ...props } 
-                  userAuthenticated={this.state.loggedInUser} 
-                  onSaveRecipe={this.handleSaveRecipe}
-                /> )}>
+            <Route path='/recipe' render={(props) => <Recipe {...props} userAuthenticated={this.state.loggedInUser} onSaveRecipe={this.handleSaveRecipe}/> }>
             </Route>
           </Switch>
         </div>

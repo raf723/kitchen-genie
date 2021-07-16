@@ -67,3 +67,10 @@
   font-weight: 600;
   margin-top: 5%;
 }
+
+#user-message {
+  margin-left: 25%;
+  margin-right: 25%;
+  font-size: larger;
+  color: brown;
+}

@@ -5,7 +5,7 @@ import '../../css/search.css'
 
 // Autosuggest ingredients
 import Autosuggest from 'react-autosuggest'
-import ingredients from '../../ingredients.json'
+import ingredients from '../../assets/ingredients.json'
 
 
 

@@ -10,7 +10,7 @@ import { withRouter } from 'react-router-dom'
 import Search from './reusable/Search'
 
 // Asset imports
-import DeleteIcon from '../delete.png'
+import DeleteIcon from '../assets/delete.png'
 
 class Home extends React.Component {
   // Declare initialState object where all values are empty
@@ -44,7 +44,7 @@ class Home extends React.Component {
   // Search for recipes via ingredients
   searchHandler = async() => {
     // Get recipes from Spoonacular
-    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${this.state.ingredients}&number=12&ranking=1&ignorePantry=true&apiKey=${process.env.REACT_APP_API_KEY}`)
+    const spoonacular = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${this.state.ingredients}&number=12&ranking=2&ignorePantry=true&apiKey=${process.env.REACT_APP_API_KEY}`)
     const recipes = await spoonacular.json()
 
     // Pass data another parent component (page)
@@ -60,14 +60,25 @@ class Home extends React.Component {
   // Get random recipe from API and navigate to recipe page
   serveRecipe = async() => {
     const spoonacular = await fetch(`https://api.spoonacular.com/recipes/random?number=1&apiKey=${process.env.REACT_APP_API_KEY}`)
-    const randomRecipe = await spoonacular.json()
-    console.log(randomRecipe.recipes)
+    const responseObject = await spoonacular.json()
+    const randomRecipe = responseObject.recipes[0]
+
+    // Navigate to recipe page and pass recipe data
+    this.props.history.push({
+      pathname: '/recipe',
+      state: {
+        id: randomRecipe.id,
+        title: randomRecipe.title,
+        image: randomRecipe.image
+      }
+    })
   }
 
   render() {
     return (
       <div id="home-container">
         <h1>Kitchen Genie</h1>
+        <span>Find recipes using what's in your kitchen</span>
 
         {/* Placeholder, input and search button */}
         <div id="search-container">
@@ -80,7 +91,7 @@ class Home extends React.Component {
               id={ this.state.ingredients.length !== 0 ? "green-button" : "grey-button" }
               className="search-button"
               onClick={ () => this.searchHandler() }>
-                GO
+                FIND
             </button>
           </div>
         </div>
@@ -93,9 +104,7 @@ class Home extends React.Component {
             </button>
           )}
         </div>
-
-        {/* Random recipe button */}
-        <button id="random-recipe-button" onClick={ () => this.serveRecipe() }>Serve me up!</button>
+        <button id="random-recipe-button" onClick={this.serveRecipe}>Serve me up!</button>
       </div>
     )
   }
