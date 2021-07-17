@@ -1,3 +1,6 @@
+import React from 'react'
+import '../css/recipe.css'
+
 // Third party imports
 import StarsRatings from 'react-star-ratings'
 
@@ -7,7 +10,7 @@ import Comments from './Comments'
 // Helper functions
 import { getCookie } from '../function-assets/helpers'
 
-class Recipe extends Component {
+class Recipe extends React.Component {
   initialState = {
       recipeId: this.props.location.state.id,
       isCurrentlySaved: false,
