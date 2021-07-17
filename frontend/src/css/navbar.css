@@ -11,6 +11,11 @@
   font-family: 'Poppins', sans-serif;
 }
 
+#nav-bar-home-logo{
+  padding: 0;
+  margin-top: -7px
+}
+
 #nav-container .logo-link svg {
   stroke:rgb(116,166,127);
 }
@@ -53,10 +58,22 @@
 #nav-container .middle-nav {
   display: flex;
   justify-content: center;
+  margin-left: -110px;
 }
 
 #nav-container .page-nav {
   display: flex;
   justify-content: space-between;
   padding: 0 40px;
+  height: 60px;
 }
+
+#nav-container{
+  position: fixed;
+  top:0;
+  width: 100%;
+  background-color: white;
+  overflow: hidden;
+  z-index: 100;
+}
+

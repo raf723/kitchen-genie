@@ -7,3 +7,5 @@
 /frontend/.env.production
 /frontend/.netlify/
 /.vscode
+frontend/.env.production
+frontend/.netlify/
