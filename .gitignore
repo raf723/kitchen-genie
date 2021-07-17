@@ -5,3 +5,5 @@
 .env.development
 /backend/.env.development
 /.vscode
+frontend/.env.production
+frontend/.netlify/
