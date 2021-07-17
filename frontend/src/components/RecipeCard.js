@@ -1,7 +1,14 @@
-import '../css/recipe-card.css'
-import StarsRatings from 'react-star-ratings'
-import { withRouter } from 'react-router-dom'
 import React from 'react'
+import '../css/recipe-card.css'
+
+// ROuting imports
+import { withRouter } from 'react-router-dom'
+
+// Component imports
+import SaveButton from './SaveButton'
+
+// Third party imports
+import StarsRatings from 'react-star-ratings'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
@@ -60,10 +67,10 @@ class RecipeCard extends React.Component {
 
 
   render() {
-    const { recipe, forPage, rating } = this.props
+    const { recipe, forPage, rating, isCurrentlySaved } = this.props
 
     return (
-      <article  key={recipe.id} id={ recipe.id } className="recipe-card" onClick={ () => this.recipeHandler(recipe) }>
+      <article  key={recipe.id} id={ recipe.id } className="recipe-card">
         <div className="recipe-card-top">
         {/* Card image */}
           <img className="recipe-image" src={ recipe.image } alt="prepared recipe"/>
@@ -71,7 +78,7 @@ class RecipeCard extends React.Component {
         {/* Card meta */}
         <div className="recipe-card-bottom">
           {/* Recipe title */}
-          <h5 className="recipe-title">{ recipe.title }</h5>
+          <span className="recipe-title" onClick={ () => this.recipeHandler(recipe) }>{ recipe.title }</span>
 
           {/* Star rating */}
           {
@@ -85,7 +92,13 @@ class RecipeCard extends React.Component {
           }
 
           {/* Ingredients info */}
-          {this.renderInfo({ forPage, recipe })}
+          <div className="card-footer-container">
+            {this.renderInfo({ forPage, recipe })}
+            <SaveButton
+              recipeID={ recipe.id }
+              onSave={ () => this.props.onSave(recipe.id) } 
+              isCurrentlySaved={ isCurrentlySaved } /> 
+          </div>
         </div>
       </article>
     )

@@ -53,13 +53,13 @@ class Register extends React.Component {
       const { response } = await apiResponse.json()
 
       if (response === `success`) {
-        window.location.replace("/login");
+        window.location.assign("/login");
       } else if (response === `already registered`) {
         alert("There is already an email address associated with that email.\n Try logging in or registering again!")
         window.location.reload()
       } else if (response === `bad credentials`) {
         alert("Invalid email, username or password!\nEnsure Javascript is enabled and reload the app.")
-        window.location.replace("/error")
+        window.location.assign("/error")
       }
     }
   }

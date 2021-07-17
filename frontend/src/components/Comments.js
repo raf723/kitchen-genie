@@ -26,7 +26,7 @@ class Comments extends React.Component {
     // Set state of componentStatus depending on whether the current recipe has any comments stored in the database
     if (response === 'success') comments.length === 0 ? 
     this.setState({ componentStatus: 'No comments yet!' }) : this.setState({ componentStatus: '', comments: comments})
-    else window.location.replace('/error')
+    else window.location.assign('/error')
   }
 
   renderComment(comment) {
@@ -51,24 +51,25 @@ class Comments extends React.Component {
     this.setState({ comment: newCommentsArray })
   }
 
-    render() {
-        const { comments, componentStatus } = this.state
-    
-        return(
-            <div id="comments-container">
-                <br />
-                <hr />
-                <div className="comments-container">
-                    <h2>Comments ({ comments.length })</h2>
-                    <CommentInput userAuthenticated={ this.props.userAuthenticated } recipeId={ this.props.recipeId } handleNewComment={ this.handleNewComment } />
-                    <p className="comments-status">{ componentStatus }</p>
-                    <ul className="comments-list">
-                        { comments.map((comment) => this.renderComment(comment)) }
-                    </ul>
-                </div>
-            </div>
-        )
-    }
+  render() {
+    const { comments, componentStatus } = this.state
+
+    return(
+      <div id="comments-container">
+        <div id="input-comments-container">
+          <h2>Comments ({ comments.length })</h2>
+          <CommentInput userAuthenticated={ this.props.userAuthenticated } recipeId={ this.props.recipeId } handleNewComment={ this.handleNewComment } />
+        </div>
+
+        <div id="get-comments-container">
+          { comments.length === 0 && <p className="comments-status">{ componentStatus }</p> }
+          <ul className="comments-list">
+            { comments.map((comment) => this.renderComment(comment)) }
+          </ul>
+        </div>
+      </div>
+    )
+  }
 }
 
 export default Comments

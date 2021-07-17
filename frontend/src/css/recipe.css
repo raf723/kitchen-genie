@@ -1,123 +1,208 @@
-.recipe-page-root{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 auto;
-    width: 80%;
-    color: rgba(50, 50, 50, 1);    
+/* ==================== General ==================== */
+#recipe-container {
+  height: 100%;
+  color: rgb(80, 80, 80);
+  margin: 0 10%
 }
 
-.recipe-header-container{
-    margin: 30px 0;
-    width: 100%;
+#recipe-container h1 {
+  font-size: 40px;
+  text-align: left;
+  color: rgb(116, 166, 127);
+  padding-top: 24px;
+  margin: 0;
 }
 
-.rating-fav-container{
-    align-items: center;
-    margin-top: 10px;
-    width: 100%;
-    height: 50px;
-}
-
-#average-rating{
-    display: flex;
-  
-}
-
-#average-rating span{
-    margin-left: 8px;
-    padding-bottom: 3px;
-}
-
-.favourite-box{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 200px;
-}
-
-.favourite-box #favourite-button{
-    position: static;
-}
-
-.favourite-box p {
-    margin: 0;
-    padding-bottom: 3px;
+#recipe-container .recipe-subheading {
+  font-size: 20px;
+  font-weight: 600;
 }
 
 
-/* Recipe page body */
 
-.recipe-page-body{
-    width: 100%;
+/* ==================== Recipe header i.e. ratings ==================== */
+#header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top:8px;
 }
 
-.image-instruction-column{
-    width: 30%;
+#recipe-container #star-icon {
+  font-size: 18px;
+  color: rgba(243, 176, 74, 255)
 }
 
-.info-desc-instruct-column{
-    margin-left: 20px;
-    width: 70%;
+#recipe-container .rating-span {
+  font-size: 16px;
+  font-weight: 500;
+  margin-left: 6px;
 }
 
-.recipe-list-items{
-    margin: 5px 0;
+#recipe-container #save-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Image and ingredients column */
-
-.recipe-page-image{
-    border-radius: 10px;
-    width: 100%;
-    height: fit-content;
-    display: block;
+#recipe-container #save-recipe-button {
+  display: flex;
+  align-items: center;
 }
 
-.instructions{
-    width: 70%;
+#recipe-container #save-recipe-button {
+  height: 32px;
+  font-size: 14px;
+  color: rgb(80, 80, 80);
+  background: none;
+  border: none;
+  border-radius: 8px;
+  padding: 0 8px;
+  transition: background .5s ease;
 }
 
-.ingredients{
-    width: 100%;
-    border: 1 solid;
-
+#recipe-container #save-recipe-button:hover {
+  background: rgba(200, 200, 200, 0.4);
+  transition: background .5s ease;
 }
 
-.recipe-list-items{
-    text-transform: capitalize;
+#save-recipe-button i {
+  font-size: 20px;
+  color: rgb(199, 31, 55);
 }
 
-/* Personal Reating */
-
-.personal-rating{
-    width: 100%;
+#recipe-container #save-recipe-button span {
+  font-size: 14px;
+  padding-bottom: 2px;
+  margin-left: 6px;
 }
 
 
-/* Utilities */
-.recipe-subheading{
-    font-weight: 600;
-    font-size: 1.2rem;
-    margin-top: 10px
+
+/* ==================== Recipe body ==================== */
+#recipe-body-container {
+  display: flex;
+  margin-top: 16px;
 }
 
-.flex{
-    display: flex;
+#img-ingredients-container {
+  width: 30%;
 }
 
-.row{
-    flex-direction: row;
+#meta-desc-instructions-container {
+  height: 100%;
+  width: 68%;
+  margin-left: 2%;
 }
 
-.column{
-    flex-direction: column;
+
+
+/* ==================== Recipe image ==================== */
+#recipe-container .recipe-image {
+  height: auto;
+  width: 100%;
+  border-radius: 4px;
 }
 
-.missing{
-    color: red;
+
+
+/* ==================== Recipe ingredients ==================== */
+#ingredients-container {
+  margin-top: 20px;
 }
 
-m-10{
-    margin: 10;
+#ingredients-container ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 8px 0;
 }
+
+#ingredients-container li {
+  width: fit-content;
+  font-size: 13px;
+  font-weight: 300;
+  color: white;
+  background: rgb(116, 166, 127);
+  border-radius: 20px;
+  padding: 4px 8px;
+  margin: 4px 0;
+}
+
+
+
+/* ==================== Recipe meta ==================== */
+#recipe-container #meta-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#recipe-container #meta-container .title-span {
+  font-size: 15px;
+}
+
+#recipe-container #meta-container .result-span {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgb(90, 131, 99);
+}
+
+#recipe-container #meta-container #diet-span {
+  text-transform: capitalize;
+}
+
+#recipe-container #meta-container #red-span {
+  color: brown;
+}
+
+
+
+/* ==================== Recipe description ==================== */
+#recipe-container #description-container {
+  margin-top: 32px;
+}
+
+#recipe-container #description-container p {
+  font-size: 15px;
+  margin: 8px 0;
+}
+
+
+
+/* ==================== Recipe instructions ==================== */
+#instructions-container {
+  margin-top: 32px;
+}
+
+#instructions-container ol {
+  margin: 0;
+}
+
+#instructions-container li {
+  font-size: 15px;
+  margin: 12px 0;
+}
+
+
+
+/* ==================== Current user's rating ==================== */
+#user-rating-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#user-rating-container  p {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+
+
+/* ==================== Comments section ==================== */
+#comments-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+

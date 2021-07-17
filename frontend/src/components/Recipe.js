@@ -1,270 +1,265 @@
 import { Component } from 'react'
-import StarsRatings from 'react-star-ratings'
-import SaveButton from './SaveButton'
-import { getCookie } from '../function-assets/helpers'
 import '../css/recipe.css'
+
+// Third party imports
+import StarsRatings from 'react-star-ratings'
+
+// Component imports
 import Comments from './Comments'
 
+// Helper functions
+import { getCookie } from '../function-assets/helpers'
+
 class Recipe extends Component {
+  initialState = {
+    averageRating: undefined,
+    description: '',
+    diets: [],
+    ingredients: [],
+    instructions: [],
+    isCurrentlySaved: false,
+    preperationTime: '',
+    pricePerServing: '',
+    personalRating: undefined,
+    recipeId: this.props.location.state.id,
+    serving: '',
+    title: this.props.location.state.title
+  }
 
-    initialState = {
-        recipeId: this.props.location.state.id,
-        isCurrentlySaved: false,
-        title: this.props.location.state.title,
-        description: '',
-        instructions: [],
-        ingredients: [],
-        averageRating: undefined,
-        personalRating: undefined,
-        preperationTime: '',
-        serving: '',
-        pricePerServing: '',
-        diets: [],
+  state = this.initialState
+
+  async componentDidMount() {
+    await this.getAverageStarRatings()
+    await this.getPersonalStarRating()
+    await this.checkSavedRecipe()
+    await this.fetchRecipeInfomation()
+    await this.summariseRecipe() // May not need this as it is passed from recipeCard.sj
+    await this.fetchRecipeIntructions() // May not need this as this is also passed from recipeCard
+  }
+
+  // Get average rating for current recipe
+  async getAverageStarRatings() {
+    const { recipeId } = this.state
+    const fetchAverageRating = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/${recipeId}`)
+    const averageRating = await fetchAverageRating.json()
+    this.setState({ averageRating: parseFloat(averageRating.value) })
+  }
+
+  // Get user's specific rating for this recipe (if exists)
+  async getPersonalStarRating() {
+    const { recipeId } = this.state
+    const currentSession = getCookie('sessionId') ?? null
+    if (currentSession) {
+      const apiResponse= await fetch(`${process.env.REACT_APP_URL}/recipe/personalrating/${recipeId}/${currentSession}`)
+      const { response, recipe } = await apiResponse.json()
+      
+      if (response === 'success') this.setState({ personalRating: recipe.rating })
+      else if (response !== 'unauthorized') window.location.assign('/error')
     }
+  }
 
-    state = this.initialState
+  // Has the user saved the recipe
+  async checkSavedRecipe(){
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/myrecipes/id-only`, {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    const { response, savedRecipeIds } = await apiResponse.json()
 
-    async fetchRecipeInfomation() {
+    if (response === 'success') this.setState({ isCurrentlySaved: savedRecipeIds.includes(this.state.recipeId)})
+    else if (response !== 'unauthorized') window.location.assign('/error')
+  }
 
-        const { recipeId } = this.state
+  // Recipe title, image, ingredients, price, prep time, serving size and diet
+  async fetchRecipeInfomation() {
+    const { recipeId } = this.state
+    const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/information?includeNutrition=false&apiKey=${process.env.REACT_APP_API_KEY}`
+    const spoonacularRes = await fetch(spoonacularEndpoint)
+    const spoonacularData = await spoonacularRes.json()
+    const { extendedIngredients } = spoonacularData
 
-        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/information?includeNutrition=false&apiKey=${process.env.REACT_APP_API_KEY}`
+    this.setState({
+      diets: spoonacularData.diets,
+      title: spoonacularData.title, 
+      imageSrc: spoonacularData.image, 
+      ingredients: extendedIngredients,
+      preperationTime: spoonacularData.readyInMinutes,
+      pricePerServing: spoonacularData.pricePerServing,
+      serving: spoonacularData.serving
+    })
+  }
 
-        const spoonacularRes = await fetch(spoonacularEndpoint)
+  // Recipe description
+  async summariseRecipe() {
+    const { recipeId } = this.state
+    const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/summary?&apiKey=${process.env.REACT_APP_API_KEY}`
+    const summaryRes = await fetch(spoonacularEndpoint)
+    const { summary } = await summaryRes.json()
+    this.setState({ description: this.removeHtmlTagsFromString(summary) })
+  }
 
-        const spoonacularData = await spoonacularRes.json()
+  // Recipe instructions
+  async fetchRecipeIntructions() {
+    const { recipeId } = this.state
+    const instructionRes = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?&apiKey=${process.env.REACT_APP_API_KEY}`)
+    const [{ steps }] = await instructionRes.json()
+    this.setState({ instructions: steps })
+  }
 
-        const { extendedIngredients } = spoonacularData
+  // Rating handler
+  handleChangeRating = async (newRating) => this.setState({ personalRating: newRating }, () => { this.postStarRating() })
+  async postStarRating() {
+    const { recipeId, personalRating } = this.state
+    const postRatingRes = await fetch(`${process.env.REACT_APP_URL}/recipe/rating`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        rating: personalRating,
+        recipeId: recipeId
+      })
+    })
+    const recipe = await postRatingRes.json()
 
-        this.setState({ 
-            title: spoonacularData.title, 
-            imageSrc: spoonacularData.image, 
-            ingredients: extendedIngredients,
-            pricePerServing: spoonacularData.pricePerServing,
-            preperationTime: spoonacularData.readyInMinutes,
-            serving: spoonacularData.serving,
-            diets: spoonacularData.diets,
-         })
+    await this.getAverageStarRatings()
+    
+    this.setState({ personalRating: recipe.rating })
+  }
 
-    }
+  // Save recipe handler
+  async handleSaveRecipe() {
+    const { isCurrentlySaved, recipeId } = this.state
+    const newSaveState = await this.props.onSaveRecipe(recipeId, !isCurrentlySaved)
+    this.setState({ isCurrentlySaved: newSaveState })
+  }
 
-    async summariseRecipe() {
+  // For each ingredient, render an <li>
+  renderIngredients = () => this.state.ingredients.map((ingredient, i) => <li key={i} className="ingredient-item">{ ingredient.name }</li>)
+  
+  // For each instruction, render an <li>
+  renderInstructions = (instructionsArr) => instructionsArr.map((instruction, i) => <li key={i} className="instruction-item">{ instruction.step }</li>)
+  
+  // Use regex to remove HTML tags from a string
+  removeHtmlTagsFromString = (string) => string === '' ? 'No description' : string.replace(/(<([^>]+)>)/gi, "")
 
-        const { recipeId } = this.state
+  render() {
+    const { averageRating, description, diets, instructions, isCurrentlySaved, personalRating, preperationTime, pricePerServing, recipeId, serving, title } = this.state
+    const { image, numIngredients, numMissingIngredients } = this.props.location.state
+    const { userAuthenticated } = this.props
 
-        const spoonacularEndpoint = `https://api.spoonacular.com/recipes/${recipeId}/summary?&apiKey=${process.env.REACT_APP_API_KEY}`
+    return (
+      <div id="recipe-container">
+        {/* Title */}
+        <h1>{ title }</h1>
 
-        const summaryRes = await fetch(spoonacularEndpoint)
+        {/* Header i.e. Recipe's average rating */}
+        <div id="header-container">
+          <div id="ratings-container">
+            <span id="star-icon" class="fa fa-star"></span>
+            <span className="rating-span">{ averageRating === 0 ? "No ratings" : parseFloat(averageRating).toFixed(1) }</span>
+          </div>
 
-        const { summary } = await summaryRes.json()
+          {/* Save recipe button */}
+          <div id="save-container">
+            <button id="save-recipe-button" onClick={ () => this.handleSaveRecipe() }>
+              <i className={ isCurrentlySaved ? "fas fa-heart" : "far fa-heart" }></i>
+              <span> { isCurrentlySaved ? "Saved" : "Save recipe" }</span>
+            </button>
+          </div>
+        </div>
 
-        this.setState({ description: this.removeHtmlTagsFromString(summary) })
+        <div id="recipe-body-container">
+          <div id="img-ingredients-container">
+            {/* Recipe image */}
+            <img src={ image } className="recipe-image" alt="food" />
 
-    }
+            {/* Ingredients list */}
+            <div id="ingredients-container">
+              <span className="recipe-subheading">Ingredients</span>
+              <ul>{ this.renderIngredients() }</ul>
+            </div>
+          </div>
 
-    async fetchRecipeIntructions() {
+          <div id="meta-desc-instructions-container">
+            {/* Recipe meta i.e. prep time, servings, etc. */}
+            <div id="meta-container">
+              { serving && 
+                <span>
+                  <span className="title-span">Serves: </span>
+                  <span className="result-span">{ serving } people</span>
+                </span> 
+              }
 
-        const { recipeId } = this.state
+              { preperationTime &&
+                <span>
+                  <span className="title-span">Preparation time: </span>
+                  <span className="result-span">{ preperationTime } min</span>
+                </span>
+              }
 
-        const instructionRes = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?&apiKey=${process.env.REACT_APP_API_KEY}`)
+              { pricePerServing && 
+                <span>
+                  <span className="title-span">Price per serving: </span>
+                  <span className="result-span">${ (pricePerServing / 100).toFixed(2) } per person</span>
+                </span>
+              }
 
-        const [{ steps }] = await instructionRes.json()
+              { diets.length !== 0 && 
+                <span>
+                  <span className="title-span">Diet: </span>
+                  <span className="result-span" id="diet-span">{ diets.join(', ') }</span>
+                </span>
+              }
 
-        this.setState({
-            instructions: steps
-        })
-    }
+              { numIngredients &&
+                <span>
+                  <span className="title-span">Number of ingredients: </span>
+                  <span className="result-span">{ numIngredients }</span>
+                </span>
+              }
+              
+              { numMissingIngredients && 
+                <span>
+                  <span className="title-span">Number of missing ingredients: </span>
+                  <span className="result-span" id="red-span">{ numMissingIngredients }</span>
+                </span>
+              }
+            </div>
+            
+            {/* Recipe description */}
+            <div id="description-container">
+              <span className="recipe-subheading">Description</span>
+              <p>{ description }</p>
+            </div>
 
-    async getAverageStarRatings() {
+            {/* Instructions list */}
+            <div id="instructions-container">
+              <span className="recipe-subheading">Instructions</span>
+              { instructions.length === 0 ? <p>No intructions available</p> : <ol>{ this.renderInstructions(instructions) }</ol> }
+            </div>
+          </div>
+        </div>
 
-        const { recipeId } = this.state
+        {/* Current user's rating */}
+        <div id="user-rating-container">
+          { userAuthenticated && personalRating === 0 && <p>{`Leave a rating below!`}</p> }
+          { userAuthenticated && personalRating !== 0 && <p>{`Your rating`}</p> }
+          { userAuthenticated && 
+            <StarsRatings
+              id="star-rating"
+              rating={ personalRating }
+              starHoverColor="rgba(248,176,82,255)"
+              starRatedColor="rgba(248,176,82,255)"
+              starDimension="25px"
+              starSpacing="5px"
+              changeRating={(newRating) => { this.handleChangeRating(newRating) }} /> }
+        </div>
 
-        const fetchAverageRating = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/${recipeId}`)
-
-        const averageRating = await fetchAverageRating.json()
-
-        this.setState({ averageRating: parseFloat(averageRating.value) })
-    }
-
-    async getPersonalStarRating() {
-        const { recipeId } = this.state
-        const currentSession = getCookie('sessionId') ?? null
-        if (currentSession) {
-            const apiResponse= await fetch(`${process.env.REACT_APP_URL}/recipe/personalrating/${recipeId}/${currentSession}`)
-            const { response, recipe } = await apiResponse.json()
-            if (response === 'success') {
-                this.setState({ personalRating: recipe.rating })
-            } else if (response === 'unauthorized') {
-                //do nothing
-            } else {
-                window.location.replace('/error')
-            }
-        }
-    }
-
-
-    async postStarRating() {
-
-        const { recipeId, personalRating } = this.state
-
-        const postRatingRes = await fetch(`${process.env.REACT_APP_URL}/recipe/rating`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                rating: personalRating,
-                recipeId: recipeId
-            })
-        })
-
-        const recipe = await postRatingRes.json()
-
-        await this.getAverageStarRatings()
-
-        this.setState({ personalRating: recipe.rating })
-    }
-
-    async handleChangeRating(newRating) {
-        this.setState({
-            personalRating: newRating
-        }, () => {
-            this.postStarRating()
-        })
-    }
-
-    renderIngredients() {
-        return this.state.ingredients.map((ingredient, i) => <li key={i} className="recipe-list-items">{ingredient.name}</li>)
-    }
-
-
-    renderInstructions(instructionsArr) {
-        return instructionsArr.map((instruction, i) => <li key={i} className="recipe-list-items">{instruction.step}</li>)
-    }
-
-    removeHtmlTagsFromString(string) {
-        return string === '' ? 'No description' : string.replace(/(<([^>]+)>)/gi, "")
-    }
-
-    async checkSavedRecipe(){
-        const apiResponse = await fetch(`${process.env.REACT_APP_URL}/myrecipes/id-only`, {
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-          })
-            const { response, savedRecipeIds } = await apiResponse.json()
-            if (response === 'success') { 
-              this.setState({ isCurrentlySaved: savedRecipeIds.includes(this.state.recipeId)})
-            } else if (response === 'unauthorized') {
-              //do nothing
-            } else {
-              window.location.replace('/error')
-            }
-
-    }
-
-
-    async componentDidMount() {
-      await this.getAverageStarRatings()
-      await this.getPersonalStarRating()
-      await this.checkSavedRecipe()
-      await this.fetchRecipeInfomation()
-      await this.summariseRecipe() //! May not need this as it is passed from recipeCard.sj
-      await this.fetchRecipeIntructions() //! May not need this as this is also passed from recipeCard
-    }
-
-
-    async handleSaveRecipe() {
-        const { isCurrentlySaved, recipeId } = this.state
-        const newSaveState = await this.props.onSaveRecipe(recipeId, !isCurrentlySaved)
-        this.setState({ isCurrentlySaved: newSaveState })
-    }
-
-
-    render() {
-
-        const { title, description, instructions, personalRating, averageRating, recipeId, preperationTime, pricePerServing, diets, serving } = this.state
-
-        const { image, numIngredients, numMissingIngredients } = this.props.location.state
-
-        const { userAuthenticated } = this.props
-
-        return (
-            <div>
-                <div className="recipe-page-root">
-                    <section className="recipe-header-container">
-                        <h1>{title}</h1>
-                        <div id="average-rating">
-                            <div className="rating-fav-container flex row">
-                                <StarsRatings
-                                    className="star-rating"
-                                    rating={averageRating}
-                                    starRatedColor="gold"
-                                    starDimension="25px"
-                                    starSpacing="5px"
-                                    />
-                                    <span>(Average Rating)</span>
-                            </div>
-                            {userAuthenticated && ( 
-                            <div className="favourite-box"> 
-                                    <p>Save Recipe</p>
-                                    <SaveButton id="recipe-favourite" onSave={() => this.handleSaveRecipe()} isCurrentlySaved={this.state.isCurrentlySaved} size={30} />    
-                            </div>
-                            )}    
-                        </div>
-                    </section>
-                        {/* Main section of page */}
-                    <div className="recipe-page-body flex row">
-                        {/* Ingredients and Images */}
-                        <section className="image-instruction-column flex column">
-                            <img src={image} className="recipe-page-image" alt="food" />
-                            <span className="recipe-subheading">Ingredients</span>
-                            <ul>
-                                {this.renderIngredients()}
-                            </ul>
-                        </section>
-                        {/* Preptime and instructions */}
-                        <section className="info-desc-instruct-column flex column">
-                            <article className="key-info flex column">
-                                { preperationTime && <span>Preperation time: {preperationTime} minutes</span> }
-                                { pricePerServing && <span>Price Per Serving: $ {(pricePerServing / 100).toFixed(2)} per person</span> }
-                                { serving && <span>Serving: {preperationTime} people </span> }
-                                { diets.length !== 0 && <span>Diets: { diets.join(', ') }</span> }
-                                { !Number.isNaN(numIngredients) && <span>Number of Ingredients: {numIngredients}</span> }
-                                { numMissingIngredients && <span className="missing">Number of Missing Ingredients: {numMissingIngredients}</span>}    
-                                <span className="recipe-subheading">Description</span>
-                                <p className='recipe-description'>{description}</p>
-                            </article>
-                            <article className="instructions">
-                                <span className="recipe-subheading">Instructions</span>
-                                { 
-                                instructions.length === 0 ? <p>No intructions</p> :
-                                <ol>
-                                    {this.renderInstructions(instructions)}
-                                </ol>
-                                }
-                            </article>
-                        </section>
-                    </div>
-                    <section className="personal-rating">
-                        {userAuthenticated && <StarsRatings
-                            className="star-rating"
-                            rating={personalRating}
-                            starRatedColor="gold"
-                            starDimension="25px"
-                            starSpacing="5px"
-                            changeRating={(newRating) => { this.handleChangeRating(newRating) }} />
-                        }
-                        {userAuthenticated && personalRating !== 0 && <span>{`Your personal rating is ${personalRating}`}</span>}
-                        {userAuthenticated && personalRating === 0 && <span>{`Enjoyed? Rate this meal`}</span>}
-                    </section>
-                </div>
-                    <section>
-                        <Comments userAuthenticated={userAuthenticated} recipeId={recipeId} />
-                    </section>
-                </div>
-
-                                 
-        )
-    }
+        {/* Comments section */}
+        <Comments userAuthenticated={ userAuthenticated } recipeId={ recipeId }/>
+      </div>
+    )
+  }
 }
 
 export default Recipe
