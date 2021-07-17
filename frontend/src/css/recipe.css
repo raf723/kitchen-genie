@@ -50,7 +50,10 @@
 
 .favourite-box p {
     margin: 0;
+}
 
+.star-rating{
+    padding-top: 15px;
 }
 
 .favourite-box{
@@ -125,6 +128,8 @@ ul.ingredients-list{
 
 .personal-rating{
     width: 100%;
+    justify-content: flex-end;
+    align-content: center;
 }
 
 .bottom-rating {

@@ -129,14 +129,15 @@ class Recipe extends Component {
 
         await this.getAverageStarRatings()
 
-        this.setState({ personalRating: recipe.rating, totalRatings: recipe.total_ratings })
+        this.setState({ personalRating: recipe.rating})
     }
 
     async handleChangeRating(newRating) {
         this.setState({
             personalRating: newRating
         }, () => {
-            this.postStarRating()
+             this.postStarRating()
+      
         })
     }
 
@@ -211,7 +212,7 @@ class Recipe extends Component {
                                     starDimension="24px"
                                     starSpacing="5px"
                                     />
-                                    <span className="recipe-subheading">{totalRatings > 0 ? `Average Rating - ${averageRating} out of 5 (${totalRatings} ratings)` : `No ratings yet`}</span>
+                                    <span className="recipe-subheading">{averageRating > 0 ? `Average Rating - ${averageRating} out of 5 (${totalRatings} ratings)` : `No ratings yet`}</span>
                             </div>
                             {userAuthenticated && ( 
                             <div className="favourite-box flex row" > 
@@ -239,7 +240,7 @@ class Recipe extends Component {
                                 { serving && <span>Serving - <span className="important-info">{preperationTime} people</span> </span> }
                                 { diets.length !== 0 && <span>Diets - <span className="important-info">{ diets.join(', ') }</span></span> }
                                 { numIngredients && <span>Number of Ingredients - <span className="important-info">{numIngredients}</span></span> }
-                                { numMissingIngredients && <span className="missing">Number of Missing Ingredients - {numMissingIngredients}</span>}    
+                                { numMissingIngredients && <span>Number of Missing Ingredients - <span className="missing important-info">{numMissingIngredients}</span></span>}    
                                 <span className="recipe-subheading">Description</span>
                                 {<p className='recipe-description'>{description}</p>}
                             </article>
@@ -254,7 +255,7 @@ class Recipe extends Component {
                             </article>
                         </section>
                     </div>
-                    <section className="personal-rating">
+                    <section className="personal-rating flex row">
                         {userAuthenticated && personalRating !== 0 && <span className="bottom-rating recipe-subheading">Your personal rating is <span className="important-info">{`${personalRating}`}</span></span>}
                         {userAuthenticated && personalRating === 0 && <span className="bottom-rating recipe-subheading">{`Enjoyed? Rate this meal`}</span>}
                         {userAuthenticated && <StarsRatings
