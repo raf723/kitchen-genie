@@ -71,7 +71,9 @@ class Recipe extends Component {
 
         const [ instructions ] = await instructionRes.json()
 
-        //!Check to make sure the returned object is not empty. 
+        if(instructions.steps.length === 0 ){
+            instructions.steps.push('No instructions available.')
+        }
 
         this.setState({
             instructions: instructions.steps
@@ -85,8 +87,6 @@ class Recipe extends Component {
         const fetchAverageRating = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/${recipeId}`)
 
         const recipe= await fetchAverageRating.json()
-
-        console.log(recipe)
 
         this.setState({ averageRating: parseFloat(recipe.value), totalRatings: recipe.total_ratings})
     }
@@ -171,9 +171,9 @@ class Recipe extends Component {
       await this.getAverageStarRatings()
       await this.getPersonalStarRating()
       await this.checkSavedRecipe()
-      await this.fetchRecipeInfomation()
-      await this.summariseRecipe() //! May not need this as it is passed from recipeCard.sj
-      await this.fetchRecipeIntructions() //! May not need this as this is also passed from recipeCard
+    //   await this.fetchRecipeInfomation()
+    //   await this.summariseRecipe()
+    //   await this.fetchRecipeIntructions() 
     }
 
 
@@ -204,9 +204,8 @@ class Recipe extends Component {
                                     rating={averageRating}
                                     starHoverColor="rgb(116, 166, 127, 1)"
                                     starRatedColor="rgb(253, 193, 76, 1)"
-                                    starDimension="50px"
-                                    svgIconPath="M0,20a10,10 0 1,0 20,0a10,10 0 1,0 -20,0"
-                                    starSpacing="0px"
+                                    starDimension="24px"
+                                    starSpacing="5px"
                                     />
                                     <span className="recipe-subheading">{totalRatings > 0 ? `Average Rating - ${averageRating} out of 5 (${totalRatings} ratings)` : `No ratings yet`}</span>
                             </div>
@@ -231,12 +230,12 @@ class Recipe extends Component {
                         {/* Preptime and instructions */}
                         <section className="info-desc-instruct-column flex column">
                             <article className="key-info flex column">
-                                { preperationTime && <span>Preperation time: {preperationTime} minutes</span> }
-                                { pricePerServing && <span>Price Per Serving: $ {(pricePerServing / 100).toFixed(2)} per person</span> }
-                                { serving && <span>Serving: {preperationTime} people </span> }
-                                { diets.length !== 0 && <span>Diets: { diets.join(', ') }</span> }
-                                { !Number.isNaN(numIngredients) && <span>Number of Ingredients: {numIngredients}</span> }
-                                { numMissingIngredients && <span className="missing">Number of Missing Ingredients: {numMissingIngredients}</span>}    
+                                { preperationTime && <span>Preperation time - {preperationTime} minutes</span> }
+                                { pricePerServing && <span>Price Per Serving - £ {((pricePerServing / 100)*0.8).toFixed(2)} per person</span> }
+                                { serving && <span>Serving - {preperationTime} people </span> }
+                                { diets.length !== 0 && <span>Diets - { diets.join(', ') }</span> }
+                                { !Number.isNaN(numIngredients) && <span>Number of Ingredients - {numIngredients}</span> }
+                                { numMissingIngredients && <span className="missing">Number of Missing Ingredients - {numMissingIngredients}</span>}    
                                 <span className="recipe-subheading">Description</span>
                                 {<p className='recipe-description'>{description}</p>}
                             </article>
@@ -252,19 +251,19 @@ class Recipe extends Component {
                         </section>
                     </div>
                     <section className="personal-rating">
+                        {userAuthenticated && personalRating !== 0 && <span className="bottom-rating recipe-subheading">Your personal rating is <span className="important-info">{`${personalRating}`}</span></span>}
+                        {userAuthenticated && personalRating === 0 && <span className="bottom-rating recipe-subheading">{`Enjoyed? Rate this meal`}</span>}
                         {userAuthenticated && <StarsRatings
                             className="star-rating"
                             changeRating={(newRating) => { this.handleChangeRating(newRating) }}
                             rating={personalRating}
                             starHoverColor="rgb(116, 166, 127, 1)"
                             starRatedColor="rgb(253, 193, 76, 1)"
-                            starDimension="50px"
-                            svgIconPath="M0,20a10,10 0 1,0 20,0a10,10 0 1,0 -20,0"
-                            starSpacing="0px"
+                            starDimension="24px"
+                            starSpacing="5px"
                             />
                         }
-                        {userAuthenticated && personalRating !== 0 && <span>{`Your personal rating is ${personalRating}`}</span>}
-                        {userAuthenticated && personalRating === 0 && <span>{`Enjoyed? Rate this meal`}</span>}
+
                     </section>
                 </div>
                     <section>
