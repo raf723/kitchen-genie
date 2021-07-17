@@ -10,7 +10,10 @@ class Recipe extends Component {
     initialState = {
         recipeId: this.props.location.state.id,
         isCurrentlySaved: false,
+        image: this.props.location.state.image ? this.props.location.state.image : '',
         title: this.props.location.state.title,
+        numIngredients: this.props.location.state.numIngredients ? this.props.location.state.numIngredients : '',
+        numMissingIngredients: this.props.location.state.numMissingIngredients ? this.props.location.state.numMissingIngredients : '',
         description: '',
         instructions: [],
         ingredients: [],
@@ -189,9 +192,7 @@ class Recipe extends Component {
 
     render() {
 
-        const { title, description, instructions, personalRating, averageRating, recipeId, preperationTime, pricePerServing, diets, serving, totalRatings } = this.state
-
-        const { image, numIngredients, numMissingIngredients } = this.props.location.state
+        const { title, description, instructions, personalRating, averageRating, recipeId, preperationTime, pricePerServing, diets, serving, totalRatings, numIngredients, numMissingIngredients, image } = this.state
 
         const { userAuthenticated } = this.props
 
@@ -213,7 +214,7 @@ class Recipe extends Component {
                                     <span className="recipe-subheading">{totalRatings > 0 ? `Average Rating - ${averageRating} out of 5 (${totalRatings} ratings)` : `No ratings yet`}</span>
                             </div>
                             {userAuthenticated && ( 
-                            <div className="favourite-box"> 
+                            <div className="favourite-box flex row" > 
                                     <p>Save Recipe</p>
                                     <SaveButton id="recipe-favourite" onSave={() => this.handleSaveRecipe()} isCurrentlySaved={this.state.isCurrentlySaved} size={30} />    
                             </div>
