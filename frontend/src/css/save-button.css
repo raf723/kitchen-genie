@@ -3,7 +3,9 @@
     cursor: pointer;
     top: 99%;
     left: 80%;
-    filter: brightness(0.32) sepia(1) hue-rotate(-70deg) saturate(5) drop-shadow(1.95px 1.95px 2.6px);
+    fill: rgb(116,166,127);
+    stroke: rgb(71, 116, 81);
+    stroke-width: 1px;
 }
 
 .inactive-save-button {
@@ -11,12 +13,17 @@
     cursor: pointer;
     top: 99%;
     left: 80%;
-    filter: brightness(0.17) sepia(0.7) hue-rotate(-70deg) saturate(5) drop-shadow(1.95px 1.95px 2.6px);
+    fill: rgba(0, 0, 0, 0.2);
+    stroke: rgba(0, 0, 0, 0.5);
+    stroke-width: 1px;
 }
 
 .active-save-button:hover, .inactive-save-button:hover {
     transform: scale(1);
 	animation: beat 2s infinite;
+    transition: 0.3s;
+    fill: rgb(116,166,127);
+    stroke: rgb(71, 116, 81);
 }
 
 @keyframes beat {
