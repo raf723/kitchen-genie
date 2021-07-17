@@ -7,7 +7,7 @@ import '../css/app.css'
 import { setCookie, getCookie } from '../function-assets/helpers'
 
 // Routing imports
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
 // Component imports
 import Navbar from './Navbar'
@@ -50,7 +50,6 @@ class App extends React.Component {
     
     if (response) {
       this.setState({ loggedInUser: currentUser })
-      window.location.replace('/')
     } else {
       alert("Either your email or password is incorrect!") 
     }
@@ -58,7 +57,7 @@ class App extends React.Component {
   
   handleLogout() {
     setCookie('sessionId', null, 0)
-    window.location.replace('/')
+    window.location.assign('/')
   }
 
   handleSaveRecipe = async (recipeId, toSave=true) => {
@@ -70,14 +69,8 @@ class App extends React.Component {
 
     const { response } = await apiResponse.json()
 
-    if (response === 'success') {
-      return toSave
-    } else if (response === 'bad credential') {
-        alert("Unauthorized access!\nYou must log in to access saved recipes!")
-        window.location.replace('/login')
-    } else {
-        window.location.replace('/error')
-    }
+    if (response === 'success') return toSave
+    else if (window.confirm("Please log in or create an accout to save recipes!")) window.location.assign('/login')
   }
   
   
@@ -101,7 +94,7 @@ class App extends React.Component {
             </Route>
 
             <Route path='/login'>
-              <Login onLogin={ this.loginHandler }/>
+              { loggedInUser ? <Redirect to="/" /> : <Login onLogin={ this.loginHandler }/> }
             </Route>
 
             <Route path='/about'>
@@ -123,7 +116,9 @@ class App extends React.Component {
               <Error />
             </Route>
 
-            <Route path='/recipe' render={(props) => <Recipe {...props} userAuthenticated={this.state.loggedInUser} onSaveRecipe={this.handleSaveRecipe}/> }>
+            <Route
+              path='/recipe'
+              render={ (props) => <Recipe { ...props } userAuthenticated={ this.state.loggedInUser } onSaveRecipe={ this.handleSaveRecipe }/> }>
             </Route>
           </Switch>
         </div>

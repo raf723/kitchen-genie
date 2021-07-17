@@ -53,12 +53,11 @@
 #results-container #grid-container {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 12px;
 }
 
 #results-container .card-container {
   width: 22%;
-  margin: 0 12px;
+  margin: 12px;
 }
 
 #results-container #no-results-span {

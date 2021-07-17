@@ -21,7 +21,7 @@ const teamMembers = [
     desc: 'Chemical Engineer turned Software! Coding or non-coding, I love making things.' },
   { name: 'Rafiul Ansari',
     image: rafiul,
-    desc: 'Chemical Engineer turned Software! Coding or non-coding, I just love making things.' },
+    desc: 'Chemical Engineer turned Software! Coding or non-coding, he just loves making things.' },
   { name: 'Tawab Rahmani',
     image: tawab,
     desc: 'Chemical Engineer turned Software! Coding or non-coding, I love making things.' }

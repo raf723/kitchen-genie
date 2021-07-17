@@ -23,9 +23,9 @@ class InputComments extends React.Component {
       this.setState(this.initialState)
     } else if (response === 'unauthorized') {
       alert('You must be logged in to comment!')
-      window.location.replace('/login')
+      window.location.assign('/login')
     } else {
-      window.location.replace('/error')
+      window.location.assign('/error')
     }
   }
   
@@ -34,45 +34,37 @@ class InputComments extends React.Component {
     element.target.style.height = (element.target.scrollHeight)+"px";
   }
 
-    renderCommentBox(userAuthenticated){
-        const { comment } = this.state
+  renderCommentBox(userAuthenticated){
+    const { comment } = this.state
 
-
-
-        if (!!userAuthenticated) {
-            return (
-                <div id="comment-input-container">
-                    <div className="comment-input-container">
-                        <h3>Hi, <span className="user-prompt">{userAuthenticated.username}!</span> Leave a comment below!</h3>
-                        <form onSubmit={(e) => this.handleSubmit(e)}>
-                            <div className="comment-and-buttons">
-                                <textarea name="comment" placeholder="Please enter a comment..." value={comment} className="comment-box-valid" onInput={this.autoGrow} onChange={(e) => this.setState({comment: e.target.value})}/>
-                                <div>
-                                    <button className="cancel-button" type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })}>Cancel</button>
-                                    <button className="post-button" type="submit" name="post" value="Post">Post</button>
-                                </div>                        
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )
-        } else {
-            return (
-                <div id="comment-input-container">
-                    <div className="comment-input-container">
-                        <h3>Please leave a comment below!</h3>
-                        <div className="comment-and-buttons">
-                            <textarea className="comment-box-invalid" value={comment} name="comment" placeholder="You must be logged in to leave a comment." disabled/>
-                            <div>
-                                <button className="sign-up-button" type="button" name="sign-up-butto" onClick={() =>  window.location.href='/register'}>Sign Up</button>
-                                <button className="log-in-button" type="button" name="log-in-button" onClick={() =>  window.location.href='/login'}>Log In</button>
-                            </div>                        
-                        </div>
-                    </div>
-                </div>
-            )
-        }
+    if (!!userAuthenticated) {
+      return (
+        <div id="comment-input-container">
+          <h3>Hi, <span id="username">{userAuthenticated.username}!</span> Leave a comment below!</h3>
+          <form onSubmit={(e) => this.handleSubmit(e)}>
+            <textarea name="comment" placeholder="Please enter a comment..." value={comment} className="comment-box-valid" onInput={this.autoGrow} onChange={(e) => this.setState({comment: e.target.value})}/>
+            <div id="buttons-container">
+              <button className="cancel-button" type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })}>Cancel</button>
+              <button className="post-button" type="submit" name="post" value="Post">Post</button>
+            </div>  
+          </form>
+        </div>
+      )
+    } else {
+      return (
+        <div id="comment-input-container">
+          <h3>Please leave a comment below!</h3>
+          <div className="comment-and-buttons">
+            <textarea className="comment-box-invalid" value={comment} name="comment" placeholder="You must be logged in to leave a comment." disabled/>
+            <div id="buttons-container">
+              <button className="sign-up-button" type="button" name="sign-up-button" onClick={() =>  window.location.href='/register'}>Sign Up</button>
+              <button className="log-in-button" type="button" name="log-in-button" onClick={() =>  window.location.href='/login'}>Log In</button>
+            </div>                        
+          </div>
+        </div>
+      )
     }
+  }
 
   render() {
     return this.renderCommentBox(this.props.userAuthenticated)

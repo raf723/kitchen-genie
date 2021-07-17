@@ -46,7 +46,8 @@ app
       const user = await getUser({ email })
       const sessionId = v4.generate()
       const sessionLifespan = remember ? '7 days' : '1 day'
-      await client.queryObject(`INSERT INTO sessions (uuid, user_id, created_at, expiry_date) VALUES ($1, $2, NOW(), NOW() + interval '${sessionLifespan}');`, sessionId, user.id)
+      await client.queryObject(`INSERT INTO sessions (uuid, user_id, created_at, expiry_date)
+        VALUES ($1, $2, NOW(), NOW() + interval '${sessionLifespan}');`, sessionId, user.id)
       server.setCookie({
         name: "sessionId",
         value: sessionId,
@@ -62,7 +63,7 @@ app
 
 
 
-  //--------------------- Sessions handler -----------------------------------// To revive sessions
+  //--------------------- Sessions handler -----------------------------------//
   .get('/sessions/:sessionId', async (server) => {
     const { sessionId } = server.params
     const currentUser = await getCurrentUser(sessionId)
@@ -76,20 +77,19 @@ app
   .post('/register', async (server) => {
     let { email, password, username } = await server.body
 
-    if(verify.isEmailValid(email) && verify.isPasswordValid(password) && verify.isUsernameValid(username, true)) {
+    if (verify.isEmailValid(email) && verify.isPasswordValid(password) && verify.isUsernameValid(username, true)) {
         username = username.trim()
         email = email.trim()
+
         if (await getUser({ email })) {
-            // Error: Already a user
-            server.json({ response:`already registered` })
+          server.json({ response:`already registered` }) // User already registered
         } else {
-            // All good
-            await addUser(email, password, username)
-            server.json({ response:`success`})
+          await addUser(email, password, username)
+          server.json({ response:`success`})
         }
+
     } else {
-        // Error: Invalid email, username or password
-        server.json({  response: `bad credentials` })
+        server.json({  response: `bad credentials` }) // Invalid email, username or password
     }
   })
 
@@ -98,7 +98,7 @@ app
   //------------------------- Get username -------------------------//
   .get('/checkname/:username', async (server) => {
     const username = server.params.username.trim()
-    const nameExists = !! (await getUser({ username })) // GetUser retrieves a user given an username, email, or id. If unable to find user with matching credentials, it returns null.
+    const nameExists = !! (await getUser({ username })) // getUser() retrieves a registered user (using username, email, or id), else returns null.
     await server.json({ nameExists: nameExists })
   })
 
@@ -107,26 +107,32 @@ app
   //------------------------- Get email -------------------------//
   .get('/checkemail/:email', async (server) => {
     const email = server.params.email.trim()
+
     if (verify.isEmailValid(email)) {
       const emailExists = !! (await getUser({ email }))
       await server.json({ emailExists: emailExists })
     } else {
       await server.json({emailExists: false})
     }
+
   })
 
 
 
-  //------------------------- Get recipe rating ---------------------//
+  //------------------------- Get single recipe rating ---------------------//
   .get('/recipe/averagerating/:id', async (server) => {
-
     const { id } = server.params
 
-    const averageRatingQuery = `SELECT COUNT(*)::integer AS total_ratings, ROUND(AVG(rating), 2)::float AS value FROM recipe_rating WHERE recipe_id = $1;`
+    // Query for average rating for a recipe
+    const averageRatingQuery = `SELECT COUNT(*)::integer AS total_ratings, ROUND(AVG(rating), 2)::float AS value 
+      FROM recipe_rating
+      WHERE recipe_id = $1;`
 
+    // Get average rating for a particular recipe using recipeID
     const [ averageRating ] = (await client.queryObject(averageRatingQuery, id)).rows
 
-    if(Number.isNaN(Number.parseFloat(averageRating.value))){
+
+    if (Number.isNaN(Number.parseFloat(averageRating.value))){
       //Sets value to zero if no one has voted. 
       averageRating.value = 0
     }
@@ -135,52 +141,55 @@ app
   })
 
 
-  //------------------------- Get multiple ratings ---------------------//
+
+  //------------------------- Get multiple recipe ratings ---------------------//
   .get('/recipe/averagerating/bulk/:recipeIdsString', async (server) => {
-
     const  { recipeIdsString } = await server.params
-    const recipeIds = recipeIdsString.split(',') || ['_'] //make an array from the string of comma-delimited ids (e.g. '11645,78981,3394' --> [11645,78981,3394])
 
-    const queryTemplate = recipeIds.reduce((accumulator, _recipeId, i) =>  accumulator + `$${i + 1}, `, "" ).slice(0, -2) // e.g. [11645,78981,3394] --> "$1, $2, $3"
+    // Make an array from the string of comma-delimited ids (e.g. '11645,78981,3394' --> [11645,78981,3394])
+    const recipeIds = recipeIdsString.split(',') || ['_']
 
-    const averageRatingQuery = `SELECT recipe_id, ROUND(AVG(rating), 2)::float AS value FROM recipe_rating 
+    // e.g. [11645,78981,3394] --> "$1, $2, $3"
+    const queryTemplate = recipeIds.reduce((accumulator, _recipeId, i) =>  accumulator + `$${i + 1}, `, "" ).slice(0, -2)
+
+    // Query for average rating for a recipe
+    const averageRatingQuery = `SELECT recipe_id, ROUND(AVG(rating), 2)::float AS value
+      FROM recipe_rating
       WHERE recipe_id IN (${queryTemplate})
       GROUP BY recipe_id;`
-    
+
+    // Get average rating for multiple recipes (recipeIDs array)
     const averageRatingsArray = (await client.queryObject(averageRatingQuery, ...recipeIds)).rows
+
+    // Make an object with recipe_id as keys and ratings as values for efficency and convenience
     const averageRatings = averageRatingsArray.reduce((accumulator, rating) => { 
       accumulator[rating.recipe_id] = !rating.value ? 0 : Number.parseFloat(rating.value)
-      return accumulator }, {}) //make an object with recipe_id as keys and ratings as values for efficency and convenience
-
+      return accumulator }, {})
+    
     server.json({ response: "success", averageRatings }) 
   })
 
+
+
   //------------------------- Get personal recipe rating ---------------------//
   .get('/recipe/personalrating/:recipeId/:sessionId', async(server) => {
-
     const { sessionId, recipeId } = server.params
-
     const currentUser = await getCurrentUser(sessionId)
 
-    const userRecipeRating = `SELECT rating, recipe_id FROM recipe_rating WHERE recipe_id = $1 AND user_id = $2`
-
+    // Get current user's rating for a particular recipe
+    const userRecipeRating = `SELECT rating, recipe_id
+      FROM recipe_rating
+      WHERE recipe_id = $1
+      AND user_id = $2`
     const [recipe] = (await client.queryObject(userRecipeRating, recipeId, currentUser.id)).rows
 
     if (currentUser) {
-      if(recipe && recipe.rating) {
-        // All good: recipe rated
-        server.json({ response:'success', recipe })
-      } else {
-        // All good: recipe not rated
-        server.json({response:'success', recipe: { rating:  0, recipe_id: recipeId }})
-      }
-    } else {
-      // Bad Credentials
-      await server.json({ response: 'unauthorized', recipe: {} })
-    }
-
+      if (recipe && recipe.rating) server.json({ response:'success', recipe }) // Successful rating
+      else server.json({response:'success', recipe: { rating:  0, recipe_id: recipeId }}) // Unsuccessful rating
+    } else await server.json({ response: 'unauthorized', recipe: {} }) // Bad Credentials
   })
 
+  
 
   //--------------------------- Insert rating ------------------------//
   .post('/recipe/rating', async (server) => {
@@ -192,28 +201,24 @@ app
 
       // Is sequential id numbering a security risk
       const user = await getCurrentUser(server.cookies.sessionId)
+
       // Delete instances with same recipe id and user.id
-      const deleteOldRating = `
-        DELETE FROM recipe_rating
-          WHERE user_id = $1 AND recipe_id = $2;`
+      const deleteOldRating = `DELETE FROM recipe_rating
+        WHERE user_id = $1
+        AND recipe_id = $2;`
+      await client.queryObject(deleteOldRating, user.id, recipeId)
 
-      const insertNewRating = `INSERT INTO recipe_rating 
-          (rating, created_at, updated_at, recipe_id, user_id)
-        VALUES 
-          ($1, NOW(), NOW(), $2, $3)
-          RETURNING rating;`
+      const insertNewRating = `INSERT INTO recipe_rating (rating, created_at, updated_at, recipe_id, user_id)
+        VALUES ($1, NOW(), NOW(), $2, $3)
+        RETURNING rating;`
+      const [ ratingResponse ] = (await client.queryObject(insertNewRating, rating, recipeId, user.id)).rows
 
-        await client.queryObject(deleteOldRating, user.id, recipeId)
-        
-        const [ ratingResponse ] = (await client.queryObject(insertNewRating, rating, recipeId, user.id)).rows
-
-      // All good: return user's rating
+      // Return user's rating
       server.json({ rating: ratingResponse.rating })
     } else {
       // User is unauthorized to rate
       server.json({message: 'You need to be a registered user to rate.'})
     }
-
   })
 
 
@@ -223,28 +228,24 @@ app
     const sessionId = server.cookies.sessionId
     const currentUser = await getCurrentUser(sessionId)
     if (currentUser) {
-      const savedRecipeIds = (await client.queryArray(`
-        SELECT recipe_id FROM saved_recipes 
-        WHERE user_id = $1 AND active = 't'
+      const savedRecipeIds = (await client.queryArray(`SELECT recipe_id FROM saved_recipes
+        WHERE user_id = $1
+        AND active = 't'
         ORDER BY created_at DESC;`, currentUser.id)).rows 
 
-
       if (savedRecipeIds.length !== 0) {
+        // Convert savedRecipeIDs array to usable string to pass as a parameter when making a bulk fetch from Spoonacular
         const recipeString = savedRecipeIds.reduce((accumulator, [recipe], i) => accumulator + recipe + (i === savedRecipeIds.length - 1 ? "" : ","), "") 
-        //****************** INSERT YOUR API KEY ********************************/
         const spoonacularEndpoint = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeString}&apiKey=${Deno.env.get('SPOONACULAR_API_KEY')}`
         const spoonacularApiResponse = await fetch(spoonacularEndpoint)
         const recipes = await spoonacularApiResponse.json()
 
-        if (recipes.status === "failure") {
-          // Problem with spoonacular
-          await server.json({ response: 'service down', recipes: [], loggedInUser: { username: currentUser.username, id: currentUser.id } })
-        } else {
-          // All good: Return a list of saved recipes if any
-          await server.json({ response: 'success', recipes, loggedInUser: { username: currentUser.username, id: currentUser.id } })
-        } 
+        // If failure (spoonacular side) return 'service down', else return a list of saved recipes (if any)
+        if (recipes.status === "failure") await server.json({ response: 'service down', recipes: [], loggedInUser: { username: currentUser.username, id: currentUser.id } })
+        else await server.json({ response: 'success', recipes, loggedInUser: { username: currentUser.username, id: currentUser.id } })
+
       } else {
-        // All good: User did not save any recipe
+        // User did not save any recipe
         await server.json({ response: 'success', recipes: [], loggedInUser: { username: currentUser.username, id: currentUser.id } })
       }
     } else {
@@ -264,19 +265,18 @@ app
     if (currentUser) {
       const { recipeId, action } = server.params
 
-      const toggleActiveSavesFalse = ` 
-        UPDATE saved_recipes 
+      // Set previously favourited recipe to 'f' (soft-deletion)
+      const toggleActiveSavesFalse = `UPDATE saved_recipes 
         SET active = 'f', updated_at = NOW()
-        WHERE user_id = $1 AND recipe_id = $2 AND active = 't';
-      `
-      const createActiveSave = ` 
-        INSERT INTO saved_recipes(user_id, recipe_id, active, created_at, updated_at)
-        VALUES ($1, $2, 't', NOW(), NOW());
-      `
-      await client.queryObject(`${toggleActiveSavesFalse}`, currentUser.id, recipeId) 
-      if (action === 'save') {
-        await client.queryObject(`${ createActiveSave }`, currentUser.id, recipeId)
-      }
+        WHERE user_id = $1
+        AND recipe_id = $2
+        AND active = 't';`
+      await client.queryObject(`${toggleActiveSavesFalse}`, currentUser.id, recipeId)
+
+      // Insert favourited recipe into DB
+      const createActiveSave = `INSERT INTO saved_recipes(user_id, recipe_id, active, created_at, updated_at)
+        VALUES ($1, $2, 't', NOW(), NOW());`
+      if (action === 'save') await client.queryObject(`${ createActiveSave }`, currentUser.id, recipeId)
 
       await server.json({ response: 'success' })
     } else {
@@ -292,15 +292,16 @@ app
     const currentUser = await getCurrentUser(sessionId)
 
     if (currentUser) {
-      const queryResults = (await client.queryArray(`
-        SELECT recipe_id FROM saved_recipes 
-        WHERE user_id = $1 AND active = 't';`, currentUser.id)).rows
+      const queryResults = (await client.queryArray(`SELECT recipe_id
+        FROM saved_recipes 
+        WHERE user_id = $1
+        AND active = 't';`, currentUser.id)).rows
       const savedRecipeIds = queryResults.reduce((accumulator, id) => accumulator.concat(id), []) // Technicality: removes nesting from results
 
       // All good: Return a list of saved recipeIds if any
       await server.json({ response: 'success', savedRecipeIds, loggedInUser: { username: currentUser.username, id: currentUser.id }})
+    
     } else {
-
       // Bad Credentials
       await server.json({ response: 'unauthorized' })
     }
@@ -312,12 +313,11 @@ app
   .get('/comments/:recipeId', async (server) => {
     const { recipeId } = await server.params
 
-    const queryResults = (await client.queryObject(`
-            SELECT comment, recipe_comments.id, recipe_id, user_id, recipe_comments.created_at, username 
-            FROM recipe_comments 
-            JOIN users ON recipe_comments.user_id = users.id
-            WHERE recipe_id = $1
-            ORDER BY created_at DESC;`, recipeId))
+    const queryResults = (await client.queryObject(`SELECT comment, recipe_comments.id, recipe_id, user_id, recipe_comments.created_at, username 
+      FROM recipe_comments 
+      JOIN users ON recipe_comments.user_id = users.id
+      WHERE recipe_id = $1
+      ORDER BY created_at DESC;`, recipeId))
 
     await server.json({response: 'success', comments: queryResults.rows })
   })
@@ -333,17 +333,12 @@ app
 
 
     if (currentUser) {
-      const [ outCome ] =  (await client.queryObject(`INSERT INTO 
-        recipe_comments(comment, recipe_id, user_id, created_at, updated_at)
+      const [ outCome ] =  (await client.queryObject(`INSERT INTO recipe_comments(comment, recipe_id, user_id, created_at, updated_at)
         VALUES ($1, $2, $3, NOW(), NOW())
         RETURNING created_at, comment;`, comment, recipeId, currentUser.id)).rows
-     if (outCome)  {
-       // All good
-      await server.json({ response: 'success', newComment: outCome.comment, createdAt: outCome.created_at })
-     } else {
-       // Something when wrong processing the query
-      await server.json({ response: 'failure' })
-     }
+
+      if (outCome) await server.json({ response: 'success', newComment: outCome.comment, createdAt: outCome.created_at }) // All good
+      else await server.json({ response: 'failure' }) // Error processing the query
 
     } else {
       // Bad Credentials

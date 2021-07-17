@@ -7,7 +7,6 @@ import '../css/save-button.css'
 // Component imports
 import Search from './reusable/Search'
 import RecipeCard from './RecipeCard'
-import SaveButton from './SaveButton'
 
 // Asset imports
 import DeleteIcon from '../assets/delete.png'
@@ -46,7 +45,7 @@ class Results extends React.Component {
     const { response, savedRecipeIds } = await apiResponse.json()
 
     if (response === 'success') this.setState({ savedRecipeIds, displaySaveFeature: true })
-    else if (response !== 'unauthorized') window.location.replace('/error')
+    else if (response !== 'unauthorized') window.location.assign('/error')
   }
 
   // Routine to get the average rating of each recipe on page, to be displayed on RecipeCard via its rating prop
@@ -112,8 +111,8 @@ class Results extends React.Component {
       this.setState(savedRecipeIds)
     } else if (response === 'unauthorized') {
         alert("Unauthorized access!\nYou must log in to access saved recipes!")
-        window.location.replace('/login')
-    } else window.location.replace('/error')
+        window.location.assign('/login')
+    } else window.location.assign('/error')
   }
 
   render() {
@@ -141,16 +140,17 @@ class Results extends React.Component {
           <p>{pageStatus}</p>
         {/* Grid of cards (recipes) */}
         { this.state.results.length > 0 && <div id="grid-container">
-          {/* For each recipe, render a recipe card and save button (only if user is authenticated i.e. displaySaveFeature is true) */}
-          { Array.isArray(results) && results.map(recipe => <div className="card-container" key={ recipe.id }>
-            { displaySaveFeature &&
-              <SaveButton
-                className="save-recipe-button"
+          {/* For each recipe, render a recipe card */}
+          { Array.isArray(results) && results.map(recipe => 
+            <div className="card-container" key={ recipe.id }>              
+              <RecipeCard
+                recipe={ recipe }
+                forPage="results"
+                rating={ averageRatings[recipe.id] }
+                authenticated={ displaySaveFeature }
                 onSave={ () => this.handleSaveRecipe(recipe.id, !savedRecipeIds.includes(recipe.id)) } 
-                isCurrentlySaved={ savedRecipeIds.includes(recipe.id) } />
-            }
-            <RecipeCard recipe={ recipe } forPage="results" rating={averageRatings[recipe.id]} />
-          </div>) }
+                isCurrentlySaved={ savedRecipeIds.includes(recipe.id) ? true : false } /> 
+            </div> )}
         </div> }
 
         {/* If number of recipes is 0, show a no results message */}

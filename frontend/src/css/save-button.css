@@ -1,44 +1,25 @@
-.active-save-button {
-    position: relative;
-    cursor: pointer;
-    top: 99%;
-    left: 80%;
-    fill: rgb(116,166,127);
-    stroke: rgb(71, 116, 81);
-    stroke-width: 1px;
+#save-button-container #save-recipe-button {
+  display: flex;
+  align-items: center;
 }
 
-.inactive-save-button {
-    position: relative;
-    cursor: pointer;
-    top: 99%;
-    left: 80%;
-    fill: rgba(0, 0, 0, 0.2);
-    stroke: rgba(0, 0, 0, 0.5);
-    stroke-width: 1px;
+#save-button-container #save-recipe-button {
+  font-size: 14px;
+  color: rgb(80, 80, 80);
+  background: none;
+  border: none;
+  border-radius: 8px;
+  padding: 0 8px;
+  transition: background .5s ease;
 }
 
-.active-save-button:hover, .inactive-save-button:hover {
-    transform: scale(1);
-	animation: beat 2s infinite;
-    transition: 0.3s;
-    fill: rgb(116,166,127);
-    stroke: rgb(71, 116, 81);
+#save-button-container #save-recipe-button:hover {
+  background: rgba(200, 200, 200, 0.4);
+  transition: background .5s ease;
+
 }
 
-@keyframes beat {
-	0% {
-		transform: scale(0.95);
-        filter: drop-shadow(1.95px 1.95px 2.6px);
-	}
-
-	70% {
-		transform: scale(1);
-        filter: drop-shadow(0 0 0);
-	}
-
-	100% {
-		transform: scale(0.95);
-        filter: drop-shadow(0 0 0);
-	}
+#save-button-container #save-icon {
+  height: 20px;
+  padding: 8px 4px;
 }

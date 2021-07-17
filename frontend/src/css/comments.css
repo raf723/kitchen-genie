@@ -1,60 +1,83 @@
-#comments-container .comments-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    min-width: 700px;
-    height: 30%;
-    min-width: 600px;
-    font-family: 'Poppins', sans-serif;
+/* ==================== General ==================== */
+#comments-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 50px;
 }
 
-#comments-container .comments-container h2 {
-    margin-bottom: 0px;
-    color: rgb(57, 87, 64);
-    margin-bottom: 15px;
+
+
+/* ==================== Input comments container ==================== */
+#input-comments-container {
+  width: 40%;
+}
+
+#input-comments-container h2 {
+  font-weight: 600;
+  color: rgb(80, 80, 80);
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+
+
+/* ==================== Comments list container ==================== */
+#get-comments-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  margin-top: 48px;
+}
+
+#get-comments-container p {
+  font-size: 24px;
+  font-weight: 500;
 }
 
 #comments-container .comments-list {
-    list-style-type: none;
-    padding-inline-start: 0px;
-    margin-top: 0;
+  width: 80%;
+  list-style-type: none;
+  padding-inline-start: 0px;
+  margin-top: 0;
+}
+
+
+
+/* ==================== Each comment ==================== */
+.comments-list li {
+  margin: 32px 0;
 }
 
 #comments-container .comment-box {
-    width: 600px;
-    margin: 20px 30px 5px 30px;
-    transition: box-shadow .2s;
-    height: auto;
-    border-radius: 10px;
-    padding: 10px 10px 10px 10px;
-    border: 1px solid rgb(116,166,127);
-}
-
-#comments-container .comment-box:hover {
-    box-shadow: 0 0 8px rgb(71, 116, 81);
+  margin: 0;
+  height: auto;
+  border-radius: 10px;
+  padding: 10px 10px 0px 10px;
+  border: 2px solid rgba(169, 201, 176, 0.8);
 }
 
 #comments-container .comment-header {
-    font-weight: 550;
-    font-size: 15px;
-    padding: 0;
-    margin: 0;
-    color: rgb(57, 87, 64);
-}
-
-#comments-container .comment-footer {
-    font-size: 12px;
-    padding: 0;
-    margin: 0 0 0 30px;
-    color: rgb(57, 87, 64);
+  font-weight: 550;
+  font-size: 15px;
+  color: rgb(57, 87, 64);
+  padding: 0;
+  margin: 0;
 }
 
 #comments-container .comment-body {
-    margin-left: 10px;
-    margin-top: 5px;
-    margin-bottom: 0;
-    font-size: 16px;
-    color: rgb(57, 87, 64);
+  font-size: 14px;
+  font-weight: 400;
+  margin: 4px 10px;
+  margin-bottom: 12px;
+}
+
+#comments-container .comment-footer {
+  font-size: 12px;
+  color: rgb(116, 166, 127);
+  padding: 0;
+  margin-top: 6px;
 }
