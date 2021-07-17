@@ -138,7 +138,10 @@ class Recipe extends Component {
     }
 
     renderIngredients() {
-        return this.state.ingredients.map((ingredient, i) => <li key={i} className="recipe-list-items">{ingredient.name}</li>)
+        const { ingredients } = this.state 
+        return ingredients
+        .filter((item, index) => ingredients.indexOf(item) === index)
+        .map((ingredient, i) => <li key={i} className="recipe-li-ingredient">{ingredient.name}</li>)
     }
 
 
@@ -171,9 +174,9 @@ class Recipe extends Component {
       await this.getAverageStarRatings()
       await this.getPersonalStarRating()
       await this.checkSavedRecipe()
-    //   await this.fetchRecipeInfomation()
-    //   await this.summariseRecipe()
-    //   await this.fetchRecipeIntructions() 
+      await this.fetchRecipeInfomation()
+      await this.summariseRecipe()
+      await this.fetchRecipeIntructions() 
     }
 
 
@@ -223,18 +226,18 @@ class Recipe extends Component {
                         <section className="image-instruction-column flex column">
                             <img src={image} className="recipe-page-image" alt="food" />
                             <span className="recipe-subheading">Ingredients</span>
-                            <ul>
+                            <ul className="ingredients-list">
                                 {this.renderIngredients()}
                             </ul>
                         </section>
                         {/* Preptime and instructions */}
                         <section className="info-desc-instruct-column flex column">
                             <article className="key-info flex column">
-                                { preperationTime && <span>Preperation time - {preperationTime} minutes</span> }
-                                { pricePerServing && <span>Price Per Serving - £ {((pricePerServing / 100)*0.8).toFixed(2)} per person</span> }
-                                { serving && <span>Serving - {preperationTime} people </span> }
-                                { diets.length !== 0 && <span>Diets - { diets.join(', ') }</span> }
-                                { !Number.isNaN(numIngredients) && <span>Number of Ingredients - {numIngredients}</span> }
+                                { preperationTime && <span>Preperation time - <span className="important-info">{preperationTime} minutes</span></span> }
+                                { pricePerServing && <span>Price Per Serving - <span className="important-info">£ {((pricePerServing / 100)*0.8).toFixed(2)} per person</span></span> }
+                                { serving && <span>Serving - <span className="important-info">{preperationTime} people</span> </span> }
+                                { diets.length !== 0 && <span>Diets - <span className="important-info">{ diets.join(', ') }</span></span> }
+                                { numIngredients && <span>Number of Ingredients - <span className="important-info">{numIngredients}</span></span> }
                                 { numMissingIngredients && <span className="missing">Number of Missing Ingredients - {numMissingIngredients}</span>}    
                                 <span className="recipe-subheading">Description</span>
                                 {<p className='recipe-description'>{description}</p>}

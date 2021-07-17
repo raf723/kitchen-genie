@@ -68,14 +68,27 @@
     width: 70%;
 }
 
-.recipe-list-items{
+.recipe-list-item{
     margin: 5px 0;
+
 }
 
-.recipe-list-item .instruction{
+.recipe-li-ingredient{
     text-transform: capitalize;
+    width: fit-content;
+    color: white;
+    background-color: rgb(116, 166, 127);
+    border: none;
+    border-radius: 20px;
+    padding: 4px 8px;
+    margin: 4px;
+    transition: background .5s ease;
 }
 
+ul.ingredients-list{
+    margin: 15px 0;
+    padding: 0;
+}
 /* Image and ingredients column */
 
 .recipe-page-image{
@@ -106,7 +119,8 @@
 }
 
 .important-info{
-    color: red;
+    color: rgb(71, 116, 81, 0.98);
+    font-weight: 600;
 }
 
 
@@ -114,7 +128,7 @@
 .recipe-subheading{
     font-weight: 600;
     font-size: 1.2rem;
-    margin-top: 10px
+    margin-top: 15px
 }
 
 .flex{
