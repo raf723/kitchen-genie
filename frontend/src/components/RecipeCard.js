@@ -43,7 +43,9 @@ class RecipeCard extends React.Component {
       if (recipe.missedIngredientCount > 0) {
         return (
           <Tippy placement="bottom" content={"Missing: " + listToTitleString(recipe.missedIngredients)}>
-            <p className="some-missing"> Missing { recipe.missedIngredientCount } ingredients</p>  
+            <p className="some-missing">
+              Missing { recipe.missedIngredientCount } { recipe.missedIngredientCount === 1 ? "ingredient" : "ingredients" }
+            </p>  
           </Tippy>
         )
       } else {

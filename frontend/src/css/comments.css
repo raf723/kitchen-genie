@@ -1,4 +1,4 @@
-.comments-container {
+#comments-container .comments-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,33 +10,33 @@
     font-family: 'Poppins', sans-serif;
 }
 
-.comments-container h2 {
+#comments-container .comments-container h2 {
     margin-bottom: 0px;
     color: rgb(57, 87, 64);
     margin-bottom: 15px;
 }
 
-.comments-list {
+#comments-container .comments-list {
     list-style-type: none;
     padding-inline-start: 0px;
     margin-top: 0;
 }
 
-.comment-box2 {
+#comments-container .comment-box {
     width: 600px;
-    margin: 30px 30px 5px 30px;
-    transition: box-shadow .3s;
+    margin: 20px 30px 5px 30px;
+    transition: box-shadow .2s;
     height: auto;
     border-radius: 10px;
-    padding: 10px 10px 0px 10px;
+    padding: 10px 10px 10px 10px;
     border: 1px solid rgb(116,166,127);
 }
 
-.comment-box2:hover {
+#comments-container .comment-box:hover {
     box-shadow: 0 0 8px rgb(71, 116, 81);
 }
 
-.comment-header {
+#comments-container .comment-header {
     font-weight: 550;
     font-size: 15px;
     padding: 0;
@@ -44,15 +44,17 @@
     color: rgb(57, 87, 64);
 }
 
-.comment-footer {
+#comments-container .comment-footer {
     font-size: 12px;
     padding: 0;
     margin: 0 0 0 30px;
     color: rgb(57, 87, 64);
 }
 
-.comment-body {
+#comments-container .comment-body {
     margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 0;
     font-size: 16px;
     color: rgb(57, 87, 64);
 }

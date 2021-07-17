@@ -42,7 +42,7 @@ export function validateUsername(proposedName) {
 
 export async function isUsernameTaken(proposedName) {
     if(proposedName) {
-      const existenceCheckResponse = await fetch(`http://localhost:8080/checkname/${proposedName}`)
+      const existenceCheckResponse = await fetch(`${process.env.REACT_APP_URL}/checkname/${proposedName}`)
       const { nameExists } = await existenceCheckResponse.json()
       this.setState({ isUsernameTaken: nameExists })
       return nameExists
@@ -53,7 +53,7 @@ export async function isUsernameTaken(proposedName) {
 
 export async function isEmailTaken(email) {
     if(email) {
-      const existenceCheckResponse = await fetch(`http://localhost:8080/checkemail/${email}`)
+      const existenceCheckResponse = await fetch(`${process.env.REACT_APP_URL}/checkemail/${email}`)
       const { emailExists } = await existenceCheckResponse.json()
       this.setState({ isEmailTaken: emailExists })
       return emailExists

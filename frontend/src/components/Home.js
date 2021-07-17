@@ -78,6 +78,7 @@ class Home extends React.Component {
     return (
       <div id="home-container">
         <h1>Kitchen Genie</h1>
+        <span>Find recipes using what's in your kitchen</span>
 
         {/* Placeholder, input and search button */}
         <div id="search-container">
@@ -90,7 +91,7 @@ class Home extends React.Component {
               id={ this.state.ingredients.length !== 0 ? "green-button" : "grey-button" }
               className="search-button"
               onClick={ () => this.searchHandler() }>
-                GO
+                FIND
             </button>
           </div>
         </div>

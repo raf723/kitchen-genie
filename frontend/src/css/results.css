@@ -58,7 +58,7 @@
 
 #results-container .card-container {
   width: 22%;
-  margin: 12px 12px;
+  margin: 0 12px;
 }
 
 #results-container #no-results-span {
@@ -73,4 +73,9 @@
   margin-right: 25%;
   font-size: larger;
   color: brown;
+}
+
+#results-container #favourite-button {
+  left: 85%;
+  top: 88%
 }

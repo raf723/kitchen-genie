@@ -4,6 +4,8 @@
 ./backend/.env.development
 .env.development
 /backend/.env.development
+/frontend/.env.production
+/frontend/.netlify/
 /.vscode
 frontend/.env.production
 frontend/.netlify/

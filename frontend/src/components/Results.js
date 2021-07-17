@@ -31,12 +31,12 @@ class Results extends React.Component {
     await this.getSavedRecipeIds()
     await this.getAverageRatings()
 
-    /*Routine to check and notify user if there is some external problem with the website (e.g. site has exceeded the maximum number of calls to spoonacular)*/
+    // Routine to check and notify user if there is some external problem with the website (e.g. site has exceeded the maximum number of calls to spoonacular)
     const { results } = this.props.location.state
     if (!Array.isArray(results)) this.setState({pageStatus: 'The service is temporarily down! Please try again later.'})
   }
 
-  /*Routine to Identify which of the recipies displayed in the results were previously saved by the user */
+  // Routine to Identify which of the recipies displayed in the results were previously saved by the user
   async getSavedRecipeIds() {
     const apiResponse = await fetch(`${process.env.REACT_APP_URL}/myrecipes/id-only`, {
       credentials: 'include',
@@ -49,7 +49,7 @@ class Results extends React.Component {
     else if (response !== 'unauthorized') window.location.replace('/error')
   }
 
-  /*Routine to get the average rating of each recipe on page, to be displayed on RecipeCard via its rating prop*/
+  // Routine to get the average rating of each recipe on page, to be displayed on RecipeCard via its rating prop
   async getAverageRatings() {
     const { results } = this.props.location.state
 
@@ -145,6 +145,7 @@ class Results extends React.Component {
           { Array.isArray(results) && results.map(recipe => <div className="card-container" key={ recipe.id }>
             { displaySaveFeature &&
               <SaveButton
+                className="save-recipe-button"
                 onSave={ () => this.handleSaveRecipe(recipe.id, !savedRecipeIds.includes(recipe.id)) } 
                 isCurrentlySaved={ savedRecipeIds.includes(recipe.id) } />
             }

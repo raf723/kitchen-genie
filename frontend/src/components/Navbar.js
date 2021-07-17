@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 
 function Navbar( {userAuthenticated, onLogout} ) {
   return(
-    <div>
+    <div id="nav-container">
       <nav className="page-nav">
         {/* Left: Home icon */}
         <NavLink
@@ -17,7 +17,6 @@ function Navbar( {userAuthenticated, onLogout} ) {
               height="28"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="rgb(116,166,127)"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"

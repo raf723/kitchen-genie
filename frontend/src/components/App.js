@@ -15,10 +15,11 @@ import Home from './Home'
 import Register from './Register'
 import Login from './Login'
 import Results from './Results'
-import About from './About'
+import AboutUs from './AboutUs'
 import Recipe from './Recipe'
 import SavedRecipes from './SavedRecipes'
 import Error from './Error'
+import FAQ from './FAQ'
 
 class App extends React.Component {
   initialState = {
@@ -31,14 +32,14 @@ class App extends React.Component {
   async componentDidMount(){
     const currentSession = getCookie('sessionId') ?? null
     if (currentSession) {
-      const apiResponse = await fetch(`http://localhost:8080/sessions/${currentSession}`)
+      const apiResponse = await fetch(`${process.env.REACT_APP_URL}/sessions/${currentSession}`)
       const loggedInUser = await apiResponse.json()
       this.setState({ loggedInUser })
     }
   }
 
   loginHandler = async ({ email, password, remember }) => {
-    const apiResponse = await fetch(`http://localhost:8080/login`, {
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/login`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -61,7 +62,7 @@ class App extends React.Component {
   }
 
   handleSaveRecipe = async (recipeId, toSave=true) => {
-    const apiResponse = await fetch(`http://localhost:8080/save/${recipeId}/${ toSave ? 'save' : 'unsave'}`, {
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/save/${recipeId}/${ toSave ? 'save' : 'unsave'}`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -104,10 +105,11 @@ class App extends React.Component {
             </Route>
 
             <Route path='/about'>
-              <About/>
+              <AboutUs/>
             </Route>
 
             <Route path='/faq'>
+              <FAQ />
             </Route>
 
             <Route path='/favourites'>
