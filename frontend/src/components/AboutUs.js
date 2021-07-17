@@ -11,10 +11,11 @@ import tawab from '../assets/tawab.jpg';
 
 const inspiration = 'As we got older, we started falling more in love with different foods, dishes, and recipes from all over the world. What was once a simple meal to fill us up is now filled with the intrigue of discovering whole new world of flavours, aromas, herbs and spices. So we came up with this wonderful website to make it easier to make all kinds of foods using the ingredients in your kitchen. A recipe has no soul until you bring the dish to life.'
 const process = 'Kitchen Genie processes a database of recipes based on the ingredients you want to use. It also tells you the ingredients you are missing, step by step instructions on how to make the food, supported by the community to share, comment, and rate recipes and save your favourite recipes.'
+const cengizBio = `It’s been my dream role to become a software developer, and this project has been the best way to conclude a challenging but extremely fun bootcamp at Sigmalabs.\nI have loved iterating, testing and building with the Kitchen Genie team, we have all pushed ourselves to apply our newly learnt knowledge, designing a product that we think tackles the important problem of food waste. I am proud to call it my first software development team project.\nTo the future! `
 const teamMembers = [
   { name: 'Cengiz Ziyaeddin',
     image: cengiz,
-    desc: 'Chemical Engineer turned Software! Coding or non-coding, I love making things.' },
+    desc: cengizBio },
   { name: 'Keano Robinson',
     image: keano,
     desc: 'Chemical Engineer turned Software! Coding or non-coding, I love making things.' },
