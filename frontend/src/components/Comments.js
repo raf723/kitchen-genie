@@ -48,7 +48,7 @@ class Comments extends React.Component {
       created_at: commentObject.createdAt,
       username: this.props.userAuthenticated.username
     })
-    this.setState({ comment: newCommentsArray })
+    this.setState({ comment: newCommentsArray, componentStatus: "" })
   }
 
   render() {

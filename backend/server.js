@@ -124,15 +124,16 @@ app
     const { id } = server.params
 
     // Query for average rating for a recipe
-    const averageRatingQuery = `SELECT ROUND(AVG(rating), 2)::float AS value
+    const averageRatingQuery = `SELECT COUNT(*)::integer AS total_ratings, ROUND(AVG(rating), 2)::float AS value 
       FROM recipe_rating
       WHERE recipe_id = $1;`
 
     // Get average rating for a particular recipe using recipeID
     const [ averageRating ] = (await client.queryObject(averageRatingQuery, id)).rows
 
-    // If invalid, return 0
-    if (Number.isNaN(Number.parseFloat(averageRating.value))) {
+
+    if (Number.isNaN(Number.parseFloat(averageRating.value))){
+      //Sets value to zero if no one has voted. 
       averageRating.value = 0
     }
 

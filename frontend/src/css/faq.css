@@ -34,6 +34,9 @@
     background-color: #f1f1f1;
     text-align: justify;
     text-justify: inter-word;
+    border-width: 0 2px 0 2px;
+    border-style: solid;
+    border-color: rgb(71, 116, 81, 0.98);
   }
 
   #faq-container {
@@ -43,6 +46,7 @@
   #faq-container .collapse {
       width: 50%;
       margin: auto;
+      margin-bottom: 90px;
   }
 
   #faq-container .collapsible-top {
@@ -52,6 +56,12 @@
   #faq-container .collapsible-bottom {
       border-bottom-left-radius: 10px;
       border-bottom-right-radius: 10px;
+  }
+
+  #faq-container .content-bottom {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-width: 0 2px 2px 2px;
   }
 
   #faq-container h1 {

@@ -16,6 +16,7 @@
 #save-button-container #save-recipe-button:hover {
   background: rgba(200, 200, 200, 0.4);
   transition: background .5s ease;
+
 }
 
 #save-button-container #save-icon {

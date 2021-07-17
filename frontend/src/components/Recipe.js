@@ -1,6 +1,3 @@
-import { Component } from 'react'
-import '../css/recipe.css'
-
 // Third party imports
 import StarsRatings from 'react-star-ratings'
 
@@ -12,22 +9,26 @@ import { getCookie } from '../function-assets/helpers'
 
 class Recipe extends Component {
   initialState = {
-    averageRating: undefined,
-    description: '',
-    diets: [],
-    ingredients: [],
-    instructions: [],
-    isCurrentlySaved: false,
-    preperationTime: '',
-    pricePerServing: '',
-    personalRating: undefined,
-    recipeId: this.props.location.state.id,
-    serving: '',
-    title: this.props.location.state.title
+      recipeId: this.props.location.state.id,
+      isCurrentlySaved: false,
+      image: this.props.location.state.image ? this.props.location.state.image : '',
+      title: this.props.location.state.title,
+      numIngredients: this.props.location.state.numIngredients ? this.props.location.state.numIngredients : '',
+      numMissingIngredients: this.props.location.state.numMissingIngredients ? this.props.location.state.numMissingIngredients : '',
+      description: '',
+      instructions: [],
+      ingredients: [],
+      averageRating: undefined,
+      totalRatings: undefined,
+      personalRating: undefined,
+      preperationTime: '',
+      serving: '',
+      pricePerServing: '',
+      diets: [],
   }
 
   state = this.initialState
-
+  
   async componentDidMount() {
     await this.getAverageStarRatings()
     await this.getPersonalStarRating()
@@ -38,12 +39,16 @@ class Recipe extends Component {
   }
 
   // Get average rating for current recipe
-  async getAverageStarRatings() {
-    const { recipeId } = this.state
-    const fetchAverageRating = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/${recipeId}`)
-    const averageRating = await fetchAverageRating.json()
-    this.setState({ averageRating: parseFloat(averageRating.value) })
-  }
+    async getAverageStarRatings() {
+
+        const { recipeId } = this.state
+
+        const fetchAverageRating = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/${recipeId}`)
+
+        const recipe= await fetchAverageRating.json()
+
+        this.setState({ averageRating: parseFloat(recipe.value), totalRatings: recipe.total_ratings})
+    }
 
   // Get user's specific rating for this recipe (if exists)
   async getPersonalStarRating() {
@@ -134,7 +139,12 @@ class Recipe extends Component {
   }
 
   // For each ingredient, render an <li>
-  renderIngredients = () => this.state.ingredients.map((ingredient, i) => <li key={i} className="ingredient-item">{ ingredient.name }</li>)
+  renderIngredients() {
+      const { ingredients } = this.state 
+      return ingredients
+      .filter((item, index) => ingredients.indexOf(item) === index)
+      .map((ingredient, i) => <li key={i} className="recipe-li-ingredient">{ingredient.name}</li>)
+  }
   
   // For each instruction, render an <li>
   renderInstructions = (instructionsArr) => instructionsArr.map((instruction, i) => <li key={i} className="instruction-item">{ instruction.step }</li>)
@@ -143,8 +153,7 @@ class Recipe extends Component {
   removeHtmlTagsFromString = (string) => string === '' ? 'No description' : string.replace(/(<([^>]+)>)/gi, "")
 
   render() {
-    const { averageRating, description, diets, instructions, isCurrentlySaved, personalRating, preperationTime, pricePerServing, recipeId, serving, title } = this.state
-    const { image, numIngredients, numMissingIngredients } = this.props.location.state
+    const { averageRating, description, diets, instructions, isCurrentlySaved, personalRating, preperationTime, pricePerServing, recipeId, serving, title, totalRatings, image, numIngredients, numMissingIngredients } = this.state
     const { userAuthenticated } = this.props
 
     return (
