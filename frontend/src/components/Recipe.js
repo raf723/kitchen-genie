@@ -168,7 +168,7 @@ class Recipe extends React.Component {
         <div id="header-container">
           <div id="ratings-container">
             <span id="star-icon" class="fa fa-star"></span>
-            <span className="rating-span">{ averageRating === 0 ? "No ratings" : parseFloat(averageRating).toFixed(1) }</span>
+            <span className="rating-span">{ averageRating === 0 ? "No ratings" : `Average rating: ${parseFloat(averageRating).toFixed(1)} (${ totalRatings })` }</span>
           </div>
 
           {/* Save recipe button */}
