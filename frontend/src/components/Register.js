@@ -6,6 +6,7 @@ import UsernameInput from './form-components/UsernameInput'
 import PasswordConfirmation from './form-components/PasswordConfirmation'
 import validate from '../function-assets/validate'
 import splash from '../assets/splash.jpeg';
+import { withRouter } from 'react-router-dom'
 
 class Register extends React.Component {
   // Declare initialState object where all values are empty

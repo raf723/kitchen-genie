@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import RecipeCard from './RecipeCard'
 import '../css/saved-recipes.css'
+import { withRouter } from 'react-router-dom'
 
 export class SavedRecipes extends Component {
   initialState = {
