@@ -28,7 +28,7 @@ export class SavedRecipes extends Component {
       if (recipes.length === 0) {pageState = 'No saved recipes!'} else {pageState = ''} 
 
       //Update state
-      await this.setState({savedRecipes: recipes, isCurrentlySaved, loggedInUser, pageState})
+      this.setState({savedRecipes: recipes, isCurrentlySaved, loggedInUser, pageState})
 
       //Fetch the average ratings from backend and populate the averageRatings object in state
       await this.getAverageRatings()
@@ -47,8 +47,8 @@ export class SavedRecipes extends Component {
   async getAverageRatings() {
     const { savedRecipes } = this.state
 
-    const recipeIds = savedRecipes.map((recipe) => recipe.id).join(',')
-    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/bulk/${recipeIds}`, {
+    const recipeIds = savedRecipes.map((recipe) => recipe.id).join(',') || '-1'
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/averagerating/bulk/${recipeIds}`, {
       headers: { 'Content-Type': 'application/json' },
     })
     const  { averageRatings } = await apiResponse.json()

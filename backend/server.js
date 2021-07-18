@@ -143,7 +143,7 @@ app
 
 
   //------------------------- Get multiple recipe ratings ---------------------//
-  .get('/recipe/averagerating/bulk/:recipeIdsString', async (server) => {
+  .get('/averagerating/bulk/:recipeIdsString', async (server) => {
     const  { recipeIdsString } = await server.params
 
     // Make an array from the string of comma-delimited ids (e.g. '11645,78981,3394' --> [11645,78981,3394])

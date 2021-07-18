@@ -52,8 +52,8 @@ class Results extends React.Component {
   async getAverageRatings() {
     const { results } = this.props.location.state
 
-    const recipeIds = Array.isArray(results) && results.map((recipe) => recipe.id).join(',')
-    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/bulk/${recipeIds}`, {
+    const recipeIds = (Array.isArray(results) && results.map((recipe) => recipe.id).join(',')) || '-1'
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/averagerating/bulk/${recipeIds}`, {
       headers: { 'Content-Type': 'application/json' },
     })
 
