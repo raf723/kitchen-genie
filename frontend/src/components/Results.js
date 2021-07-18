@@ -7,7 +7,7 @@ import '../css/save-button.css'
 // Component imports
 import Search from './reusable/Search'
 import RecipeCard from './RecipeCard'
-
+import { withRouter } from 'react-router-dom'
 // Asset imports
 import DeleteIcon from '../assets/delete.png'
 
@@ -45,7 +45,7 @@ class Results extends React.Component {
     const { response, savedRecipeIds } = await apiResponse.json()
 
     if (response === 'success') this.setState({ savedRecipeIds, displaySaveFeature: true })
-    else if (response !== 'unauthorized') window.location.assign('/error')
+    else if (response !== 'unauthorized') this.props.history.push('/error')
   }
 
   // Routine to get the average rating of each recipe on page, to be displayed on RecipeCard via its rating prop
@@ -111,8 +111,8 @@ class Results extends React.Component {
       this.setState(savedRecipeIds)
     } else if (response === 'unauthorized') {
         alert("Unauthorized access!\nYou must log in to access saved recipes!")
-        window.location.assign('/login')
-    } else window.location.assign('/error')
+        this.props.history.push('/login')
+    } else this.props.history.push('/error')
   }
 
   render() {
@@ -160,4 +160,4 @@ class Results extends React.Component {
   }
 }
 
-export default Results
+export default withRouter(Results)

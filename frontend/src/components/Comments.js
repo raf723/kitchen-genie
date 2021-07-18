@@ -2,6 +2,7 @@ import React from 'react'
 import '../css/comments.css'
 import { format } from 'date-fns'
 import CommentInput from './CommentInput'
+import { withRouter } from 'react-router-dom'
 
 class Comments extends React.Component {
   initialState = { 
@@ -26,7 +27,7 @@ class Comments extends React.Component {
     // Set state of componentStatus depending on whether the current recipe has any comments stored in the database
     if (response === 'success') comments.length === 0 ? 
     this.setState({ componentStatus: 'No comments yet!' }) : this.setState({ componentStatus: '', comments: comments})
-    else window.location.assign('/error')
+    else this.props.history.push('/error')
   }
 
   renderComment(comment) {
@@ -72,4 +73,4 @@ class Comments extends React.Component {
   }
 }
 
-export default Comments
+export default withRouter(Comments)

@@ -38,7 +38,7 @@ export class SavedRecipes extends Component {
       // Notify the user (e.g. when access limit reached )
       this.setState({loggedInUser, pageState: 'Service is currently down. Please try again later!'})
     }else {
-      window.location.assign('/error')
+      this.props.history.push('/error')
     }
   }
 
@@ -91,4 +91,4 @@ export class SavedRecipes extends Component {
   }
 }
 
-export default SavedRecipes
+export default withRouter(SavedRecipes)

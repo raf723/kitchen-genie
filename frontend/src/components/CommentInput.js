@@ -1,5 +1,6 @@
 import React from 'react'
 import '../css/comment-input.css'
+import { withRouter } from 'react-router-dom'
 
 class InputComments extends React.Component {
   initialState = { comment: ""}
@@ -23,9 +24,9 @@ class InputComments extends React.Component {
       this.setState(this.initialState)
     } else if (response === 'unauthorized') {
       alert('You must be logged in to comment!')
-      window.location.assign('/login')
+      this.props.history.push('/login')
     } else {
-      window.location.assign('/error')
+      this.props.history.push('/error')
     }
   }
   
@@ -57,8 +58,8 @@ class InputComments extends React.Component {
           <div className="comment-and-buttons">
             <textarea className="comment-box-invalid" value={comment} name="comment" placeholder="You must be logged in to leave a comment." disabled/>
             <div id="buttons-container">
-              <button className="sign-up-button" type="button" name="sign-up-button" onClick={() =>  window.location.href='/register'}>Sign Up</button>
-              <button className="log-in-button" type="button" name="log-in-button" onClick={() =>  window.location.href='/login'}>Log In</button>
+              <button className="sign-up-button" type="button" name="sign-up-button" onClick={() =>  this.props.history.push('/register')}>Sign Up</button>
+              <button className="log-in-button" type="button" name="log-in-button" onClick={() =>  this.props.history.push('/login')}>Log In</button>
             </div>                        
           </div>
         </div>
@@ -71,4 +72,4 @@ class InputComments extends React.Component {
   }
 }
 
-export default InputComments
+export default withRouter(InputComments)

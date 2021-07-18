@@ -57,7 +57,7 @@ class App extends React.Component {
   
   handleLogout() {
     setCookie('sessionId', null, 0)
-    window.location.assign('/')
+    this.props.history.push('/')
   }
 
   handleSaveRecipe = async (recipeId, toSave=true) => {
@@ -70,7 +70,7 @@ class App extends React.Component {
     const { response } = await apiResponse.json()
 
     if (response === 'success') return toSave
-    else if (window.confirm("Please log in or create an accout to save recipes!")) window.location.assign('/login')
+    else if (window.confirm("Please log in or create an accout to save recipes!")) this.props.history.push('/login')
   }
   
   
