@@ -65,6 +65,20 @@ class RecipeCard extends React.Component {
     }
   }
 
+  formatNumberOfRatings(n) {
+    n = parseInt(n, 10)
+    if (n >= 1e9) {
+      return (n / 1e6).toFixed(1) + "B"
+    } else if (n >= 1e6) {
+      return (n / 1e6).toFixed(1) + "M"
+    } else if ( n >= 1e3) {
+      return (n / 1e3).toFixed(1) + "k"
+    } else {
+      return n
+    }
+
+  }
+
 
   render() {
     const { recipe, forPage, rating, isCurrentlySaved } = this.props
@@ -83,12 +97,16 @@ class RecipeCard extends React.Component {
           {/* Star rating */}
           {
             (!rating && <div className="unrated-recipe-tag">No rating yet!</div>)
-            || <StarsRatings
-              className="star-rating"
-              rating={ rating }
-              starRatedColor="gold"
-              starDimension="15px"
-              starSpacing="3px" />
+            || (
+              <div className="ratings">
+                <StarsRatings
+                  className="star-rating"
+                  rating={ rating.value }
+                  starRatedColor="gold"
+                  starDimension="15px"
+                  starSpacing="3px" /> <span className="number-of-ratings"> ({this.formatNumberOfRatings(rating.numberOfRatings)})</span>
+              </div>
+            )
           }
 
           {/* Ingredients info */}
