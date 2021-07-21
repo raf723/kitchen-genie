@@ -37,7 +37,7 @@ export class SavedRecipes extends Component {
     } else if (response === 'service down') { 
       // Notify the user (e.g. when access limit reached )
       this.setState({loggedInUser, pageState: 'Service is currently down. Please try again later!'})
-    }else {
+    } else {
       window.location.assign('/error')
     }
   }
@@ -46,13 +46,15 @@ export class SavedRecipes extends Component {
   async getAverageRatings() {
     const { savedRecipes } = this.state
 
-    const recipeIds = savedRecipes.map((recipe) => recipe.id).join(',')
-    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/bulk/${recipeIds}`, {
-      headers: { 'Content-Type': 'application/json' },
-    })
-    const  { averageRatings } = await apiResponse.json()
+    if (savedRecipes.length !== 0) {
+      const recipeIds = savedRecipes.map((recipe) => recipe.id).join(',')
+      const apiResponse = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/bulk/${recipeIds}`, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      const  { averageRatings } = await apiResponse.json()
 
-    this.setState({averageRatings})
+      this.setState({averageRatings})
+    }
   }
 
   async handleSaveRecipe(recipeId) {

@@ -2,7 +2,6 @@ import React from 'react'
 
 // Styling imports
 import '../css/results.css'
-import '../css/save-button.css'
 
 // Component imports
 import Search from './reusable/Search'
@@ -51,7 +50,6 @@ class Results extends React.Component {
   // Routine to get the average rating of each recipe on page, to be displayed on RecipeCard via its rating prop
   async getAverageRatings() {
     const { results } = this.props.location.state
-
     const recipeIds = Array.isArray(results) && results.map((recipe) => recipe.id).join(',')
     const apiResponse = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/bulk/${recipeIds}`, {
       headers: { 'Content-Type': 'application/json' },
@@ -59,7 +57,7 @@ class Results extends React.Component {
 
     const  { averageRatings } = await apiResponse.json()
 
-    this.setState({averageRatings})
+    this.setState({ averageRatings })
   }
 
   // Get recipes from Spoonacular
@@ -89,9 +87,7 @@ class Results extends React.Component {
   // Remove ingredient from this.state's ingredients on user click
   removeIngredient = (deletedIngredient) => {
     const filteredIngredients = this.state.ingredients.filter(ingredient => ingredient !== deletedIngredient)
-    this.setState({ ingredients: filteredIngredients }, () => {
-      this.getRecipes(this.state.ingredients)
-    })
+    this.setState({ ingredients: filteredIngredients }, () => this.getRecipes(this.state.ingredients))
   }
 
   // Save recipe button
@@ -110,9 +106,10 @@ class Results extends React.Component {
       else this.setState({ savedRecipeIds: savedRecipeIds.filter((id) => id !== recipeId) })
       this.setState(savedRecipeIds)
     } else if (response === 'unauthorized') {
-        alert("Unauthorized access!\nYou must log in to access saved recipes!")
-        window.location.assign('/login')
-    } else window.location.assign('/error')
+      if (window.confirm("Please log in or create an account to save recipes!")) window.location.assign('/login')
+    } else {
+      window.location.assign('/error')
+    }
   }
 
   render() {

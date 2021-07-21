@@ -15,9 +15,8 @@ await client.connect()
 
 // Drop old tables
 await client.queryObject(`DROP TABLE IF EXISTS sessions;`)
-await client.queryObject(`DROP TABLE IF EXISTS rating;`)
+await client.queryObject(`DROP TABLE IF EXISTS recipe_rating;`)
 await client.queryObject(`DROP TABLE IF EXISTS saved_recipes;`)
-await client.queryObject(`DROP TABLE IF EXISTS recipe_comment_votes;`)
 await client.queryObject(`DROP TABLE IF EXISTS recipe_comments;`)
 await client.queryObject(`DROP TABLE IF EXISTS users;`)
 
@@ -82,19 +81,5 @@ await client.queryObject(`
     recipe_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users(id)
-  );`
-)
-
-// Create recipe comment votes
-await client.queryObject(`
-  CREATE TABLE IF NOT EXISTS recipe_comment_votes (
-    id SERIAL PRIMARY KEY,
-    direction TEXT NOT NULL DEFAULT 'up',
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
-    user_id INTEGER,
-    comment_id INTEGER,
-    FOREIGN KEY(user_id) REFERENCES users(id),
-    FOREIGN KEY(comment_id) REFERENCES recipe_comments(id)
   );`
 )

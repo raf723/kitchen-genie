@@ -53,6 +53,7 @@
 #about-us-container .member-div {
   display: flex;
   flex-direction: column;
+  width: 22%;
 }
 
 #about-us-container .member-div span {
@@ -65,6 +66,7 @@
   color: rgb(70, 70, 70);
   font-size: 14px;
   font-weight: 400;
+  padding: 0;
   margin: 2px 0;
 }
 

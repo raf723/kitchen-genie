@@ -37,7 +37,7 @@
 #form-container {
   display: flex;
   flex-direction: column;
-  height: 60%;
+  height: 66%;
   width: 74%;
 }
 
@@ -68,7 +68,7 @@ input:-webkit-autofill {
 }
 
 form #register-button {
-  height: 40px;
+  height: 40px !important;
   width: 100%;
   color: white;
   transition: background .5s ease;

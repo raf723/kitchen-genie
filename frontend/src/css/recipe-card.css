@@ -56,15 +56,15 @@
 
 /* ==================== Recipe rating ==================== */
 .unrated-recipe-tag {
-  background: rgba(192, 192, 192, 0.603);
   width: 80px;
   font-size: x-small;
   font-weight: 600;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-radius:5px 30px 30px 5px;
   text-align: center;
   color: green;
+  background: rgba(192, 192, 192, 0.603);
+  border-radius:5px 30px 30px 5px;
+  padding: 0px 10px;
+  margin: 7px 0;
 }
 
 .star-rating {
@@ -88,6 +88,7 @@
   font-size: 12px;
   font-weight: 400;
   color: brown;
+  margin: 4px 0;
 }
 
 .none-missing {
