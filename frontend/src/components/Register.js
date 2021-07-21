@@ -6,6 +6,7 @@ import UsernameInput from './form-components/UsernameInput'
 import PasswordConfirmation from './form-components/PasswordConfirmation'
 import validate from '../function-assets/validate'
 import splash from '../assets/splash.jpeg';
+import { withRouter } from 'react-router-dom'
 
 class Register extends React.Component {
   // Declare initialState object where all values are empty
@@ -53,13 +54,13 @@ class Register extends React.Component {
       const { response } = await apiResponse.json()
 
       if (response === `success`) {
-        window.location.assign("/login");
+        this.props.history.push("/login");
       } else if (response === `already registered`) {
         alert("There is already an email address associated with that email.\n Try logging in or registering again!")
         window.location.reload()
       } else if (response === `bad credentials`) {
         alert("Invalid email, username or password!\nEnsure Javascript is enabled and reload the app.")
-        window.location.assign("/error")
+        this.props.history.push("/error")
       }
     }
   }
@@ -118,4 +119,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register
+export default withRouter(Register)

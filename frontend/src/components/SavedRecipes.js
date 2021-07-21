@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import RecipeCard from './RecipeCard'
 import '../css/saved-recipes.css'
+import { withRouter } from 'react-router-dom'
 
 export class SavedRecipes extends Component {
   initialState = {
@@ -27,7 +28,7 @@ export class SavedRecipes extends Component {
       if (recipes.length === 0) {pageState = 'No saved recipes!'} else {pageState = ''} 
 
       //Update state
-      await this.setState({savedRecipes: recipes, isCurrentlySaved, loggedInUser, pageState})
+      this.setState({savedRecipes: recipes, isCurrentlySaved, loggedInUser, pageState})
 
       //Fetch the average ratings from backend and populate the averageRatings object in state
       await this.getAverageRatings()
@@ -38,7 +39,7 @@ export class SavedRecipes extends Component {
       // Notify the user (e.g. when access limit reached )
       this.setState({loggedInUser, pageState: 'Service is currently down. Please try again later!'})
     } else {
-      window.location.assign('/error')
+      this.props.history.push('/error')
     }
   }
 
@@ -47,7 +48,7 @@ export class SavedRecipes extends Component {
     const { savedRecipes } = this.state
 
     if (savedRecipes.length !== 0) {
-      const recipeIds = savedRecipes.map((recipe) => recipe.id).join(',')
+      const recipeIds = savedRecipes.map((recipe) => recipe.id).join(',') || '-1'
       const apiResponse = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/bulk/${recipeIds}`, {
         headers: { 'Content-Type': 'application/json' },
       })
@@ -93,4 +94,4 @@ export class SavedRecipes extends Component {
   }
 }
 
-export default SavedRecipes
+export default withRouter(SavedRecipes)

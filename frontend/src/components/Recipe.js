@@ -58,7 +58,7 @@ class Recipe extends React.Component {
       const { response, recipe } = await apiResponse.json()
       
       if (response === 'success') this.setState({ personalRating: recipe.rating })
-      else if (response !== 'unauthorized') window.location.assign('/error')
+      else if (response !== 'unauthorized') this.props.history.push('/error')
     }
   }
 
@@ -71,7 +71,7 @@ class Recipe extends React.Component {
     const { response, savedRecipeIds } = await apiResponse.json()
 
     if (response === 'success') this.setState({ isCurrentlySaved: savedRecipeIds.includes(this.state.recipeId)})
-    else if (response !== 'unauthorized') window.location.assign('/error')
+    else if (response !== 'unauthorized') this.props.history.push('/error')
   }
 
   // Recipe title, image, ingredients, price, prep time, serving size and diet

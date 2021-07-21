@@ -6,7 +6,7 @@ import '../css/results.css'
 // Component imports
 import Search from './reusable/Search'
 import RecipeCard from './RecipeCard'
-
+import { withRouter } from 'react-router-dom'
 // Asset imports
 import DeleteIcon from '../assets/delete.png'
 
@@ -44,14 +44,14 @@ class Results extends React.Component {
     const { response, savedRecipeIds } = await apiResponse.json()
 
     if (response === 'success') this.setState({ savedRecipeIds, displaySaveFeature: true })
-    else if (response !== 'unauthorized') window.location.assign('/error')
+    else if (response !== 'unauthorized') this.props.history.push('/error')
   }
 
   // Routine to get the average rating of each recipe on page, to be displayed on RecipeCard via its rating prop
   async getAverageRatings() {
     const { results } = this.props.location.state
-    const recipeIds = Array.isArray(results) && results.map((recipe) => recipe.id).join(',')
-    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/bulk/${recipeIds}`, {
+    const recipeIds = (Array.isArray(results) && results.map((recipe) => recipe.id).join(',')) || '-1'
+    const apiResponse = await fetch(`${process.env.REACT_APP_URL}/averagerating/bulk/${recipeIds}`, {
       headers: { 'Content-Type': 'application/json' },
     })
 
@@ -106,7 +106,7 @@ class Results extends React.Component {
       else this.setState({ savedRecipeIds: savedRecipeIds.filter((id) => id !== recipeId) })
       this.setState(savedRecipeIds)
     } else if (response === 'unauthorized') {
-      if (window.confirm("Please log in or create an account to save recipes!")) window.location.assign('/login')
+      if (window.confirm("Please log in or create an account to save recipes!")) this.props.history.push('/login')
     } else {
       window.location.assign('/error')
     }
@@ -157,4 +157,4 @@ class Results extends React.Component {
   }
 }
 
-export default Results
+export default withRouter(Results)

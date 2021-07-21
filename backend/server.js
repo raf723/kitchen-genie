@@ -143,7 +143,7 @@ app
 
 
   //------------------------- Get multiple recipe ratings ---------------------//
-  .get('/recipe/averagerating/bulk/:recipeIdsString', async (server) => {
+  .get('/averagerating/bulk/:recipeIdsString', async (server) => {
     const  { recipeIdsString } = await server.params
 
     // Make an array from the string of comma-delimited ids (e.g. '11645,78981,3394' --> [11645,78981,3394])
@@ -153,7 +153,7 @@ app
     const queryTemplate = recipeIds.reduce((accumulator, _recipeId, i) =>  accumulator + `$${i + 1}, `, "" ).slice(0, -2)
 
     // Query for average rating for a recipe
-    const averageRatingQuery = `SELECT recipe_id, ROUND(AVG(rating), 2)::float AS value
+    const averageRatingQuery = `SELECT COUNT(*)::integer AS total_ratings, recipe_id, ROUND(AVG(rating), 2)::float AS value
       FROM recipe_rating
       WHERE recipe_id IN (${queryTemplate})
       GROUP BY recipe_id;`
@@ -163,7 +163,10 @@ app
 
     // Make an object with recipe_id as keys and ratings as values for efficency and convenience
     const averageRatings = averageRatingsArray.reduce((accumulator, rating) => { 
-      accumulator[rating.recipe_id] = !rating.value ? 0 : Number.parseFloat(rating.value)
+      accumulator[rating.recipe_id] = {
+        value: !rating.value ? 0 : Number.parseFloat(rating.value),
+        numberOfRatings: rating.total_ratings
+      }
       return accumulator }, {})
     
     server.json({ response: "success", averageRatings }) 
