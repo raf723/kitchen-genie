@@ -12,22 +12,22 @@ import { getCookie } from '../function-assets/helpers'
 
 class Recipe extends React.Component {
   initialState = {
-      recipeId: this.props.location.state.id,
-      isCurrentlySaved: false,
-      image: this.props.location.state.image ? this.props.location.state.image : '',
-      title: this.props.location.state.title,
-      numIngredients: this.props.location.state.numIngredients ? this.props.location.state.numIngredients : '',
-      numMissingIngredients: this.props.location.state.numMissingIngredients ? this.props.location.state.numMissingIngredients : '',
-      description: '',
-      instructions: [],
-      ingredients: [],
-      averageRating: undefined,
-      totalRatings: undefined,
-      personalRating: undefined,
-      preperationTime: '',
-      serving: '',
-      pricePerServing: '',
-      diets: [],
+    recipeId: this.props.location.state.id,
+    isCurrentlySaved: false,
+    image: this.props.location.state.image ? this.props.location.state.image : '',
+    title: this.props.location.state.title,
+    numIngredients: this.props.location.state.numIngredients ? this.props.location.state.numIngredients : '',
+    numMissingIngredients: this.props.location.state.numMissingIngredients ? this.props.location.state.numMissingIngredients : '',
+    description: '',
+    instructions: [],
+    ingredients: [],
+    averageRating: undefined,
+    totalRatings: undefined,
+    personalRating: undefined,
+    preperationTime: '',
+    serving: '',
+    pricePerServing: '',
+    diets: [],
   }
 
   state = this.initialState
@@ -42,16 +42,12 @@ class Recipe extends React.Component {
   }
 
   // Get average rating for current recipe
-    async getAverageStarRatings() {
-
-        const { recipeId } = this.state
-
-        const fetchAverageRating = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/${recipeId}`)
-
-        const recipe= await fetchAverageRating.json()
-
-        this.setState({ averageRating: parseFloat(recipe.value), totalRatings: recipe.total_ratings})
-    }
+  async getAverageStarRatings() {
+    const { recipeId } = this.state
+    const fetchAverageRating = await fetch(`${process.env.REACT_APP_URL}/recipe/averagerating/${recipeId}`)
+    const recipe= await fetchAverageRating.json()
+    this.setState({ averageRating: parseFloat(recipe.value), totalRatings: recipe.total_ratings})
+  }
 
   // Get user's specific rating for this recipe (if exists)
   async getPersonalStarRating() {
@@ -143,14 +139,15 @@ class Recipe extends React.Component {
 
   // For each ingredient, render an <li>
   renderIngredients() {
-      const { ingredients } = this.state 
-      return ingredients
+    const { ingredients } = this.state 
+    
+    return ingredients
       .filter((item, index) => ingredients.indexOf(item) === index)
-      .map((ingredient, i) => <li key={i} className="recipe-li-ingredient">{ingredient.name}</li>)
+      .map((ingredient, i) => <li key={ i } className="recipe-li-ingredient">{ ingredient.name }</li>)
   }
   
   // For each instruction, render an <li>
-  renderInstructions = (instructionsArr) => instructionsArr.map((instruction, i) => <li key={i} className="instruction-item">{ instruction.step }</li>)
+  renderInstructions = (instructionsArr) => instructionsArr.map((instruction, i) => <li key={ i } className="instruction-item">{ instruction.step }</li>)
   
   // Use regex to remove HTML tags from a string
   removeHtmlTagsFromString = (string) => string === '' ? 'No description' : string.replace(/(<([^>]+)>)/gi, "")
@@ -223,7 +220,7 @@ class Recipe extends React.Component {
                 </span>
               }
 
-              { numIngredients &&
+              {/* { numIngredients &&
                 <span>
                   <span className="title-span">Number of ingredients: </span>
                   <span className="result-span">{ numIngredients }</span>
@@ -235,7 +232,7 @@ class Recipe extends React.Component {
                   <span className="title-span">Number of missing ingredients: </span>
                   <span className="result-span" id="red-span">{ numMissingIngredients }</span>
                 </span>
-              }
+              } */}
             </div>
             
             {/* Recipe description */}

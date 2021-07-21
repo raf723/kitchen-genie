@@ -41,11 +41,17 @@ class InputComments extends React.Component {
     if (!!userAuthenticated) {
       return (
         <div id="comment-input-container">
-          <h3>Hi, <span id="username">{userAuthenticated.username}!</span> Leave a comment below!</h3>
-          <form onSubmit={(e) => this.handleSubmit(e)}>
-            <textarea name="comment" placeholder="Please enter a comment..." value={comment} className="comment-box-valid" onInput={this.autoGrow} onChange={(e) => this.setState({comment: e.target.value})}/>
+          <h3>Leave a comment below!</h3>
+          <form onSubmit={ (e) => this.handleSubmit(e) }>
+            <textarea
+              name="comment"
+              placeholder="Please enter a comment..."
+              value={ comment }
+              className="comment-box-valid"
+              onInput={ this.autoGrow }
+              onChange={ (e) => this.setState({ comment: e.target.value }) }/>
             <div id="buttons-container">
-              <button className="cancel-button" type="button" value="Cancel" name="cancel" onClick={() => this.setState({ comment: "" })}>Cancel</button>
+              <button className="cancel-button" type="button" value="Cancel" name="cancel" onClick={ () => this.setState({ comment: "" }) }>Cancel</button>
               <button className="post-button" type="submit" name="post" value="Post">Post</button>
             </div>  
           </form>
@@ -56,7 +62,7 @@ class InputComments extends React.Component {
         <div id="comment-input-container">
           <h3>Please leave a comment below!</h3>
           <div className="comment-and-buttons">
-            <textarea className="comment-box-invalid" value={comment} name="comment" placeholder="You must be logged in to leave a comment." disabled/>
+            <textarea className="comment-box-invalid" value={ comment } name="comment" placeholder="You must be logged in to leave a comment." disabled/>
             <div id="buttons-container">
               <button className="sign-up-button" type="button" name="sign-up-button" onClick={() =>  this.props.history.push('/register')}>Sign Up</button>
               <button className="log-in-button" type="button" name="log-in-button" onClick={() =>  this.props.history.push('/login')}>Log In</button>
