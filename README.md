@@ -1,4 +1,5 @@
+
 **Kitchen Genie**
 
 Demo:
-https://user-images.githubusercontent.com/74607544/129767472-4d9fc848-cbde-4221-ac2b-93adeacd213f.mp4
+![Kitchen Genie](https://user-images.githubusercontent.com/74607544/129787258-f08b700a-1756-4113-ab0a-03f3acff55f3.gif)
