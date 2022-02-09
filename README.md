@@ -5,7 +5,7 @@
 Kitchen Genie is a recipe recommendation platform built using React, Postgres and Deno. You can input ingredients you have in your kitchen to receive a list of ordered recipes and create an account to favourite or comment on recipes!
 
 ## Installation
-N/A - visit www.kitchen-genie.co.uk
+Visit www.kitchen-genie.co.uk
 
 ## Stack
 - Web framework: ReactJS
